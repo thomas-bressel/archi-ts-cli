@@ -6,4 +6,4 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /archits
 FROM alpine:latest
 COPY --from=builder /archits /usr/local/bin/archits
-CMD ["archits"]
+ENTRYPOINT ["/bin/bash"]
