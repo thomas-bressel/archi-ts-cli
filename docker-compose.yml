@@ -1,0 +1,11 @@
+services:
+  archits:
+    build: .
+    image: archits-cli
+    container_name: archits
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: /bin/sh
+    stdin_open: true
+    tty: true
