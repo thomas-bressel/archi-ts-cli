@@ -15,7 +15,7 @@ func PromptProjectName() (string, error) {
 		Default: "archi-project",
 		Validate: func(input string) error {
 			if len(input) < 1 {
-				return fmt.Errorf("le nom du projet ne peut pas être vide")
+				return fmt.Errorf("project name cannot be empty")
 			}
 			return nil
 		},

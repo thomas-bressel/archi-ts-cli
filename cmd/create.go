@@ -18,15 +18,15 @@ var createCmd = &cobra.Command{
 
 func runCreate(cmd *cobra.Command, args []string) error {
 
-	// Prompt pour le nom du projet
+	// Prompt to ask the user for the project name
 	projectName, err := prompts.PromptProjectName()
 	if err != nil {
-		return fmt.Errorf("erreur lors de la saisie du nom de projet: %w", err)
+		return fmt.Errorf("error with this project name: %w", err)
 	}
-	// Créer le répertoire du projet
+	// Create the project directory
 	projectPath := filepath.Join(".", projectName)
 	if err := os.MkdirAll(projectPath, 0755); err != nil {
-		return fmt.Errorf("erreur lors de la création du répertoire: %w", err)
+		return fmt.Errorf("error when trying to create the folder: %w", err)
 	}
 
 	return nil
