@@ -30,6 +30,33 @@ func PromptProjectName() (string, error) {
 }
 
 /*
+* PromptArchitecture ask the architecture type
+ */
+func PromptArchitecture() (string, error) {
+	prompt := promptui.Select{
+		Label: "Select an architecture",
+		Items: []string{
+			"Layered Architecture",
+			"Clean Architecture",
+			"Hexagonal Architecture",
+		},
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
+			Active:   color.New(color.FgCyan).Sprint("▸ {{ . | cyan }}"),
+			Inactive: "  {{ . | faint }}",
+			Selected: color.New(color.FgGreen).Sprint("✓ {{ . | green }}"),
+		},
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		return "", err
+	}
+
+	return result, nil
+}
+
+/*
 * PromptLanguage ask the language type :  JavaScript or TypeScript
  */
 func PromptLanguage() (string, error) {

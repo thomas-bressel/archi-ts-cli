@@ -34,7 +34,13 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error with this project name: %w", err)
 	}
 
-	// Prompt 2 - Language Type (JS or TS)
+	// Prompt 2 - Architecture Type
+	architecture, err := prompts.PromptArchitecture()
+	if err != nil {
+		return fmt.Errorf("error when choosing an architecture: %w", err)
+	}
+
+	// Prompt 3 - Language Type (JS or TS)
 	language, err := prompts.PromptLanguage()
 	if err != nil {
 		return fmt.Errorf("error when choosing a language: %w", err)
@@ -56,16 +62,22 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	}
 
 	color.New(color.FgYellow).Printf("📁 Project created at: %s\n", projectPath)
+	color.New(color.FgBlue).Printf("Architecture: %s\n", architecture)
+	color.New(color.FgGreen).Printf("Language: %s\n", language)
 	fmt.Println()
 
-	// Générer la structure du projet
+	// Store the configuration in a struct and generate the project
 	config := project.ProjectConfig{
-		Name:     projectName,
-		Language: language,
+		Name:         projectName,
+		Architecture: architecture,
+		Language:     language,
 	}
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the prject: %w", err)
 	}
+	// Success message
+	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
+	fmt.Println()
 
 	return nil
 }
