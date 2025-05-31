@@ -42,3 +42,25 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Author
 Developed by [Thomas Bressel].
+
+## Dependencies
+- **Go Modules** for dependency management.
+- **cobra** for command-line interface.
+- **fmt** for formatted I/O.
+- **os** for operating system functionality.
+- **path/filepath** for file path manipulation.
+- **prompui** for user prompts.
+- **color** for colored output : go get github.com/fatih/color
+
+
+____________________________________
+
+## features descriptions :
+
+**Project Structure**
+- `main.go`: Entry point of the CLI application.
+- `root.go`: A very important file in whitch createCmd variable is init.
+
+**Prompts commands**
+- `prompts/prompts.go`: the creation of a prompts starts here in a named function.
+- `cmd/create.go`: to use your prompt functions, have a look into the runCreate function.
