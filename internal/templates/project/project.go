@@ -49,111 +49,165 @@ func createDirectoryStructure(architecture string) error {
 }
 
 /*
-* getLayeredDirectories returns the directory structure for Layered Architecture
+ * getLayeredDirectories returns the directory structure for Layered Architecture
  */
 func getLayeredDirectories() []string {
 	return []string{
 		"src",
+
+		// Controllers Layer
 		"src/controllers",
 		"src/controllers/base",
+
+		// Services Layer
 		"src/services",
 		"src/services/base",
+
+		// Repositories Layer
 		"src/repositories",
 		"src/repositories/base",
+
+		// Models Layer
 		"src/models",
-		"src/models/base",
+		"src/models/entities",
+		"src/models/dtos",
+		"src/models/requests",
+		"src/models/responses",
+		"src/models/database",
+
+		// Data Access Layer
 		"src/database",
 		"src/database/connections",
 		"src/database/migrations",
 		"src/database/seeds",
+		"src/database/queries",
+
+		// Infrastructure Layer
+		"src/infrastructure",
+		"src/infrastructure/cache",
+		"src/infrastructure/email",
+		"src/infrastructure/modules",
+
+		// Middleware Layer
 		"src/middleware",
-		"src/utils",
-		"src/config",
+		"src/middleware/auth",
+		"src/middleware/validation",
+		"src/middleware/security",
+
+		// Routes Layer
 		"src/routes",
 		"src/routes/api",
+		"src/routes/web",
+
+		// Utilities & Config
+		"src/utils",
+		"src/config",
+		"src/constants",
+		"src/mappers",
+
+		// External directories
 		"database",
-		"uploads",
-		"logs",
+		"database/backups",
+		"database/schema",
+		"storage",
+		"storage/uploads",
+		"storage/uploads/avatars",
+		"storage/uploads/documents",
+		"storage/logs",
+		"tests",
+		"tests/unit",
+		"tests/integration",
+		"tests/functional",
+		"tests/e2e",
+		".github",
+		".github/workflows",
 	}
 }
 
 /*
-* getCleanDirectories returns the directory structure for Clean Architecture
- */
+getCleanDirectories returns the directory structure for Clean Architecture
+*/
 func getCleanDirectories() []string {
 	return []string{
 		"src",
-		// Domain Layer (Enterprise Business Rules)
+		// Domain
 		"src/domain",
 		"src/domain/entities",
-		"src/domain/entities/base",
-		"src/domain/value-objects",
-		"src/domain/repositories",
-		"src/domain/services",
 
-		// Application Layer (Application Business Rules)
-		"src/application",
-		"src/application/use-cases",
-		"src/application/use-cases/user",
-		"src/application/use-cases/role",
-		"src/application/use-cases/permission",
-		"src/application/dto",
-		"src/application/dto/request",
-		"src/application/dto/response",
-		"src/application/ports",
-		"src/application/ports/inbound",
-		"src/application/ports/outbound",
+		// Data
+		"src/data",
+		"src/data/repositories",
+		"src/data/data-sources",
+		"src/data/data-sources/local",
+		"src/data/services",
+		"src/data/dtos",
+		"src/data/models",
+		"src/data/mappers",
 
-		// Infrastructure Layer (Frameworks & Drivers)
-		"src/infrastructure",
-		"src/infrastructure/database",
-		"src/infrastructure/database/repositories",
-		"src/infrastructure/database/entities",
-		"src/infrastructure/database/migrations",
-		"src/infrastructure/database/seeds",
-		"src/infrastructure/external-services",
-		"src/infrastructure/web",
-		"src/infrastructure/web/controllers",
-		"src/infrastructure/web/middleware",
-		"src/infrastructure/web/routes",
-		"src/infrastructure/web/serializers",
-		"src/infrastructure/config",
+		// Presentation
+		"src/presentation",
+		"src/presentation/controllers",
+		"src/presentation/routes",
+		"src/presentation/middlewares",
+		"src/presentation/models",
 
 		// Main Layer (Composition Root)
-		"src/main",
-		"src/main/factories",
+		"src/infrastructure",
+		"src/infrastructure/database",
+		"src/infrastructure/cache",
+		"src/infrastructure/email",
+		"src/infrastructure/server",
+
+		// Shared
+		"src/shared",
+		"src/shared/utils",
+		"src/shared/constants",
 
 		// Base directories
 		"database",
-		"uploads",
+		"database/backups",
+		"database/schema",
+		"storage",
+		"storage/uploads",
+		"storage/avatars",
+		"storage/documents",
+		"__tests__",
+		"__tests__/unit",
+		"__tests__/functional",
 		"logs",
+		".github/",
+		".github/workflows",
 	}
 }
 
 /*
-* getHexagonalDirectories returns the directory structure for Hexagonal Architecture
+ * getHexagonalDirectories returns the directory structure for Hexagonal Architecture
  */
 func getHexagonalDirectories() []string {
 	return []string{
 		"src",
+
 		// Core (Application Hexagon)
 		"src/core",
 		"src/core/domain",
-		"src/core/domain/models",
+		"src/core/domain/entities",
 		"src/core/domain/value-objects",
 		"src/core/domain/services",
 		"src/core/domain/exceptions",
 		"src/core/application",
-		"src/core/application/services",
+		"src/core/application/use-cases",
 		"src/core/application/commands",
 		"src/core/application/queries",
 		"src/core/application/handlers",
 		"src/core/application/handlers/commands",
 		"src/core/application/handlers/queries",
+		"src/core/application/dtos",
 
 		// Ports (Interfaces)
 		"src/ports",
 		"src/ports/inbound",
+		"src/ports/inbound/http",
+		"src/ports/inbound/cli",
 		"src/ports/outbound",
 		"src/ports/outbound/repositories",
 		"src/ports/outbound/external-services",
@@ -166,44 +220,61 @@ func getHexagonalDirectories() []string {
 		"src/adapters/inbound/http/controllers",
 		"src/adapters/inbound/http/middleware",
 		"src/adapters/inbound/http/routes",
-		"src/adapters/inbound/http/serializers",
+		"src/adapters/inbound/http/models",
 		"src/adapters/inbound/cli",
 		"src/adapters/inbound/cli/commands",
-		"src/adapters/inbound/message-queue",
-		"src/adapters/inbound/message-queue/consumers",
 
 		// Outbound Adapters
 		"src/adapters/outbound",
 		"src/adapters/outbound/repositories",
-		"src/adapters/outbound/repositories/database",
-		"src/adapters/outbound/repositories/database/mysql",
-		"src/adapters/outbound/repositories/database/postgresql",
-		"src/adapters/outbound/repositories/database/entities",
-		"src/adapters/outbound/repositories/in-memory",
-		"src/adapters/outbound/repositories/file-system",
+		"src/adapters/outbound/repositories/mysql",
+		"src/adapters/outbound/repositories/redis",
+		"src/adapters/outbound/repositories/entities",
+		"src/adapters/outbound/repositories/queries",
+		"src/adapters/outbound/repositories/mappers",
 		"src/adapters/outbound/external-services",
 		"src/adapters/outbound/external-services/email",
-		"src/adapters/outbound/external-services/hash",
-		"src/adapters/outbound/external-services/events",
-		"src/adapters/outbound/external-services/logging",
+		"src/adapters/outbound/external-services/auth",
+		"src/adapters/outbound/external-services/storage",
 		"src/adapters/outbound/infrastructure",
 		"src/adapters/outbound/infrastructure/database",
-		"src/adapters/outbound/infrastructure/message-queue",
-		"src/adapters/outbound/infrastructure/file-storage",
+		"src/adapters/outbound/infrastructure/cache",
+		"src/adapters/outbound/infrastructure/server",
 
-		// Configuration
+		// Shared/Common
+		"src/shared",
+		"src/shared/utils",
+		"src/shared/constants",
+		"src/shared/exceptions",
+		"src/shared/types",
+
+		// Configuration & DI
 		"src/config",
 		"src/config/dependencies",
 		"src/config/database",
-		"src/config/database/migrations",
 		"src/config/environment",
 
 		// Main (Bootstrap)
 		"src/main",
 
-		// Base directories
+		// External directories
 		"database",
-		"uploads",
-		"logs",
+		"database/backups",
+		"database/schema",
+		"database/migrations",
+		"database/seeds",
+		"storage",
+		"storage/uploads",
+		"storage/uploads/avatars",
+		"storage/uploads/documents",
+		"storage/logs",
+		"tests",
+		"tests/unit",
+		"tests/integration",
+		"tests/functional",
+		"tests/e2e",
+		".github",
+		".github/workflows",
 	}
+
 }
