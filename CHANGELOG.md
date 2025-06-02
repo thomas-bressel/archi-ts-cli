@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+
+## [1.4.0] - 2025-06-02
+    - Generate package.json file with the selected language type.
+    - Generate .env file template.
+
 ## [1.3.0] - 2025-05-31
 - Adding a prompt to choose the language type between typescript and javascript. 
 - Adding a 3rd choice into the architecture prompt.

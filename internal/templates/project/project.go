@@ -27,6 +27,11 @@ func GenerateProject(cfg ProjectConfig) error {
 		return fmt.Errorf("error during the files creation: %w", err)
 	}
 
+	// .env
+	if err := utils.WriteFile(".env", files.GetEnvTemplate()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
