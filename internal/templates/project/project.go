@@ -79,5 +79,10 @@ func generateBaseFiles(cfg ProjectConfig) error {
 		}
 	}
 
+	// .gitignore
+	if err := utils.WriteFile(".gitignore", files.GetGitignoreTemplate()); err != nil {
+		return err
+	}
+
 	return nil
 }
