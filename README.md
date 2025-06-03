@@ -10,31 +10,33 @@ Archi-TS-CLI is a Go-based command-line tool (CLI) designed to simplify project 
 
 ## Prerequisites
 - **Go** (version 1.18 or higher)
+- **Linux** (or use WSL on windows systems)
 
 ## Installation
 Clone the repository and build the project:
 ```bash
 git clone https://github.com/thomas-bressel/archi-ts-cli.git
 cd archi-ts-cli
-go build -o archi
+make install
+source ~/.bashrc
 ```
 
 ## Usage
 Run the following command to display help:
 ```bash
-./archi --help
+archi --help
 ```
 
 ### Example
 To generate a project structure:
 ```bash
-./archi create
+archi create
 ```
 
 ## Contribution
 Contributions are welcome! Please follow these steps:
 1. Fork the project.
-2. Create a branch for your changes: `git checkout -b feature/your-feature-name`.
+2. Create a branch for your changes: `git checkout -b feature/your-feature-name`.  (feature soon to come !)
 3. Submit a pull request.
 
 ## License

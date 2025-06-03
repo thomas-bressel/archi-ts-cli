@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.5.1] - 2025-06-03
+## [1.5.2] - 2025-06-03
 ### Added
     - Generate tsconfig.json file if typescript is selected
     - Generate .gitignore file
@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
     - Add a new prompt to install Express Library or not
 ### Update
     - Update the package.json template and logic to add dev dependencies in the right order
+    - Add a make file to automatize installation and configuration
 
 ## [1.4.0] - 2025-06-02
 ### Added
