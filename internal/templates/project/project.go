@@ -84,5 +84,21 @@ func generateBaseFiles(cfg ProjectConfig) error {
 		return err
 	}
 
+	// jest.config.ts or js
+	configFile := "jest.config." + getFileExtension(cfg.Language)
+	if err := utils.WriteFile(configFile, files.GetJestConfigTemplate(getFileExtension(cfg.Language))); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+/*
+getFileExtension return ts or js depending the language
+*/
+func getFileExtension(language string) string {
+	if language == "typescript" {
+		return "ts"
+	}
+	return "js"
 }

@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.5.0] - 2025-06-03
     - Generate tsconfig.json file if typescript is selected
     - Generate .gitignore file
+    - Generate jest.config file with different configuration ts or js
 
 ## [1.4.0] - 2025-06-02
     - Generate package.json file with the selected language type.
