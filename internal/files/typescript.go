@@ -1,0 +1,27 @@
+package files
+
+// GetTsconfigTemplate generate this template for the tsconfig.json file
+func GetTsconfigTemplate() string {
+	return `{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "src/*": ["src/*"],
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules", "**/*.test.ts"]
+}
+`
+}

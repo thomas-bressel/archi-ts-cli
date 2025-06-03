@@ -72,5 +72,12 @@ func generateBaseFiles(cfg ProjectConfig) error {
 		return err
 	}
 
+	// tsconfig.json (if the option typescript is selected)
+	if cfg.Language == "typescript" {
+		if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate()); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
