@@ -85,3 +85,30 @@ func PromptLanguage() (string, error) {
 	}
 	return "javascript", nil
 }
+
+/*
+ * PromptExpress asks if the user wants to use ExpressJS library
+ */
+func PromptExpress() (bool, error) {
+	prompt := promptui.Select{
+		Label: "Do you want to use ExpressJS library?",
+		Items: []string{
+			"Yes, install Express",
+			"No, I don't need Express",
+		},
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
+			Active:   color.New(color.FgYellow).Sprint("▸ {{ . | yellow }}"),
+			Inactive: "  {{ . | faint }}",
+			Selected: color.New(color.FgGreen).Sprint("✓ {{ . | green }}"),
+		},
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		return false, err
+	}
+
+	// Return true if user wants Express, false otherwise
+	return result == "Yes, install Express", nil
+}

@@ -11,6 +11,7 @@ type ProjectConfig struct {
 	Name         string
 	Architecture string
 	Language     string
+	Express      bool
 }
 
 /*
@@ -64,7 +65,7 @@ func createDirectoryStructure(architecture string) error {
 func generateBaseFiles(cfg ProjectConfig) error {
 
 	// Package.json
-	packageContent, err := files.GeneratePackageJson(cfg.Name, cfg.Language)
+	packageContent, err := files.GeneratePackageJson(cfg.Name, cfg.Language, cfg.Express)
 	if err != nil {
 		return err
 	}

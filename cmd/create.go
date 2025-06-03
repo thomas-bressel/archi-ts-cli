@@ -47,6 +47,12 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error when choosing a language: %w", err)
 	}
 
+	// Prompt 4 - Express Library ?
+	express, err := prompts.PromptExpress()
+	if err != nil {
+		return fmt.Errorf("error when choosing express library: %w", err)
+	}
+
 	///////////////////////////////////////////////
 	// End collecting the result of each prompts //
 	///////////////////////////////////////////////
@@ -65,6 +71,11 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	color.New(color.FgYellow).Printf("📁 Project created at: %s\n", projectPath)
 	color.New(color.FgBlue).Printf("Architecture: %s\n", architecture)
 	color.New(color.FgGreen).Printf("Language: %s\n", language)
+	expressStatus := "No"
+	if express {
+		expressStatus = "Yes"
+	}
+	color.New(color.FgHiMagenta).Printf("Express Library: %s\n", expressStatus)
 	fmt.Println()
 
 	// Store the configuration in a struct and generate the project
@@ -72,6 +83,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		Name:         projectName,
 		Architecture: architecture,
 		Language:     language,
+		Express:      express,
 	}
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the prject: %w", err)
