@@ -110,3 +110,11 @@ It stores the result of each prompt in an object `config` to use it into the las
 
 - `generateBaseFile()`: is calling the template function to create base file with  `WriteFile()`
 
+
+## 💖 Sponsor
+
+If you find this project valuable and would like to support its development:
+
+[Donate with PayPal](https://www.paypal.com/donate/?hosted_button_id=UMJGHGGV4YUHE)
+
+Your support helps me maintain and improve this project. Thank you! 🙏

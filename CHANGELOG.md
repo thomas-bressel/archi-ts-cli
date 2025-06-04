@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
     - Corrige les erreurs rencontrées lors d’un premier make install sur un dépôt fraîchement cloné.
 ## Fix 
     - Suppression de npm init .... stupide vu que le package.json a déjà été généré !
+    - Ajout d'un lien de don paypal pour ceux qui souhaite aider à financer ce projet.
 
 
 ## [1.5.2] - 2025-06-03
