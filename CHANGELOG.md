@@ -5,15 +5,17 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
-## [1.6.1] - 2025-06-04
+## [1.6.2] - 2025-06-04
 ## Added
     - Execution de npm init une fois la configuration validé.
     - Ececution de l'installation de dependances.
     - Execution de l'installation de pnpm.
-## Fix (Thanks for your feedback Mahery Randrianirina ;)
+## Fix (Merci à Mahery Randrianirina pour le petit feedback ;)
     - Ajout de l'initialisation automatique du module Go (go mod init) si le fichier go.mod est absent.
     - Installation automatique des dépendances via go mod tidy lors du make build.
     - Corrige les erreurs rencontrées lors d’un premier make install sur un dépôt fraîchement cloné.
+## Fix 
+    - Suppression de npm init .... stupide vu que le package.json a déjà été généré !
 
 
 ## [1.5.2] - 2025-06-03

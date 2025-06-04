@@ -90,11 +90,14 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error during the generation of the prject: %w", err)
 	}
 
-	// npm & dependencies installation
-	color.New(color.FgBlue).Println("📦 npm init...")
-	if err := utils.RunNpmInit(); err != nil {
-		color.New(color.FgRed).Printf("⚠️  Error during npm init: %v\n", err)
-	}
+	/*
+		Useless action npm init not necessary beacause package.json has been already generated!
+	*/
+	// // npm & dependencies installation
+	// color.New(color.FgBlue).Println("📦 npm init...")
+	// if err := utils.RunNpmInit(); err != nil {
+	// 	color.New(color.FgRed).Printf("⚠️  Error during npm init: %v\n", err)
+	// }
 
 	// dev dependencies and main dependencies installation
 	color.New(color.FgBlue).Println("📦 Dependencies installation...")

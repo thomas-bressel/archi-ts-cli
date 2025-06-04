@@ -6,13 +6,17 @@ import (
 	"github.com/fatih/color"
 )
 
-// RunNpmInit init npm project
-func RunNpmInit() error {
-	cmd := exec.Command("npm", "init", "-y")
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-	return cmd.Run()
-}
+/*
+Useless code : don't need to npm init if package.json has been already generated
+*/
+
+// // RunNpmInit init npm project
+// func RunNpmInit() error {
+// 	cmd := exec.Command("npm", "init", "-y")
+// 	cmd.Stdout = nil
+// 	cmd.Stderr = nil
+// 	return cmd.Run()
+// }
 
 // InstallDependencies install dependencies depending of the language
 func InstallDependencies(language string) error {
