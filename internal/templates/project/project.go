@@ -28,11 +28,6 @@ func GenerateProject(cfg ProjectConfig) error {
 		return fmt.Errorf("error during the files creation: %w", err)
 	}
 
-	// .env
-	if err := utils.WriteFile(".env", files.GetEnvTemplate()); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -70,6 +65,11 @@ func generateBaseFiles(cfg ProjectConfig) error {
 		return err
 	}
 	if err := utils.WriteFile("package.json", packageContent); err != nil {
+		return err
+	}
+
+	// .env
+	if err := utils.WriteFile(".env", files.GetEnvTemplate()); err != nil {
 		return err
 	}
 

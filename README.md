@@ -12,6 +12,7 @@ Archi-TS-CLI is a Go-based command-line tool (CLI) designed to simplify project 
 - **Go** (version 1.18 or higher)
 - **Linux** (or use WSL on windows systems)
 
+
 ## Installation
 Clone the repository and build the project:
 ```bash
@@ -66,3 +67,35 @@ ____________________________________
 **Prompts commands**
 - `prompts/prompts.go`: the creation of a prompts starts here in a named function.
 - `cmd/create.go`: to use your prompt functions, have a look into the runCreate function.
+
+
+## How does it work ??? 
+
+
+**Launch commands**
+- `init()`: is the first function executed before main().
+It adds the content of `createCmd` to the content of `rootCmd` by the cobra method `AddCommand()`
+To add more commands to le CLI, its the place where you must had them.
+
+- `main()`: is the second function executed after `init()`.
+It lauches the `Execute()` cobra function.
+
+- `Execute()`: is a methode from cobra library.
+It reads what is after the instruction `archi` and run the right function.
+(exemple : Use = command name, RunE = function to execute)
+
+
+
+**Prompts List**
+- `runCreate()`: Execute a list of function that manage prompts, stock the results, and execute the result.
+It stores the result of each prompt in an object `config` to use it into the last function to create the project `GenerateProject()`
+
+
+
+**Project Generation**
+- `GenerateProject()`: is the main function that manage the whole creation of folders `createDirectoryStructure()` and base files `generateBaseFiles()`
+
+- `createDirectoryStrucure()`: is calling the template function choose by the user and create them `CreateDirectory()`
+
+- `generateBaseFile()`: is calling the template function to create base file with  `WriteFile()`
+

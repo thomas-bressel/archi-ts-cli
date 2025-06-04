@@ -13,16 +13,16 @@ It helps you quickly scaffold projects with clean architecture patterns.`,
 }
 
 /*
-* Initialize the root command and add subcommands.
- */
-func Execute() error {
-	return rootCmd.Execute()
-}
-
-/*
-* Initialize the configuration for the CLI.
- */
+Step 1 - Initialize the configuration for the CLI.
+*/
 func init() {
 	// Add subcommands
 	rootCmd.AddCommand(createCmd)
+}
+
+/*
+Step 2 - Initialize the root command and add subcommands.
+*/
+func Execute() error {
+	return rootCmd.Execute()
 }
