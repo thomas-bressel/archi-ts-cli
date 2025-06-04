@@ -96,6 +96,12 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		color.New(color.FgRed).Printf("⚠️  Error during npm init: %v\n", err)
 	}
 
+	// dev dependencies and main dependencies installation
+	color.New(color.FgBlue).Println("📦 Dependencies installation...")
+	if err := utils.InstallDependencies(language); err != nil {
+		color.New(color.FgRed).Printf("⚠️  Error during dependencies installation: %v\n", err)
+	}
+
 	// Success message
 	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
