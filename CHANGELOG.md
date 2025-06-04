@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.6.1] - 2025-06-04
+## Added
+    - Execution de npm init une fois la configuration validé
+## Fix (Thanks for your feedback Mahery Randrianirina ;)
+    - Ajout de l'initialisation automatique du module Go (go mod init) si le fichier go.mod est absent.
+    - Installation automatique des dépendances via go mod tidy lors du make build.
+    - Corrige les erreurs rencontrées lors d’un premier make install sur un dépôt fraîchement cloné.
+
+
 ## [1.5.2] - 2025-06-03
 ### Added
     - Generate tsconfig.json file if typescript is selected
@@ -14,10 +24,14 @@ All notable changes to this project will be documented in this file.
     - Update the package.json template and logic to add dev dependencies in the right order
     - Add a make file to automatize installation and configuration
 
+
+
 ## [1.4.0] - 2025-06-02
 ### Added
     - Generate package.json file with the selected language type.
     - Generate .env file template.
+
+
 
 ## [1.3.0] - 2025-05-31
 ### Added
@@ -25,9 +39,13 @@ All notable changes to this project will be documented in this file.
 - Adding a 3rd choice into the architecture prompt.
 - Create folders structure depends the architecture type.
 
+
+
 ## [1.1.0] - 2025-05-30
 ### Added
 - Adding a first prompt to the project to enter the name of the project with command `./archi create`
+
+
 
 ## [1.0.0] - 2025-05-30
 ### Added

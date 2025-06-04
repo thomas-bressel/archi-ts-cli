@@ -6,10 +6,10 @@ MODULE_NAME = github.com/thomas-bressel/archi-ts-cli
 
 build:
 	@if [ ! -f go.mod ]; then \
-		echo "🔧 Initialisation du module Go..."; \
+		echo "🔧 Initialisation of Go mudule ..."; \
 		go mod init $(MODULE_NAME); \
 	fi
-	@echo "📦 Installation des dépendances..."
+	@echo "📦 Dependencies installation..."
 	go mod tidy
 	go build -o $(BINARY_NAME)
 
@@ -17,17 +17,17 @@ install: build
 	mkdir -p $(INSTALL_PATH)
 	cp $(BINARY_NAME) $(INSTALL_PATH)/
 	rm -f $(BINARY_NAME)
-	@echo "✅ $(BINARY_NAME) installé dans $(INSTALL_PATH)"
+	@echo "✅ $(BINARY_NAME) installed in $(INSTALL_PATH)"
 	@echo ""
 	@if ! echo "$$PATH" | grep -q "$(INSTALL_PATH)"; then \
-		echo "⚠️  $(INSTALL_PATH) n'est pas dans votre PATH"; \
-		echo "Ajoutez cette ligne à votre ~/.bashrc :"; \
+		echo "⚠️  $(INSTALL_PATH) is not in PATH"; \
+		echo "Add this line to your ~/.bashrc :"; \
 		echo "export PATH=\"\$$PATH:$(INSTALL_PATH)\""; \
 		echo ""; \
-		echo "Puis exécutez : source ~/.bashrc"; \
+		echo "Then execute : source ~/.bashrc"; \
 	else \
-		echo "✅ $(INSTALL_PATH) est déjà dans le PATH"; \
-		echo "Vous pouvez maintenant utiliser : $(BINARY_NAME) create"; \
+		echo "✅ $(INSTALL_PATH) is already in le PATH"; \
+		echo "Now you can use : $(BINARY_NAME) create"; \
 	fi
 
 # Add to PATH safely (only if user explicitly asks)

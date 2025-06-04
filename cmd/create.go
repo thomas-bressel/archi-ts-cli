@@ -3,6 +3,7 @@ package cmd
 import (
 	"archi-ts-cli/internal/prompts"
 	"archi-ts-cli/internal/templates/project"
+	"archi-ts-cli/internal/utils"
 
 	"fmt"
 	"os"
@@ -88,9 +89,20 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the prject: %w", err)
 	}
+
+	// npm & dependencies installation
+	color.New(color.FgBlue).Println("📦 npm init...")
+	if err := utils.RunNpmInit(); err != nil {
+		color.New(color.FgRed).Printf("⚠️  Error during npm init: %v\n", err)
+	}
+
 	// Success message
+	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
 	fmt.Println()
+	color.New(color.FgCyan).Printf("📂 Project name: %s\n", projectName)
+	color.New(color.FgCyan).Printf("Architecture: %s\n", architecture)
+	color.New(color.FgCyan).Printf("Language: %s\n", language)
 
 	return nil
 }

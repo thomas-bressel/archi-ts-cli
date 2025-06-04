@@ -11,6 +11,7 @@ Archi-TS-CLI is a Go-based command-line tool (CLI) designed to simplify project 
 ## Prerequisites
 - **Go** (version 1.18 or higher)
 - **Linux** (or use WSL on windows systems)
+- **Node & npm** (LTS version)
 
 
 ## Installation
@@ -86,11 +87,21 @@ It reads what is after the instruction `archi` and run the right function.
 
 
 
-**Prompts List**
+**Create workflow**
 - `runCreate()`: Execute a list of function that manage prompts, stock the results, and execute the result.
+
+*Prompts :*
+1 - `PromptProjectName()`
+2 - `PromptArchitecture()`
+3 - `PromptLanguage()`
+4 - `PromptExpress()`
+
 It stores the result of each prompt in an object `config` to use it into the last function to create the project `GenerateProject()`
 
-
+*Execution :*
+1 - `RunNpmInit()`
+2 - `InstallDependencies()`
+3 - `InstallPnpm()`
 
 **Project Generation**
 - `GenerateProject()`: is the main function that manage the whole creation of folders `createDirectoryStructure()` and base files `generateBaseFiles()`
