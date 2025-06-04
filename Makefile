@@ -2,7 +2,7 @@
 
 BINARY_NAME = archi
 INSTALL_PATH = $(HOME)/bin
-MODULE_NAME = github.com/thomas-bressel/archi-ts-cli
+MODULE_NAME = archi-ts-cli
 
 build:
 	@if [ ! -f go.mod ]; then \
