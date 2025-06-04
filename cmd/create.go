@@ -102,6 +102,11 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		color.New(color.FgRed).Printf("⚠️  Error during dependencies installation: %v\n", err)
 	}
 
+	color.New(color.FgBlue).Println("📦 Installation de pnpm...")
+	if err := utils.InstallPnpm(); err != nil {
+		color.New(color.FgRed).Printf("⚠️  Error during pnpm installation: %v\n", err)
+	}
+
 	// Success message
 	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
@@ -109,6 +114,11 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	color.New(color.FgCyan).Printf("📂 Project name: %s\n", projectName)
 	color.New(color.FgCyan).Printf("Architecture: %s\n", architecture)
 	color.New(color.FgCyan).Printf("Language: %s\n", language)
+	fmt.Println()
+	color.New(color.FgYellow).Println("To start:")
+	fmt.Printf("  cd %s\n", projectName)
+	fmt.Println("  npm start")
+	fmt.Println()
 
 	return nil
 }

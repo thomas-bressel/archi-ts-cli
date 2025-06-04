@@ -68,3 +68,10 @@ func InstallDependencies(language string) error {
 
 	return nil
 }
+
+// InstallPnpm install global pnpm
+func InstallPnpm() error {
+	color.New(color.FgBlue).Println("   Installing pnpm...")
+	cmd := exec.Command("sh", "-c", "curl -fsSL https://get.pnpm.io/install.sh | sh")
+	return cmd.Run()
+}
