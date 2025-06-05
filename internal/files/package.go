@@ -59,7 +59,7 @@ func getMainFile(language string) string {
 func getScripts(language string) map[string]string {
 	if language == "typescript" {
 		return map[string]string{
-			"start":    "node dist/index.js",
+			"start":    "node dist/src/index.js",
 			"dev":      "nodemon src/index.ts",
 			"build":    "tsc",
 			"watch":    "tsc --watch",

@@ -91,6 +91,12 @@ func generateBaseFiles(cfg ProjectConfig) error {
 		return err
 	}
 
+	// src/index
+	indexFile := "src/index." + getFileExtension(cfg.Language)
+	if err := utils.WriteFile(indexFile, files.GetIndexTemplate(cfg.Language, cfg.Express)); err != nil {
+		return err
+	}
+
 	return nil
 }
 

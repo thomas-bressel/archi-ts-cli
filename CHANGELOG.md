@@ -5,12 +5,16 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+
+
+## [1.7.0] - 2025-06-05
+## Added
+    - Generation of index.ts or index.js file depending of express or juste node choosen
+
 ## [1.6.3] - 2025-06-05
 ## Fix
     - Correction dans le fichier npm.go en placant une condition pour l'installation d'Express dans le package.json
     - Ajout de la confirmation si Express a été installé ou non dans le compte rendu de l'installation
-
-
 
 ## [1.6.2] - 2025-06-04
 ## Added

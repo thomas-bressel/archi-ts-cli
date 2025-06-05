@@ -112,7 +112,16 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 	color.New(color.FgYellow).Println("To start:")
 	fmt.Printf("  cd %s\n", projectName)
-	fmt.Println("  npm start")
+
+	if language == "typescript" {
+		fmt.Printf("  npm run dev (local development with nodemon)\n")
+		fmt.Printf("  npm run build (before npm start)\n")
+		fmt.Printf("  npm start (after npm build)\n")
+	} else {
+		fmt.Printf("  npm run dev (local development with nodemon)\n")
+		fmt.Printf("  npm start \n")
+	}
+
 	fmt.Println()
 
 	return nil
