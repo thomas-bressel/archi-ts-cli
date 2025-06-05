@@ -4,66 +4,57 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-
-
-
 ## [1.7.0] - 2025-06-05
-## Added
-    - Generation of index.ts or index.js file depending of express or juste node choosen
+### Added
+- Generation of index.ts or index.js file depending on Express or vanilla Node.js choice
 
 ## [1.6.3] - 2025-06-05
-## Fix
-    - Correction dans le fichier npm.go en placant une condition pour l'installation d'Express dans le package.json
-    - Ajout de la confirmation si Express a été installé ou non dans le compte rendu de l'installation
+### Fixed
+- Fixed npm.go file by adding condition for Express installation in package.json
+- Added confirmation display for Express installation status in the installation report
 
 ## [1.6.2] - 2025-06-04
-## Added
-    - Execution de npm init une fois la configuration validé.
-    - Ececution de l'installation de dependances.
-    - Execution de l'installation de pnpm.
-## Fix (Merci à Mahery Randrianirina pour le petit feedback ;)
-    - Ajout de l'initialisation automatique du module Go (go mod init) si le fichier go.mod est absent.
-    - Installation automatique des dépendances via go mod tidy lors du make build.
-    - Corrige les erreurs rencontrées lors d’un premier make install sur un dépôt fraîchement cloné.
-## Fix 
-    - Suppression de npm init .... stupide vu que le package.json a déjà été généré !
-    - Ajout d'un lien de don paypal pour ceux qui souhaite aider à financer ce projet.
+### Added
+- Execution of npm init after configuration validation
+- Execution of dependencies installation
+- Execution of pnpm installation
 
+### Fixed
+- Added automatic Go module initialization (go mod init) if go.mod file is missing
+- Added automatic dependencies installation via go mod tidy during make build
+- Fixed errors encountered during first make install on freshly cloned repository
+- Removed npm init execution (redundant since package.json is already generated)
+- Added PayPal donation link for those who wish to support this project
+
+*Thanks to Mahery Randrianirina for the helpful feedback! ;)*
 
 ## [1.5.2] - 2025-06-03
 ### Added
-    - Generate tsconfig.json file if typescript is selected
-    - Generate .gitignore file
-    - Generate jest.config file with different configuration ts or js
-    - Add a new prompt to install Express Library or not
-### Update
-    - Update the package.json template and logic to add dev dependencies in the right order
-    - Add a make file to automatize installation and configuration
+- Generate tsconfig.json file if TypeScript is selected
+- Generate .gitignore file
+- Generate jest.config file with different configuration for TS or JS
+- Add new prompt to choose Express library installation
 
-
+### Changed
+- Updated package.json template and logic to add dev dependencies in correct order
+- Added Makefile to automate installation and configuration
 
 ## [1.4.0] - 2025-06-02
 ### Added
-    - Generate package.json file with the selected language type.
-    - Generate .env file template.
-
-
+- Generate package.json file with the selected language type
+- Generate .env file template
 
 ## [1.3.0] - 2025-05-31
 ### Added
-- Adding a prompt to choose the language type between typescript and javascript. 
-- Adding a 3rd choice into the architecture prompt.
-- Create folders structure depends the architecture type.
-
-
+- Added prompt to choose language type between TypeScript and JavaScript
+- Added 3rd architecture choice to the architecture prompt
+- Create folder structure based on the selected architecture type
 
 ## [1.1.0] - 2025-05-30
 ### Added
-- Adding a first prompt to the project to enter the name of the project with command `./archi create`
-
-
+- Added first prompt to enter project name with `./archi create` command
 
 ## [1.0.0] - 2025-05-30
 ### Added
-- Starting the project development
-- Setting up the initial project structure
+- Started project development
+- Set up initial project structure
