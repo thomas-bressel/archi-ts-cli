@@ -6,26 +6,13 @@ import (
 	"github.com/fatih/color"
 )
 
-/*
-Useless code : don't need to npm init if package.json has been already generated
-*/
-
-// // RunNpmInit init npm project
-// func RunNpmInit() error {
-// 	cmd := exec.Command("npm", "init", "-y")
-// 	cmd.Stdout = nil
-// 	cmd.Stderr = nil
-// 	return cmd.Run()
-// }
-
 // InstallDependencies install dependencies depending of the language
-func InstallDependencies(language string) error {
+func InstallDependencies(language string, express bool) error {
 	var dependencies []string
 	var devDependencies []string
 
 	// Dépendances communes
 	dependencies = []string{
-		"express",
 		"cors",
 		"dotenv",
 	}
@@ -35,7 +22,6 @@ func InstallDependencies(language string) error {
 		devDependencies = []string{
 			"typescript",
 			"@types/node",
-			"@types/express",
 			"@types/cors",
 			"ts-node",
 			"nodemon",
@@ -48,6 +34,12 @@ func InstallDependencies(language string) error {
 			"nodemon",
 			"eslint",
 		}
+	}
+
+	// Add Express if selected in prompts
+	if express {
+		devDependencies = append(devDependencies, "@types/express")
+		dependencies = append(dependencies, "express")
 	}
 
 	// Install main dependencies
