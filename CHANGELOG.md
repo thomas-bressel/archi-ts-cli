@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.0] - 2025-06-05
 ### Added
-- Generation of index.ts or index.js file depending on Express or vanilla Node.js choice
+- Generation of index.ts or index.js file depending on Express or vanilla Node.js choice.
 
 ## [1.6.3] - 2025-06-05
 ### Fixed
