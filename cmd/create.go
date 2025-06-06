@@ -23,6 +23,7 @@ var createCmd = &cobra.Command{
 func runCreate(cmd *cobra.Command, args []string) error {
 
 	// Banner
+	utils.DisplayBanner()
 	color.New(color.FgCyan, color.Bold).Println("🚀 ArchiTS CLI - Project Scaffolding")
 	fmt.Println()
 

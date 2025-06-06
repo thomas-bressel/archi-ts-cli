@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.8.0] - 2025-06-06
+### Added
+- New command archi version to display versions of Linuc, Go, Node and Archi TS
+
 ## [1.7.0] - 2025-06-05
 ### Added
 - Generation of index.ts or index.js file depending on Express or vanilla Node.js choice.
