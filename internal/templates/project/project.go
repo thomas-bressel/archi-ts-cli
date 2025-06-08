@@ -2,6 +2,7 @@ package project
 
 import (
 	"archi-ts-cli/internal/config"
+	"archi-ts-cli/internal/models"
 
 	"archi-ts-cli/internal/files"
 	"archi-ts-cli/internal/utils"
@@ -9,18 +10,10 @@ import (
 	"time"
 )
 
-// ProjectConfig type to defnie the configuration of the project
-type ProjectConfig struct {
-	Name         string
-	Architecture string
-	Language     string
-	Express      bool
-}
-
 /*
 GenerateProject to generate the project structure and files based on the configuration
 */
-func GenerateProject(cfg ProjectConfig) error {
+func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	// Create the project directory
 	if err := createDirectoryStructure(cfg.Architecture); err != nil {
 		return fmt.Errorf("error during the folders creation: %w", err)
@@ -32,16 +25,16 @@ func GenerateProject(cfg ProjectConfig) error {
 	}
 
 	// Generate the config file of the project
-	projectConfig := config.ProjectConfig{
+	projectConfigFile := models.ProjectConfigFile{
 		Name:         cfg.Name,
 		Version:      "1.0.0",
 		Architecture: cfg.Architecture,
 		Language:     cfg.Language,
 		Express:      cfg.Express,
-		CreatedAt:    time.Now().Format(time.RFC3339),
+		CreatedAt:    time.Now(),
 	}
 
-	if err := config.SaveProjectConfig(projectConfig); err != nil {
+	if err := config.SaveProjectConfig(projectConfigFile); err != nil {
 		return fmt.Errorf("erreur lors de la sauvegarde de la configuration: %w", err)
 	}
 
@@ -51,15 +44,15 @@ func GenerateProject(cfg ProjectConfig) error {
 /*
 * createDirectoryStructure creates the directory structure based on the chosen architecture
  */
-func createDirectoryStructure(architecture string) error {
+func createDirectoryStructure(architecture models.Architecture) error {
 	var directories []string
 
 	switch architecture {
-	case "Layered Architecture":
+	case models.LayeredArchitecture:
 		directories = getLayeredDirectories()
-	case "Clean Architecture":
+	case models.CleanArchitecture:
 		directories = getCleanDirectories()
-	case "Hexagonal Architecture":
+	case models.HexagonalArchitecture:
 		directories = getHexagonalDirectories()
 	default:
 		directories = getLayeredDirectories() // Default
@@ -74,10 +67,10 @@ func createDirectoryStructure(architecture string) error {
 }
 
 // generateBaseFiles create the base files for the project
-func generateBaseFiles(cfg ProjectConfig) error {
+func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 
 	// Package.json
-	packageContent, err := files.GeneratePackageJson(cfg.Name, cfg.Language, cfg.Express)
+	packageContent, err := files.GeneratePackageJson(cfg.Name, string(cfg.Language), cfg.Express)
 	if err != nil {
 		return err
 	}
@@ -91,7 +84,7 @@ func generateBaseFiles(cfg ProjectConfig) error {
 	}
 
 	// tsconfig.json (if the option typescript is selected)
-	if cfg.Language == "typescript" {
+	if cfg.Language == models.TypeScript {
 		if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate()); err != nil {
 			return err
 		}
@@ -103,14 +96,14 @@ func generateBaseFiles(cfg ProjectConfig) error {
 	}
 
 	// jest.config.ts or js
-	configFile := "jest.config." + getFileExtension(cfg.Language)
-	if err := utils.WriteFile(configFile, files.GetJestConfigTemplate(getFileExtension(cfg.Language))); err != nil {
+	configFile := "jest.config." + cfg.GetFileExtension()
+	if err := utils.WriteFile(configFile, files.GetJestConfigTemplate(cfg.GetFileExtension())); err != nil {
 		return err
 	}
 
 	// src/index
-	indexFile := "src/index." + getFileExtension(cfg.Language)
-	if err := utils.WriteFile(indexFile, files.GetIndexTemplate(cfg.Language, cfg.Express)); err != nil {
+	indexFile := "src/index." + cfg.GetFileExtension()
+	if err := utils.WriteFile(indexFile, files.GetIndexTemplate(string(cfg.Language), cfg.Express)); err != nil {
 		return err
 	}
 

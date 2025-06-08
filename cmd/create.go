@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/prompts"
 	"archi-ts-cli/internal/templates/project"
 	"archi-ts-cli/internal/utils"
@@ -12,13 +13,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
-
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new project architecture",
-	Long:  `Create a new backend project with predefined architecture and structure.`,
-	RunE:  runCreate,
-}
 
 func runCreate(cmd *cobra.Command, args []string) error {
 
@@ -81,19 +75,20 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 
 	// Store the configuration in a struct and generate the project
-	config := project.ProjectConfig{
+	config := models.ProjectConfigBuilder{
 		Name:         projectName,
-		Architecture: architecture,
-		Language:     language,
+		Architecture: models.Architecture(architecture),
+		Language:     models.Language(language),
 		Express:      express,
 	}
+
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the prject: %w", err)
 	}
 
 	// dev dependencies and main dependencies installation
 	color.New(color.FgBlue).Println("📦 Dependencies installation...")
-	if err := utils.InstallDependencies(language, express); err != nil {
+	if err := utils.InstallDependencies(string(language), express); err != nil {
 		color.New(color.FgRed).Printf("⚠️  Error during dependencies installation: %v\n", err)
 	}
 

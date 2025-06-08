@@ -1,36 +1,16 @@
 package config
 
 import (
+	"archi-ts-cli/internal/models"
 	"encoding/json"
 	"os"
 	"path/filepath"
 )
 
 /*
-ProjectConfig is about the project config
-*/
-type ProjectConfig struct {
-	Name         string `json:"name"`
-	Version      string `json:"version"`
-	Architecture string `json:"architecture"`
-	Language     string `json:"language"`
-	Express      bool   `json:"express"`
-	CreatedAt    string `json:"created_at"`
-}
-
-/*
-ArchiConfig is about the whole CLI config
-*/
-type ArchiConfig struct {
-	DefaultArchitecture string `json:"default_architecture"`
-	DefaultLanguage     string `json:"default_language"`
-	TemplatesPath       string `json:"templates_path"`
-}
-
-/*
 SaveProjectConfig stores the project config
 */
-func SaveProjectConfig(config ProjectConfig) error {
+func SaveProjectConfig(config models.ProjectConfigFile) error {
 	configPath := filepath.Join(".", ".archi", "config.json")
 
 	// Create .archi folder if it doesn't exists
@@ -51,7 +31,7 @@ func SaveProjectConfig(config ProjectConfig) error {
 /*
 LoadProjectConfig load the project config
 */
-func LoadProjectConfig() (*ProjectConfig, error) {
+func LoadProjectConfig() (*models.ProjectConfigFile, error) {
 	configPath := filepath.Join(".", ".archi", "config.json")
 
 	// check if the file exists
@@ -66,7 +46,7 @@ func LoadProjectConfig() (*ProjectConfig, error) {
 	}
 
 	// JSOn decode
-	var config ProjectConfig
+	var config models.ProjectConfigFile
 	if err := json.Unmarshal(data, &config); err != nil {
 		return nil, err
 	}
@@ -75,8 +55,8 @@ func LoadProjectConfig() (*ProjectConfig, error) {
 }
 
 // GetDefaultConfig return the default config of an archiTS project
-func GetDefaultConfig() ArchiConfig {
-	return ArchiConfig{
+func GetDefaultConfig() models.ArchiConfig {
+	return models.ArchiConfig{
 		DefaultArchitecture: "Entity Clean Architecture",
 		DefaultLanguage:     "typescript",
 		TemplatesPath:       "./templates",
