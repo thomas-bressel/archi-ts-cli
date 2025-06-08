@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.1] - 2025-06-08
+### Fixed
+- Refacto command variable for the CLI into command.go file.
+- Refecto type of structure intro a new folder called models. 
 
 ## [1.8.0] - 2025-06-06
 ### Added
-- New command archi version to display versions of Linuc, Go, Node and Archi TS
+- New command archi version to display versions of Linux, Go, Node and Archi TS
 
 ## [1.7.0] - 2025-06-05
 ### Added
