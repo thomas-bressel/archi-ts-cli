@@ -1,9 +1,12 @@
 package project
 
 import (
+	"archi-ts-cli/internal/config"
+
 	"archi-ts-cli/internal/files"
 	"archi-ts-cli/internal/utils"
 	"fmt"
+	"time"
 )
 
 // ProjectConfig type to defnie the configuration of the project
@@ -26,6 +29,20 @@ func GenerateProject(cfg ProjectConfig) error {
 	// Generate the base files
 	if err := generateBaseFiles(cfg); err != nil {
 		return fmt.Errorf("error during the files creation: %w", err)
+	}
+
+	// Generate the config file of the project
+	projectConfig := config.ProjectConfig{
+		Name:         cfg.Name,
+		Version:      "1.0.0",
+		Architecture: cfg.Architecture,
+		Language:     cfg.Language,
+		Express:      cfg.Express,
+		CreatedAt:    time.Now().Format(time.RFC3339),
+	}
+
+	if err := config.SaveProjectConfig(projectConfig); err != nil {
+		return fmt.Errorf("erreur lors de la sauvegarde de la configuration: %w", err)
 	}
 
 	return nil
