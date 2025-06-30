@@ -28,7 +28,7 @@ func GeneratePackageJson(name, language string, useExpress bool) (string, error)
 		Scripts:     getScripts(language),
 		Keywords:    getKeywords(useExpress),
 		Author:      "",
-		License:     "ISC",
+		License:     "MIT",
 	}
 
 	// Add dependencies if Express is needed
