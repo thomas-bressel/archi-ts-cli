@@ -118,3 +118,9 @@ If you find this project valuable and would like to support its development:
 [Donate with PayPal](https://www.paypal.com/donate/?hosted_button_id=UMJGHGGV4YUHE)
 
 Your support helps me maintain and improve this project. Thank you! 🙏
+
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).  
+© 2025 Thomas Bressel
