@@ -13,12 +13,12 @@ func GetControllerTestTemplate(cfg EntityConfig) string {
 import { Request, Response } from 'express';
 
 // Layers importation
-import { %sController } from '../../../src/controllers/%s.controller';
-import { %sService } from '../../../src/services/%s.service';
-import { %sRepository } from '../../../src/repositories/%s.repository'; // Note: Only needed if you instantiate the service, which is not ideal for a pure mock.
+import { %sController } from '@controllers/%s.controller';
+import { %sService } from '@services/%s.service';
+import { %sRepository } from '@repositories/%s.repository'; // Note: Only needed if you instantiate the service, which is not ideal for a pure mock.
 
 // Mock the service module
-jest.mock('../../../src/services/%s.service');
+jest.mock('@services/%s.service');
 
 describe('%sController', () => {
   let controller: %sController;
@@ -139,12 +139,12 @@ describe('%sController', () => {
 func GetServiceTestTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
-	return fmt.Sprintf(`import { %sService } from '../../../src/services/%s.service';
-import { %sRepository } from '../../../src/repositories/%s.repository';
-import %s from '../../../src/entities/%s.entity';
+	return fmt.Sprintf(`import { %sService } from '@services/%s.service';
+import { %sRepository } from '@repositories/%s.repository';
+import %s from '@entities/%s.entity';
 
 // Mock the repository module
-jest.mock('../../../src/repositories/%s.repository');
+jest.mock('@repositories/%s.repository');
 
 describe('%sService', () => {
   let service: %sService;
@@ -231,11 +231,11 @@ describe('%sService', () => {
 func GetRepositoryTestTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
-	return fmt.Sprintf(`import { %sRepository } from '../../../src/repositories/%s.repository';
-import %s from '../../../src/entities/%s.entity';
+	return fmt.Sprintf(`import { %sRepository } from '@repositories/%s.repository';
+import %s from '@entities/%s.entity';
 
 // Mock database/ORM if needed
-// jest.mock('../../../src/config/database');
+// jest.mock('@config/database');
 
 describe('%sRepository', () => {
   let repository: %sRepository;

@@ -10,7 +10,7 @@ func GetRepositoryTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`
 // Layer importations
-import %s from '../entities/%s.entity';
+import %s from '@entities/%s.entity';
 
 export class %sRepository {
   // TODO: Add your database connection/ORM here

@@ -13,7 +13,7 @@ func GetControllerTemplate(cfg EntityConfig) string {
 import { Request, Response } from 'express';
 
 // Services importation
-import { %sService } from '../services/%s.service';
+import { %sService } from '@services/%s.service';
 
 // Libraries importation
 import { validate } from 'class-validator';

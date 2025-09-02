@@ -10,8 +10,8 @@ func GetServiceTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`
 // Layer imports
-import { %sRepository } from '../repositories/%s.repository';
-import %s from '../entities/%s.entity';
+import { %sRepository } from '@repositories/%s.repository';
+import %s from '@entities/%s.entity';
 
 export class %sService {
   private %sRepository: %sRepository;

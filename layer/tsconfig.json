@@ -1,8 +1,4 @@
-package files
-
-// GetTsconfigTemplate generate this template for the tsconfig.json file
-func GetTsconfigTemplate() string {
-	return `{
+{
   "compilerOptions": {
     "baseUrl": "./",
     "target": "es2017",
@@ -34,5 +30,3 @@ func GetTsconfigTemplate() string {
   ]
 }
 
-`
-}

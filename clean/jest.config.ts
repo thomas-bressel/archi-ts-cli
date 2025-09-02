@@ -1,8 +1,4 @@
-package files
 
-// GetJestConfigTemplate return a template for jest (TypeScript only)
-func GetJestConfigTemplate() string {
-	return `
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
@@ -10,10 +6,10 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   moduleNameMapper: {
     "^@src/(.*)$": "<rootDir>/src/$1",
-    "^@entities/(.*)$": "<rootDir>/src/entities/$1",
-    "^@controllers/(.*)$": "<rootDir>/src/controllers/$1",
-    "^@services/(.*)$": "<rootDir>/src/services/$1",
-    "^@repositories/(.*)$": "<rootDir>/src/repositories/$1"
+    "^@entities/(.*)$": "<rootDir>/src/domain/entities/$1",
+    "^@controllers/(.*)$": "<rootDir>/src/presentation/controllers/$1",
+    "^@services/(.*)$": "<rootDir>/src/data/services/$1",
+    "^@repositories/(.*)$": "<rootDir>/src/data/repositories/$1"
   },
   testMatch: ['**/tests/**/*.test.ts'],
   collectCoverage: true,
@@ -27,5 +23,4 @@ const config: Config.InitialOptions = {
   moduleFileExtensions: ['ts', 'js', 'json'],
 };
 
-export default config;`
-}
+export default config;

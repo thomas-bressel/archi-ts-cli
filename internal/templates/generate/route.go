@@ -12,9 +12,9 @@ func GetRouteTemplate(cfg EntityConfig) string {
 import express, {Request, Response} from "express";
 
 // Layers importation
-import { %sController }  from '../controllers/%s.controller'; 
-import { %sService } from '../services/%s.service';
-import { %sRepository } from "../repositories/%s.repository";
+import { %sController }  from '@controllers/%s.controller'; 
+import { %sService } from '@services/%s.service';
+import { %sRepository } from "@repositories/%s.repository";
 
 
 const router = express.Router();

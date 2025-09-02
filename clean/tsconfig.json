@@ -1,8 +1,4 @@
-package files
-
-// GetTsconfigTemplate generate this template for the tsconfig.json file
-func GetTsconfigTemplate() string {
-	return `{
+{
   "compilerOptions": {
     "baseUrl": "./",
     "target": "es2017",
@@ -18,10 +14,10 @@ func GetTsconfigTemplate() string {
     "emitDecoratorMetadata": true,
     "paths": {
       "@src/*": ["src/*"],
-      "@entities/*": ["src/entities/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@services/*": ["src/services/*"],
-      "@repositories/*": ["src/repositories/*"]
+      "@entities/*": ["src/domain/entities/*"],
+      "@controllers/*": ["src/presentation/controllers/*"],
+      "@services/*": ["src/data/services/*"],
+      "@repositories/*": ["src/data/repositories/*"]
     }
   },
   "include": [
@@ -34,5 +30,3 @@ func GetTsconfigTemplate() string {
   ]
 }
 
-`
-}

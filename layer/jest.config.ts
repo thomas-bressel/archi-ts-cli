@@ -1,8 +1,4 @@
-package files
 
-// GetJestConfigTemplate return a template for jest (TypeScript only)
-func GetJestConfigTemplate() string {
-	return `
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
@@ -27,5 +23,4 @@ const config: Config.InitialOptions = {
   moduleFileExtensions: ['ts', 'js', 'json'],
 };
 
-export default config;`
-}
+export default config;
