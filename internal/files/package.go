@@ -91,6 +91,8 @@ func getDependencies(language string, useExpress bool) map[string]string {
 
 	if useExpress {
 		deps["express"] = "^4.18.2"
+		deps["class-validator"] = "^0.14.1"
+		deps["class-transformer"] = "^0.5.1"
 	}
 
 	return deps
@@ -103,6 +105,7 @@ func getDevDependencies(language string, useExpress bool) map[string]string {
 	}
 
 	if language == "typescript" {
+		devDeps["@types/validator"] = "^13.12.2"
 		devDeps["typescript"] = "^5.3.3"
 		devDeps["@types/node"] = "^20.10.5"
 		devDeps["eslint"] = "^8.56.0"

@@ -11,7 +11,7 @@ func InstallDependencies(language string, express bool) error {
 	var dependencies []string
 	var devDependencies []string
 
-	// Dépendances communes
+	// Common dependency
 	dependencies = []string{
 		"cors",
 		"dotenv",

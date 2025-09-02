@@ -1,8 +1,6 @@
 package files
 
-/*
-GetIndexTemplate generate the template for index.ts/js
-*/
+// GetIndexTemplate generate the template for index.ts/js
 func GetIndexTemplate(language string, express bool) string {
 	if language == "typescript" {
 		return getTypeScriptIndexTemplate(express)
@@ -10,9 +8,7 @@ func GetIndexTemplate(language string, express bool) string {
 	return getJavaScriptIndexTemplate(express)
 }
 
-/*
-Return a template in the case of typescript depending of ExpressJS or not
-*/
+// Return a template in the case of typescript depending of ExpressJS or not
 func getTypeScriptIndexTemplate(express bool) string {
 
 	if express {
@@ -63,9 +59,7 @@ func getTypeScriptIndexTemplate(express bool) string {
 
 }
 
-/*
-Return a template in the case of javascript depending of ExpressJS or not
-*/
+// Return a template in the case of javascript depending of ExpressJS or not
 func getJavaScriptIndexTemplate(express bool) string {
 	if express {
 		return `

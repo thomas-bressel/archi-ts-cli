@@ -109,13 +109,3 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 
 	return nil
 }
-
-/*
-getFileExtension return ts or js depending the language
-*/
-func getFileExtension(language string) string {
-	if language == "typescript" {
-		return "ts"
-	}
-	return "js"
-}

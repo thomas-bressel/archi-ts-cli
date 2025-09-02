@@ -1,0 +1,8 @@
+{
+  "name": "layer",
+  "version": "1.0.0",
+  "architecture": "Layered Architecture",
+  "language": "typescript",
+  "express": true,
+  "created_at": "2025-09-01T17:36:45.964520846+02:00"
+}

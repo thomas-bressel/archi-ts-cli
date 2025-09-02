@@ -1,9 +1,6 @@
 package files
 
-/*
-GetjestConfigTemplate return a template for jest
-*/
-
+// GetjestConfigTemplate return a template for jest
 func GetJestConfigTemplate(extention string) string {
 	if extention == "js" {
 
@@ -11,9 +8,9 @@ func GetJestConfigTemplate(extention string) string {
 		module.exports = {
 			preset: 'js-jest',
   			testEnvironment: 'node',
-  			testMatch: ['**/__tests__/**/*.test.js'],
+  			testMatch: ['**/tests/**/*.test.js'],
   			collectCoverage: true,
-  			coverageDirectory: '__tests__/coverage',
+  			coverageDirectory: 'tests/coverage',
   			coverageReporters: ['text', 'lcov'],
 		  };`
 	}
@@ -23,9 +20,9 @@ func GetJestConfigTemplate(extention string) string {
 		const config: Config.InitialOptions = {
 	  	preset: 'ts-jest',
 	  	testEnvironment: 'node',
-	  	testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.js'],
+	  	testMatch: ['**/tests/**/*.test.ts', '**/tests/**/*.test.js'],
 	  	collectCoverage: true,
-	  	coverageDirectory: '__tests__/coverage',
+	  	coverageDirectory: 'tests/coverage',
 	  	coverageReporters: ['text', 'lcov'],
 	  	transform: {
 	  	  '^.+\\.ts$': 'ts-jest',

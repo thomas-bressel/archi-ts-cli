@@ -1,44 +1,45 @@
 package project
 
 /*
- * getLayeredDirectories returns the directory structure for Layered Architecture
+ * getLayeredDirectories returns the directory structure for a refined Layered Architecture
  */
 func getLayeredDirectories() []string {
 	return []string{
 		"src",
 
-		// Controllers Layer
-		"src/controllers",
-		"src/controllers/base",
+		// Config & Core
+		"src/config",    // configuration (db, env, logger)
+		"src/errors",    // custom errors & handlers
+		"src/utils",     // utilities & helpers
+		"src/constants", // constants
+		"src/mappers",   // entity <-> dto mappers
 
-		// Services Layer
-		"src/services",
-		"src/services/base",
-
-		// Repositories Layer
-		"src/repositories",
-		"src/repositories/base",
-
-		// Models Layer
-		"src/models",
-		"src/models/entities",
-		"src/models/dtos",
-		"src/models/requests",
-		"src/models/responses",
-		"src/models/database",
-
-		// Data Access Layer
+		// Database Layer
 		"src/database",
 		"src/database/connections",
 		"src/database/migrations",
 		"src/database/seeds",
 		"src/database/queries",
 
-		// Infrastructure Layer
-		"src/infrastructure",
-		"src/infrastructure/cache",
-		"src/infrastructure/email",
-		"src/infrastructure/modules",
+		// Entities (Domain Models)
+		"src/entities",
+
+		// DTOs (Data Transfer Objects)
+		"src/dtos",
+		"src/dtos/requests",
+		"src/dtos/responses",
+
+		// Repositories Layer
+		"src/repositories",
+		"src/repositories/base",
+
+		// Services Layer
+		"src/services",
+		"src/services/base",
+
+		// Controllers Layer
+		"src/controllers",
+		"src/controllers/base",
 
 		// Middleware Layer
 		"src/middleware",
@@ -51,11 +52,11 @@ func getLayeredDirectories() []string {
 		"src/routes/api",
 		"src/routes/web",
 
-		// Utilities & Config
-		"src/utils",
-		"src/config",
-		"src/constants",
-		"src/mappers",
+		// Infrastructure (external integrations)
+		"src/infrastructure",
+		"src/infrastructure/cache",
+		"src/infrastructure/email",
+		"src/infrastructure/modules",
 
 		// External directories
 		"database",
@@ -66,11 +67,15 @@ func getLayeredDirectories() []string {
 		"storage/uploads/avatars",
 		"storage/uploads/documents",
 		"storage/logs",
+
+		// Tests
 		"tests",
 		"tests/unit",
 		"tests/integration",
 		"tests/functional",
 		"tests/e2e",
+
+		// CI/CD
 		".github",
 		".github/workflows",
 	}
