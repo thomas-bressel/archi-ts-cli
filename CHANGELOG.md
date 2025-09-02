@@ -9,12 +9,14 @@ All notable changes to this project will be documented in this file.
 - Added `archi generate entity` command to generate files from an entity name.
 - Added `archi g e` alternative alias to the new command.
 - Added template files to generate <entity>.controller.ts, <entity>.service.ts, <entity>.repository.ts,<entity>.entity.ts, and <entity>.route.ts files.
+- Added template files to unti tests for layered architecture.
 
 ### Deleted
 - Removed Javascript support.
 
-### Changed
+### Updated
 - Updated README.md to include documentation for the new command.
+
 
 ## [1.8.1] - 2025-06-08
 ### Fixed
