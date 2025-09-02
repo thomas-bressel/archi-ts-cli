@@ -14,7 +14,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-// EntityPaths contient tous les chemins des fichiers à générer
+// EntityPaths contains all paths for generated files
 type EntityPaths struct {
 	Entity     string
 	Controller string
@@ -23,35 +23,31 @@ type EntityPaths struct {
 	Route      string
 }
 
-// runGenerateEntity is the function that will be called when the user run the command 'archi generate entity [name]'
+// runGenerateEntity is the function called when running 'archi generate entity [name]'
 func runGenerateEntity(cmd *cobra.Command, args []string) error {
-
-	// Step 1 : Prepare and configuration
+	// Step 1: Prepare and configuration
 	entityName := args[0]
 
-	// Uppcase the fist letter of entity name
+	// Uppercase the first letter of entity name
 	caser := cases.Title(language.English)
 	entityName = caser.String(strings.ToLower(entityName))
 
 	// Loading the project conf and checking if we are in a valid project
 	projectConfig, err := config.LoadProjectConfig()
 	if err != nil {
-		return fmt.Errorf("impossible to load project configuration : %w\n must be sure to have created a project with 'archi create'", err)
+		return fmt.Errorf("impossible to load project configuration: %w\n must be sure to have created a project with 'archi create'", err)
 	}
 
-	// Creating the entity configuration
+	// Creating the entity configuration (always TypeScript)
 	entityConfig := generate.EntityConfig{
 		Name:    entityName,
-		Variant: string(projectConfig.Language),
+		Variant: "typescript",
 	}
 
-	// Managing file extension according to the language
-	ext := "js"
-	if projectConfig.Language == "typescript" {
-		ext = "ts"
-	}
+	// File extension is always .ts
+	ext := "ts"
 
-	// Step 2 : Define the architecture paths
+	// Step 2: Define the architecture paths
 	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext)
 
 	// Generating the files
@@ -67,10 +63,8 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 		{paths.Route, generate.GetRouteTemplate(entityConfig), "Route"},
 	}
 
-	// Step 3 : Create the files
-
+	// Step 3: Create the files
 	for _, file := range filesToGenerate {
-
 		// Create the directory if not exists
 		dir := filepath.Dir(file.path)
 		if err := utils.CreateDirectory(dir); err != nil {
@@ -79,18 +73,18 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 
 		// Write the file
 		if err := utils.WriteFile(file.path, file.template); err != nil {
-			return fmt.Errorf("error while creating the file  %s: %w", file.path, err)
+			return fmt.Errorf("error while creating the file %s: %w", file.path, err)
 		}
 		color.New(color.FgGreen).Printf("  ✅ %s created: %s\n", file.name, file.path)
 	}
 
-	// Step 4 : Success message
-	color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated !\n", entityName)
+	// Step 4: Success message
+	color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated!\n", entityName)
 
 	return nil
 }
 
-// getEntityPaths return the paths for each entity file based on the architecture
+// getEntityPaths returns the paths for each entity file based on the architecture
 func getEntityPaths(architecture string, entityName string, ext string) EntityPaths {
 	lowerName := strings.ToLower(entityName)
 

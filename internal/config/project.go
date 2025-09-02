@@ -67,15 +67,6 @@ func ProjectExists() bool {
 	return err == nil
 }
 
-// GetProjectLanguage returns the language of the project
-func GetProjectLanguage() (string, error) {
-	config, err := LoadProjectConfig()
-	if err != nil {
-		return "", err
-	}
-	return string(config.Language), nil
-}
-
 // GetProjectArchitecture returns the architecture type of the project
 func GetProjectArchitecture() (string, error) {
 	config, err := LoadProjectConfig()

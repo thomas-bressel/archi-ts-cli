@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - Added `archi g e` alternative alias to the new command.
 - Added template files to generate <entity>.controller.ts, <entity>.service.ts, <entity>.repository.ts,<entity>.entity.ts, and <entity>.route.ts files.
 
+### Deleted
+- Removed Javascript support.
+
 ### Changed
 - Updated README.md to include documentation for the new command.
 

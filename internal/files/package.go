@@ -18,14 +18,14 @@ type PackageJSON struct {
 	DevDependencies map[string]string `json:"devDependencies"`
 }
 
-// generatePackageJson generate the package.json file content based on the project name, language and express usage
-func GeneratePackageJson(name, language string, useExpress bool) (string, error) {
+// GeneratePackageJson generate the package.json file content based on the project name and express usage
+func GeneratePackageJson(name string, useExpress bool) (string, error) {
 	pkg := PackageJSON{
 		Name:        name,
 		Version:     "1.0.0",
 		Description: "Backend API generated with Archi CLI",
-		Main:        getMainFile(language),
-		Scripts:     getScripts(language),
+		Main:        "dist/index.js",
+		Scripts:     getScripts(),
 		Keywords:    getKeywords(useExpress),
 		Author:      "",
 		License:     "MIT",
@@ -33,11 +33,11 @@ func GeneratePackageJson(name, language string, useExpress bool) (string, error)
 
 	// Add dependencies if Express is needed
 	if useExpress {
-		pkg.Dependencies = getDependencies(language, useExpress)
+		pkg.Dependencies = getDependencies(useExpress)
 	}
 
 	// Always add devDependencies
-	pkg.DevDependencies = getDevDependencies(language, useExpress)
+	pkg.DevDependencies = getDevDependencies(useExpress)
 
 	jsonData, err := json.MarshalIndent(pkg, "", "  ")
 	if err != nil {
@@ -47,38 +47,21 @@ func GeneratePackageJson(name, language string, useExpress bool) (string, error)
 	return string(jsonData), nil
 }
 
-// getMainFile return the main file based on the language
-func getMainFile(language string) string {
-	if language == "typescript" {
-		return "dist/index.js"
-	}
-	return "src/index.js"
-}
-
-// getScripts returns npm scripts based on the language
-func getScripts(language string) map[string]string {
-	if language == "typescript" {
-		return map[string]string{
-			"start":    "node dist/src/index.js",
-			"dev":      "nodemon src/index.ts",
-			"build":    "tsc",
-			"watch":    "tsc --watch",
-			"lint":     "eslint src/**/*.ts",
-			"lint:fix": "eslint src/**/*.ts --fix",
-		}
-	}
-
+// getScripts returns npm scripts for TypeScript
+func getScripts() map[string]string {
 	return map[string]string{
-		"start":    "node src/index.js",
-		"dev":      "nodemon src/index.js",
-		"lint":     "eslint src/**/*.js",
-		"lint:fix": "eslint src/**/*.js --fix",
+		"start":    "node dist/src/index.js",
+		"dev":      "nodemon src/index.ts",
+		"build":    "tsc",
+		"watch":    "tsc --watch",
+		"lint":     "eslint src/**/*.ts",
+		"lint:fix": "eslint src/**/*.ts --fix",
 	}
 }
 
 // getKeywords returns keywords based on Express usage
 func getKeywords(useExpress bool) []string {
-	baseKeywords := []string{"api", "backend", "nodejs"}
+	baseKeywords := []string{"api", "backend", "nodejs", "typescript"}
 	if useExpress {
 		return append(baseKeywords, "express")
 	}
@@ -86,7 +69,7 @@ func getKeywords(useExpress bool) []string {
 }
 
 // getDependencies returns runtime dependencies
-func getDependencies(language string, useExpress bool) map[string]string {
+func getDependencies(useExpress bool) map[string]string {
 	deps := make(map[string]string)
 
 	if useExpress {
@@ -98,27 +81,23 @@ func getDependencies(language string, useExpress bool) map[string]string {
 	return deps
 }
 
-// getDevDependencies returns development dependencies
-func getDevDependencies(language string, useExpress bool) map[string]string {
+// getDevDependencies returns development dependencies for TypeScript
+func getDevDependencies(useExpress bool) map[string]string {
 	devDeps := map[string]string{
-		"nodemon": "^3.0.2",
+		"nodemon":                          "^3.0.2",
+		"@types/validator":                 "^13.12.2",
+		"typescript":                       "^5.3.3",
+		"@types/node":                      "^20.10.5",
+		"eslint":                           "^8.56.0",
+		"@typescript-eslint/eslint-plugin": "^6.15.0",
+		"@typescript-eslint/parser":        "^6.15.0",
+		"@types/jest":                      "^29.5.14",
+		"jest":                             "^29.7.0",
+		"ts-jest":                          "^29.1.1",
 	}
 
-	if language == "typescript" {
-		devDeps["@types/validator"] = "^13.12.2"
-		devDeps["typescript"] = "^5.3.3"
-		devDeps["@types/node"] = "^20.10.5"
-		devDeps["eslint"] = "^8.56.0"
-		devDeps["@typescript-eslint/eslint-plugin"] = "^6.15.0"
-		devDeps["@typescript-eslint/parser"] = "^6.15.0"
-		devDeps["@types/jest"] = "^29.5.14"
-		devDeps["jest"] = "^29.7.0"
-
-		if useExpress {
-			devDeps["@types/express"] = "^4.17.21"
-		}
-	} else {
-		devDeps["eslint"] = "^8.56.0"
+	if useExpress {
+		devDeps["@types/express"] = "^4.17.21"
 	}
 
 	return devDeps

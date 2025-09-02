@@ -5,7 +5,6 @@ import (
 	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/templates/project"
 	"archi-ts-cli/internal/utils"
-
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,15 +14,14 @@ import (
 )
 
 func runCreate(cmd *cobra.Command, args []string) error {
-
 	// Banner
 	utils.DisplayBanner()
 	color.New(color.FgCyan, color.Bold).Println("🚀 ArchiTS CLI - Project Scaffolding")
 	fmt.Println()
 
-	// Step 1 : Start collecting the result of each prompts
+	// Step 1: Start collecting the result of each prompts
 
-	// Prompt 1 - Prompt to ask the user for the project name
+	// Prompt 1 - Project name
 	projectName, err := prompts.PromptProjectName()
 	if err != nil {
 		return fmt.Errorf("error with this project name: %w", err)
@@ -35,19 +33,13 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error when choosing an architecture: %w", err)
 	}
 
-	// Prompt 3 - Language Type (JS or TS)
-	language, err := prompts.PromptLanguage()
-	if err != nil {
-		return fmt.Errorf("error when choosing a language: %w", err)
-	}
-
-	// Prompt 4 - Express Library ?
+	// Prompt 3 - Express Library?
 	express, err := prompts.PromptExpress()
 	if err != nil {
 		return fmt.Errorf("error when choosing express library: %w", err)
 	}
 
-	// Step 2 : Create the project architecture
+	// Step 2: Create the project architecture
 
 	// Create the project directory
 	projectPath := filepath.Join(".", projectName)
@@ -62,7 +54,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 
 	color.New(color.FgYellow).Printf("📁 Project created at: %s\n", projectPath)
 	color.New(color.FgBlue).Printf("Architecture: %s\n", architecture)
-	color.New(color.FgGreen).Printf("Language: %s\n", language)
+	color.New(color.FgGreen).Printf("Language: TypeScript\n")
 	expressStatus := "No"
 	if express {
 		expressStatus = "Yes"
@@ -70,23 +62,22 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	color.New(color.FgHiMagenta).Printf("Express Library: %s\n", expressStatus)
 	fmt.Println()
 
-	// Step 3 : Generation and dependencies installation
+	// Step 3: Generation and dependencies installation
 
 	// Store the configuration in a struct and generate the project
 	config := models.ProjectConfigBuilder{
 		Name:         projectName,
 		Architecture: models.Architecture(architecture),
-		Language:     models.Language(language),
 		Express:      express,
 	}
 
 	if err := project.GenerateProject(config); err != nil {
-		return fmt.Errorf("error during the generation of the prject: %w", err)
+		return fmt.Errorf("error during the generation of the project: %w", err)
 	}
 
-	// dev dependencies and main dependencies installation
+	// Dependencies installation
 	color.New(color.FgBlue).Println("📦 Dependencies installation...")
-	if err := utils.InstallDependencies(string(language), express); err != nil {
+	if err := utils.InstallDependencies(); err != nil {
 		color.New(color.FgRed).Printf("⚠️  Error during dependencies installation: %v\n", err)
 	}
 
@@ -95,28 +86,20 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		color.New(color.FgRed).Printf("⚠️  Error during pnpm installation: %v\n", err)
 	}
 
-	// Step 4 : Succes messages
-
+	// Step 4: Success messages
 	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
 	fmt.Println()
 	color.New(color.FgCyan).Printf("📂 Project name: %s\n", projectName)
 	color.New(color.FgCyan).Printf("Architecture: %s\n", architecture)
-	color.New(color.FgCyan).Printf("Language: %s\n", language)
+	color.New(color.FgCyan).Printf("Language: TypeScript\n")
 	color.New(color.FgCyan).Printf("ExpressJS: %s\n", expressStatus)
 	fmt.Println()
 	color.New(color.FgYellow).Println("To start:")
 	fmt.Printf("  cd %s\n", projectName)
-
-	if language == "typescript" {
-		fmt.Printf("  npm run dev (local development with nodemon)\n")
-		fmt.Printf("  npm run build (before npm start)\n")
-		fmt.Printf("  npm start (after npm build)\n")
-	} else {
-		fmt.Printf("  npm run dev (local development with nodemon)\n")
-		fmt.Printf("  npm start \n")
-	}
-
+	fmt.Printf("  npm run dev (local development with nodemon)\n")
+	fmt.Printf("  npm run build (before npm start)\n")
+	fmt.Printf("  npm start (after npm build)\n")
 	fmt.Println()
 
 	return nil

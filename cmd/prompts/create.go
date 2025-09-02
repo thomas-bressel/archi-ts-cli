@@ -7,7 +7,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-// PromptProjectName to ask the name of the project.
+// PromptProjectName to ask the name of the project
 func PromptProjectName() (string, error) {
 	prompt := promptui.Prompt{
 		Label:   "Project Name",
@@ -40,7 +40,7 @@ func PromptArchitecture() (string, error) {
 			Label:    "{{ . }}:",
 			Active:   color.New(color.FgCyan).Sprint("▸ {{ . | cyan }}"),
 			Inactive: "  {{ . | faint }}",
-			Selected: color.New(color.FgGreen).Sprint("✓ {{ . | green }}"),
+			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
 		},
 	}
 
@@ -50,34 +50,6 @@ func PromptArchitecture() (string, error) {
 	}
 
 	return result, nil
-}
-
-// PromptLanguage ask the language type :  JavaScript or TypeScript
-func PromptLanguage() (string, error) {
-	prompt := promptui.Select{
-		Label: "Select a language",
-		Items: []string{
-			"TypeScript",
-			"JavaScript (please don't, if you're a true developer)",
-		},
-		Templates: &promptui.SelectTemplates{
-			Label:    "{{ . }}:",
-			Active:   color.New(color.FgYellow).Sprint("▸ {{ . | yellow }}"),
-			Inactive: "  {{ . | faint }}",
-			Selected: color.New(color.FgGreen).Sprint("✓ {{ . | green }}"),
-		},
-	}
-
-	_, result, err := prompt.Run()
-	if err != nil {
-		return "", err
-	}
-
-	// lowercase the result
-	if result == "TypeScript" {
-		return "typescript", nil
-	}
-	return "javascript", nil
 }
 
 // PromptExpress asks if the user wants to use ExpressJS library
@@ -92,7 +64,7 @@ func PromptExpress() (bool, error) {
 			Label:    "{{ . }}:",
 			Active:   color.New(color.FgYellow).Sprint("▸ {{ . | yellow }}"),
 			Inactive: "  {{ . | faint }}",
-			Selected: color.New(color.FgGreen).Sprint("✓ {{ . | green }}"),
+			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
 		},
 	}
 
