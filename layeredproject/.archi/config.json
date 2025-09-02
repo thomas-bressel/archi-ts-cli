@@ -1,0 +1,7 @@
+{
+  "name": "layeredproject",
+  "version": "1.0.0",
+  "architecture": "Layered Architecture",
+  "express": true,
+  "created_at": "2025-09-02T12:26:13.799218316+02:00"
+}
