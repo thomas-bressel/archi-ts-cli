@@ -20,11 +20,28 @@ export class %sService {
     this.%sRepository = %sRepository;
   }
 
-  async findAll(): Promise<%s[]> {
-    return await this.%sRepository.findAll();
+  /**
+   * Get the list of all %s
+   * * @returns Promise<%s[]> - Object response from the database with raw entity data
+   */
+  public async findAll(): Promise<%s[]> {
+    try {
+      return await this.%sRepository.findAll();
+    } catch (error) {
+      throw new Error("Failed to fetch %s: " + (error instanceof Error ? error.message : String(error)));
+    }
   }
 }
-`, cfg.Name, lowerName, cfg.Name, lowerName,
-		cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName, lowerName,
-		cfg.Name, lowerName)
+`,
+		// Arguments for fmt.Sprintf, in order of appearance of %s
+		cfg.Name, lowerName, // imports
+		cfg.Name, lowerName, // imports
+		cfg.Name, lowerName, cfg.Name, // class name and private repository declaration
+		lowerName, cfg.Name, lowerName, lowerName, // constructor
+		lowerName+"s", // JSDoc comment
+		cfg.Name,      // function return type
+		cfg.Name,      // function return type
+		lowerName,     // this.repository call
+		lowerName+"s", // error message
+	)
 }

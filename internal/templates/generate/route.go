@@ -6,33 +6,40 @@ import (
 )
 
 // GetRouteTemplate génère le template des routes
-
-// GetRouteTemplate génère le template des routes
 func GetRouteTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
-	return fmt.Sprintf(`import { Router } from 'express';
-import { %sController } from '../controllers/%s.controller';
+	return fmt.Sprintf(`// Express importation
+import express, {Request, Response} from "express";
 
-const router = Router();
-const %sController = new %sController();
+// Layers importation
+import { %sController }  from '../controllers/%s.controller'; 
+import { %sService } from '../services/%s.service';
+import { %sRepository } from "../repositories/%s.repository";
 
-// GET /%s
-router.get('/', %sController.getAll.bind(%sController));
 
-// GET /%s/:id
-router.get('/:id', %sController.getById.bind(%sController));
+const router = express.Router();
 
-// POST /%s
-router.post('/', %sController.create.bind(%sController));
+const %sRepository = new %sRepository()
+const %sService = new %sService(%sRepository)
+const %sController = new %sController(%sService);
 
-// PUT /%s/:id
-router.put('/:id', %sController.update.bind(%sController));
+// GET /api/v1/admin/%s
+router.get("/api/v1/admin/%s", async (req: Request, res: Response) => { 
+    %sController.getAll(req, res)
+});
 
-// DELETE /%s/:id
-router.delete('/:id', %sController.delete.bind(%sController));
 
-export { router as %sRoutes };
-`, cfg.Name, lowerName, lowerName, cfg.Name, lowerName+"s", lowerName, lowerName, lowerName+"s",
-		lowerName, lowerName, lowerName+"s", lowerName, lowerName, lowerName+"s",
-		lowerName, lowerName, lowerName+"s", lowerName, lowerName, cfg.Name)
+export default router;
+`,
+		// Arguments for fmt.Sprintf, in order of appearance of %s
+		cfg.Name, lowerName, // Controller import
+		cfg.Name, lowerName, // Service import
+		cfg.Name, lowerName, // Repository import
+		lowerName, cfg.Name, // Repository variable declaration
+		lowerName, cfg.Name, lowerName, // Service variable declaration with dependency injection
+		lowerName, cfg.Name, lowerName, // Controller variable declaration with dependency injection
+		lowerName+"s", // Route path
+		lowerName+"s", // Route path
+		lowerName,     // Controller call
+	)
 }

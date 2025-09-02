@@ -14,77 +14,85 @@ import (
 	"golang.org/x/text/language"
 )
 
-// EntityPaths contains all paths for generated files
+// EntityPaths contains all paths for generated files INCLUDING TESTS
 type EntityPaths struct {
 	Entity     string
 	Controller string
 	Service    string
 	Repository string
 	Route      string
+	// AJOUT: Chemins pour les tests
+	ControllerTest string
+	ServiceTest    string
+	RepositoryTest string
 }
 
-// runGenerateEntity is the function called when running 'archi generate entity [name]'
 func runGenerateEntity(cmd *cobra.Command, args []string) error {
-	// Step 1: Prepare and configuration
 	entityName := args[0]
-
-	// Uppercase the first letter of entity name
 	caser := cases.Title(language.English)
 	entityName = caser.String(strings.ToLower(entityName))
 
-	// Loading the project conf and checking if we are in a valid project
 	projectConfig, err := config.LoadProjectConfig()
 	if err != nil {
-		return fmt.Errorf("impossible to load project configuration: %w\n must be sure to have created a project with 'archi create'", err)
+		return fmt.Errorf("impossible to load project configuration: %w", err)
 	}
 
-	// Creating the entity configuration (always TypeScript)
 	entityConfig := generate.EntityConfig{
 		Name:    entityName,
 		Variant: "typescript",
 	}
 
-	// File extension is always .ts
 	ext := "ts"
-
-	// Step 2: Define the architecture paths
 	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext)
 
-	// Generating the files
+	// MODIFICATION: Ajout des fichiers de tests dans la génération
 	filesToGenerate := []struct {
 		path     string
 		template string
 		name     string
 	}{
+		// Fichiers source
 		{paths.Entity, generate.GetEntityTemplate(entityConfig), "Entity"},
 		{paths.Controller, generate.GetControllerTemplate(entityConfig), "Controller"},
 		{paths.Service, generate.GetServiceTemplate(entityConfig), "Service"},
 		{paths.Repository, generate.GetRepositoryTemplate(entityConfig), "Repository"},
 		{paths.Route, generate.GetRouteTemplate(entityConfig), "Route"},
+
+		// AJOUT: Fichiers de tests
+		{paths.ControllerTest, generate.GetControllerTestTemplate(entityConfig), "Controller Test"},
+		{paths.ServiceTest, generate.GetServiceTestTemplate(entityConfig), "Service Test"},
+		{paths.RepositoryTest, generate.GetRepositoryTestTemplate(entityConfig), "Repository Test"},
 	}
 
-	// Step 3: Create the files
-	for _, file := range filesToGenerate {
-		// Create the directory if not exists
+	// AJOUT: Affichage séparé pour les sources et les tests
+	color.New(color.FgCyan, color.Bold).Println("📁 Generating source files...")
+	for i, file := range filesToGenerate {
+		if i == 5 {
+			fmt.Println()
+			color.New(color.FgCyan, color.Bold).Println("🧪 Generating test files...")
+		}
+
 		dir := filepath.Dir(file.path)
 		if err := utils.CreateDirectory(dir); err != nil {
 			return fmt.Errorf("error while creating the directory %s: %w", dir, err)
 		}
 
-		// Write the file
 		if err := utils.WriteFile(file.path, file.template); err != nil {
 			return fmt.Errorf("error while creating the file %s: %w", file.path, err)
 		}
 		color.New(color.FgGreen).Printf("  ✅ %s created: %s\n", file.name, file.path)
 	}
 
-	// Step 4: Success message
-	color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated!\n", entityName)
+	// AJOUT: Messages d'aide pour les tests
+	fmt.Println()
+	color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated with tests!\n", entityName)
+	color.New(color.FgYellow).Println("💡 Don't forget to:")
+	fmt.Println("  - Run tests: npm test")
+	fmt.Println("  - Update test files with your specific business logic")
 
 	return nil
 }
 
-// getEntityPaths returns the paths for each entity file based on the architecture
 func getEntityPaths(architecture string, entityName string, ext string) EntityPaths {
 	lowerName := strings.ToLower(entityName)
 
@@ -96,6 +104,10 @@ func getEntityPaths(architecture string, entityName string, ext string) EntityPa
 			Service:    fmt.Sprintf("src/data/services/%s.service.%s", lowerName, ext),
 			Repository: fmt.Sprintf("src/data/repositories/%s.repository.%s", lowerName, ext),
 			Route:      fmt.Sprintf("src/presentation/routes/%s.routes.%s", lowerName, ext),
+			// AJOUT: Chemins des tests
+			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
+			ServiceTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
+			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	case "Hexagonal Architecture":
 		return EntityPaths{
@@ -104,6 +116,10 @@ func getEntityPaths(architecture string, entityName string, ext string) EntityPa
 			Service:    fmt.Sprintf("src/core/application/use-cases/%s.use-case.%s", lowerName, ext),
 			Repository: fmt.Sprintf("src/adapters/outbound/repositories/%s.repository.%s", lowerName, ext),
 			Route:      fmt.Sprintf("src/adapters/inbound/http/routes/%s.routes.%s", lowerName, ext),
+			// AJOUT: Chemins des tests
+			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
+			ServiceTest:    fmt.Sprintf("tests/unit/use-cases/%s.use-case.test.%s", lowerName, ext),
+			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	default: // Layered Architecture
 		return EntityPaths{
@@ -112,6 +128,10 @@ func getEntityPaths(architecture string, entityName string, ext string) EntityPa
 			Service:    fmt.Sprintf("src/services/%s.service.%s", lowerName, ext),
 			Repository: fmt.Sprintf("src/repositories/%s.repository.%s", lowerName, ext),
 			Route:      fmt.Sprintf("src/routes/%s.routes.%s", lowerName, ext),
+			// AJOUT: Chemins des tests
+			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
+			ServiceTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
+			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	}
 }

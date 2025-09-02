@@ -50,12 +50,15 @@ func GeneratePackageJson(name string, useExpress bool) (string, error) {
 // getScripts returns npm scripts for TypeScript
 func getScripts() map[string]string {
 	return map[string]string{
-		"start":    "node dist/src/index.js",
-		"dev":      "nodemon src/index.ts",
-		"build":    "tsc",
-		"watch":    "tsc --watch",
-		"lint":     "eslint src/**/*.ts",
-		"lint:fix": "eslint src/**/*.ts --fix",
+		"start":         "node dist/src/index.js",
+		"dev":           "nodemon src/index.ts",
+		"build":         "tsc",
+		"watch":         "tsc --watch",
+		"lint":          "eslint src/**/*.ts",
+		"lint:fix":      "eslint src/**/*.ts --fix",
+		"test":          "jest",
+		"test:watch":    "jest --watch",
+		"test:coverage": "jest --coverage",
 	}
 }
 
@@ -94,6 +97,8 @@ func getDevDependencies(useExpress bool) map[string]string {
 		"@types/jest":                      "^29.5.14",
 		"jest":                             "^29.7.0",
 		"ts-jest":                          "^29.1.1",
+		"@types/supertest":                 "^2.0.12",
+		"supertest":                        "^6.3.3",
 	}
 
 	if useExpress {
