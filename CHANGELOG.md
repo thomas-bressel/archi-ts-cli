@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.9.0] - 2025-09-02
+### Added
+- Added `archi generate entity` command to generate files from an entity name.
+- Added `archi g e` alternative alias to the new command.
+- Added template files to generate <entity>.controller.ts, <entity>.service.ts, <entity>.repository.ts,<entity>.entity.ts, and <entity>.route.ts files.
+
+### Changed
+- Updated README.md to include documentation for the new command.
+
 ## [1.8.1] - 2025-06-08
 ### Fixed
 - Refacto command variable for the CLI into command.go file.
