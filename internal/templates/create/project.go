@@ -2,8 +2,8 @@ package project
 
 import (
 	"archi-ts-cli/internal/config"
-	"archi-ts-cli/internal/files"
 	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/create/files"
 	"archi-ts-cli/internal/utils"
 	"fmt"
 	"time"

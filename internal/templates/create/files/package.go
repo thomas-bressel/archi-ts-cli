@@ -1,43 +1,30 @@
 package files
 
 import (
+	"archi-ts-cli/internal/models"
 	"encoding/json"
 )
 
-// PackageJSON represents the structure of package.json with ordered fields
-type PackageJSON struct {
-	Name            string            `json:"name"`
-	Version         string            `json:"version"`
-	Description     string            `json:"description"`
-	Main            string            `json:"main"`
-	Scripts         map[string]string `json:"scripts"`
-	Keywords        []string          `json:"keywords"`
-	Author          string            `json:"author"`
-	License         string            `json:"license"`
-	Dependencies    map[string]string `json:"dependencies,omitempty"`
-	DevDependencies map[string]string `json:"devDependencies"`
-}
-
 // GeneratePackageJson generate the package.json file content based on the project name and express usage
-func GeneratePackageJson(name string, useExpress bool) (string, error) {
-	pkg := PackageJSON{
+func GeneratePackageJson(name string, express bool) (string, error) {
+	pkg := models.PackageJSON{
 		Name:        name,
 		Version:     "1.0.0",
 		Description: "Backend API generated with Archi CLI",
 		Main:        "dist/index.js",
 		Scripts:     getScripts(),
-		Keywords:    getKeywords(useExpress),
+		Keywords:    getKeywords(express),
 		Author:      "",
 		License:     "MIT",
 	}
 
 	// Add dependencies if Express is needed
-	if useExpress {
-		pkg.Dependencies = getDependencies(useExpress)
+	if express {
+		pkg.Dependencies = getDependencies(express)
 	}
 
 	// Always add devDependencies
-	pkg.DevDependencies = getDevDependencies(useExpress)
+	pkg.DevDependencies = getDevDependencies(express)
 
 	jsonData, err := json.MarshalIndent(pkg, "", "  ")
 	if err != nil {
@@ -63,19 +50,19 @@ func getScripts() map[string]string {
 }
 
 // getKeywords returns keywords based on Express usage
-func getKeywords(useExpress bool) []string {
+func getKeywords(express bool) []string {
 	baseKeywords := []string{"api", "backend", "nodejs", "typescript"}
-	if useExpress {
+	if express {
 		return append(baseKeywords, "express")
 	}
 	return baseKeywords
 }
 
 // getDependencies returns runtime dependencies
-func getDependencies(useExpress bool) map[string]string {
+func getDependencies(express bool) map[string]string {
 	deps := make(map[string]string)
 
-	if useExpress {
+	if express {
 		deps["express"] = "^4.18.2"
 		deps["class-validator"] = "^0.14.1"
 		deps["class-transformer"] = "^0.5.1"
@@ -85,7 +72,7 @@ func getDependencies(useExpress bool) map[string]string {
 }
 
 // getDevDependencies returns development dependencies for TypeScript
-func getDevDependencies(useExpress bool) map[string]string {
+func getDevDependencies(express bool) map[string]string {
 	devDeps := map[string]string{
 		"nodemon":                          "^3.0.2",
 		"@types/validator":                 "^13.12.2",
@@ -101,7 +88,7 @@ func getDevDependencies(useExpress bool) map[string]string {
 		"supertest":                        "^6.3.3",
 	}
 
-	if useExpress {
+	if express {
 		devDeps["@types/express"] = "^4.17.21"
 	}
 

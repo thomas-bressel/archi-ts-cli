@@ -51,16 +51,14 @@ func getTsconfigPaths(architecture models.Architecture) string {
 
 	case models.HexagonalArchitecture:
 		return `{
-      "@core/*": ["src/core/*"],
-      "@core/domain/*": ["src/core/domain/*"],
-      "@core/application/*": ["src/core/application/*"],
-      "@ports/*": ["src/ports/*"],
-      "@adapters/*": ["src/adapters/*"],
-      "@adapters/inbound/*": ["src/adapters/inbound/*"],
-      "@adapters/outbound/*": ["src/adapters/outbound/*"],
-      "@config/*": ["src/config/*"],
-      "@main/*": ["src/main/*"],
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@entities/*": ["src/core/domain/entities/*"],
+      "@controllers/*": ["src/presentation/controllers/*"],
+      "@services/*": ["src/data/services/*"],
+      "@repositories/*": ["src/data/repositories/*"],
+      "@routes/*": ["src/presentation/routes/*"],
+      "@middlewares/*": ["src/presentation/middlewares/*"],
+      "@utils/*": ["src/shared/utils/*"]
     }`
 
 	default: // LayeredArchitecture

@@ -3,7 +3,7 @@ package cmd
 import (
 	"archi-ts-cli/cmd/prompts"
 	"archi-ts-cli/internal/models"
-	"archi-ts-cli/internal/templates/project"
+	project "archi-ts-cli/internal/templates/create"
 	"archi-ts-cli/internal/utils"
 	"fmt"
 	"os"

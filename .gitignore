@@ -46,3 +46,7 @@ Thumbs.db
 
 # Test coverage files
 coverage.out
+
+archi-test/
+hexa/
+

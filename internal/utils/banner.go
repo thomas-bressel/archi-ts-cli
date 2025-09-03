@@ -25,7 +25,7 @@ func DisplayBanner() {
 
 	// Project information
 	fmt.Println()
-	color.New(color.FgWhite, color.Bold).Println("ArchiTS CLI: 1.7.0")
+	color.New(color.FgWhite, color.Bold).Println("ArchiTS CLI: 1.9.0 beta")
 	color.New(color.FgGreen).Printf("Node: %s\n", getNodeVersion())
 	color.New(color.FgBlue).Printf("Go: %s\n", runtime.Version())
 	color.New(color.FgYellow).Printf("OS: %s\n", runtime.GOOS)

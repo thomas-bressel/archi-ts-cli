@@ -27,6 +27,20 @@ type ProjectConfigFile struct {
 	CreatedAt    time.Time    `json:"created_at"`
 }
 
+// PackageJSON represents the structure of package.json with ordered fields
+type PackageJSON struct {
+	Name            string            `json:"name"`
+	Version         string            `json:"version"`
+	Description     string            `json:"description"`
+	Main            string            `json:"main"`
+	Scripts         map[string]string `json:"scripts"`
+	Keywords        []string          `json:"keywords"`
+	Author          string            `json:"author"`
+	License         string            `json:"license"`
+	Dependencies    map[string]string `json:"dependencies,omitempty"`
+	DevDependencies map[string]string `json:"devDependencies"`
+}
+
 // GetFileExtension returns ts extension
 func (p ProjectConfigBuilder) GetFileExtension() string {
 	return "ts"
