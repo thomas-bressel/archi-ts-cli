@@ -76,8 +76,8 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 		return err
 	}
 
-	// tsconfig.json (always generated for TypeScript)
-	if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate()); err != nil {
+	// tsconfig.json - MODIFIÉ: passage de l'architecture en paramètre
+	if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate(cfg.Architecture)); err != nil {
 		return err
 	}
 
@@ -86,8 +86,8 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 		return err
 	}
 
-	// jest.config.ts
-	if err := utils.WriteFile("jest.config.ts", files.GetJestConfigTemplate()); err != nil {
+	// jest.config.ts - MODIFIÉ: passage de l'architecture en paramètre
+	if err := utils.WriteFile("jest.config.ts", files.GetJestConfigTemplate(cfg.Architecture)); err != nil {
 		return err
 	}
 
