@@ -1,4 +1,6 @@
+# Documentation temporaire
 IDEA.md
+PUBLISH.md
 
 # Binaries for programs and plugins
 *.exe
@@ -9,6 +11,11 @@ IDEA.md
 *.test
 *.out
 
+# CLI binaries (ajouté)
+archi-ts-cli
+archits
+archits.exe
+
 # Go workspace file
 go.work
 
@@ -17,15 +24,25 @@ go.sum
 go.mod
 vendor/
 
+# NPM Package specific (NOUVEAU)
+npm-package/bin/
+npm-package/node_modules/
+npm-package/package-lock.json
+npm-package/yarn.lock
+npm-package/pnpm-lock.yaml
+*.tgz
+
+# Build and distribution (étendu)
+bin/
+pkg/
+dist/
+build/
+
 # IDE directories
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# Build output directories
-bin/
-pkg/
 
 # Log files
 *.log
@@ -47,6 +64,28 @@ Thumbs.db
 # Test coverage files
 coverage.out
 
+# NPM/Node specific (NOUVEAU)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm
+.yarn-integrity
+
+# Temporary and cache directories (NOUVEAU)
+tmp/
+temp/
+.cache/
+.parcel-cache/
+
+# Test directories (existant + ajouts)
 archi-test/
 hexa/
+test-results/
+test-output/
 
+# Backup files (NOUVEAU)
+*.backup
+*.bak
+*.tmp
