@@ -20,10 +20,9 @@ archits.exe
 go.work
 
 # Dependency directories
-go.sum
-go.mod
 vendor/
 
+# NPM Package specific (NOUVEAU)
 # NPM Package specific (NOUVEAU)
 npm-package/bin/
 npm-package/node_modules/
