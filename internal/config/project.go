@@ -3,62 +3,75 @@ package config
 import (
 	"archi-ts-cli/internal/models"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
 
-/*
-SaveProjectConfig stores the project config
-*/
-func SaveProjectConfig(config models.ProjectConfigFile) error {
-	configPath := filepath.Join(".", ".archi", "config.json")
+const (
+	ConfigDir  = ".archi"
+	ConfigFile = "config.json"
+)
 
-	// Create .archi folder if it doesn't exists
-	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
-		return err
+// SaveProjectConfig saves the project configuration into .archi/config.json
+func SaveProjectConfig(config models.ProjectConfigFile) error {
+	// Create the .archi directory if it doesn't exist
+	configPath := filepath.Join(".", ConfigDir)
+	if err := os.MkdirAll(configPath, 0755); err != nil {
+		return fmt.Errorf("unable to create config directory: %w", err)
 	}
 
-	// JSON encode
+	// Convert the configuration to JSON
 	data, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to marshal configuration: %w", err)
 	}
 
-	// Fill the file
-	return os.WriteFile(configPath, data, 0644)
+	// Write the configuration file
+	configFilePath := filepath.Join(configPath, ConfigFile)
+	if err := os.WriteFile(configFilePath, data, 0644); err != nil {
+		return fmt.Errorf("unable to write configuration file: %w", err)
+	}
+
+	return nil
 }
 
-/*
-LoadProjectConfig load the project config
-*/
+// LoadProjectConfig loads the project configuration from .archi/config.json
 func LoadProjectConfig() (*models.ProjectConfigFile, error) {
-	configPath := filepath.Join(".", ".archi", "config.json")
+	configFilePath := filepath.Join(".", ConfigDir, ConfigFile)
 
-	// check if the file exists
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		return nil, err
+	// Check if the file exists
+	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("configuration file not found")
 	}
 
 	// Read the file
-	data, err := os.ReadFile(configPath)
+	data, err := os.ReadFile(configFilePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to read configuration file: %w", err)
 	}
 
-	// JSOn decode
+	// Parse the JSON
 	var config models.ProjectConfigFile
 	if err := json.Unmarshal(data, &config); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to parse configuration: %w", err)
 	}
 
 	return &config, nil
 }
 
-// GetDefaultConfig return the default config of an archiTS project
-func GetDefaultConfig() models.ArchiConfig {
-	return models.ArchiConfig{
-		DefaultArchitecture: "Entity Clean Architecture",
-		DefaultLanguage:     "typescript",
-		TemplatesPath:       "./templates",
+// ProjectExists checks if an Archi project exists in the current directory
+func ProjectExists() bool {
+	configFilePath := filepath.Join(".", ConfigDir, ConfigFile)
+	_, err := os.Stat(configFilePath)
+	return err == nil
+}
+
+// GetProjectArchitecture returns the architecture type of the project
+func GetProjectArchitecture() (string, error) {
+	config, err := LoadProjectConfig()
+	if err != nil {
+		return "", err
 	}
+	return string(config.Architecture), nil
 }

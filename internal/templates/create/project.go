@@ -3,16 +3,13 @@ package project
 import (
 	"archi-ts-cli/internal/config"
 	"archi-ts-cli/internal/models"
-
-	"archi-ts-cli/internal/files"
+	"archi-ts-cli/internal/templates/create/files"
 	"archi-ts-cli/internal/utils"
 	"fmt"
 	"time"
 )
 
-/*
-GenerateProject to generate the project structure and files based on the configuration
-*/
+// GenerateProject to generate the project structure and files based on the configuration
 func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	// Create the project directory
 	if err := createDirectoryStructure(cfg.Architecture); err != nil {
@@ -29,7 +26,6 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 		Name:         cfg.Name,
 		Version:      "1.0.0",
 		Architecture: cfg.Architecture,
-		Language:     cfg.Language,
 		Express:      cfg.Express,
 		CreatedAt:    time.Now(),
 	}
@@ -41,9 +37,7 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	return nil
 }
 
-/*
-* createDirectoryStructure creates the directory structure based on the chosen architecture
- */
+// createDirectoryStructure creates the directory structure based on the chosen architecture
 func createDirectoryStructure(architecture models.Architecture) error {
 	var directories []string
 
@@ -68,9 +62,8 @@ func createDirectoryStructure(architecture models.Architecture) error {
 
 // generateBaseFiles create the base files for the project
 func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
-
 	// Package.json
-	packageContent, err := files.GeneratePackageJson(cfg.Name, string(cfg.Language), cfg.Express)
+	packageContent, err := files.GeneratePackageJson(cfg.Name, cfg.Express)
 	if err != nil {
 		return err
 	}
@@ -83,11 +76,9 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 		return err
 	}
 
-	// tsconfig.json (if the option typescript is selected)
-	if cfg.Language == models.TypeScript {
-		if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate()); err != nil {
-			return err
-		}
+	// tsconfig.json - MODIFIÉ: passage de l'architecture en paramètre
+	if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate(cfg.Architecture)); err != nil {
+		return err
 	}
 
 	// .gitignore
@@ -95,27 +86,15 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 		return err
 	}
 
-	// jest.config.ts or js
-	configFile := "jest.config." + cfg.GetFileExtension()
-	if err := utils.WriteFile(configFile, files.GetJestConfigTemplate(cfg.GetFileExtension())); err != nil {
+	// jest.config.ts - MODIFIÉ: passage de l'architecture en paramètre
+	if err := utils.WriteFile("jest.config.ts", files.GetJestConfigTemplate(cfg.Architecture)); err != nil {
 		return err
 	}
 
-	// src/index
-	indexFile := "src/index." + cfg.GetFileExtension()
-	if err := utils.WriteFile(indexFile, files.GetIndexTemplate(string(cfg.Language), cfg.Express)); err != nil {
+	// src/index.ts
+	if err := utils.WriteFile("src/index.ts", files.GetIndexTemplate(cfg.Express)); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-/*
-getFileExtension return ts or js depending the language
-*/
-func getFileExtension(language string) string {
-	if language == "typescript" {
-		return "ts"
-	}
-	return "js"
 }

@@ -6,40 +6,28 @@ import (
 	"github.com/fatih/color"
 )
 
-// InstallDependencies install dependencies depending of the language
-func InstallDependencies(language string, express bool) error {
+// InstallDependencies install dependencies for TypeScript only
+func InstallDependencies() error {
 	var dependencies []string
 	var devDependencies []string
 
-	// Dépendances communes
+	// Common dependencies
 	dependencies = []string{
 		"cors",
 		"dotenv",
 	}
 
-	if language == "typescript" {
-		// TypeScript dependancies
-		devDependencies = []string{
-			"typescript",
-			"@types/node",
-			"@types/cors",
-			"ts-node",
-			"nodemon",
-			"@typescript-eslint/eslint-plugin",
-			"@typescript-eslint/parser",
-		}
-	} else {
-		// JavaScript dependencies
-		devDependencies = []string{
-			"nodemon",
-			"eslint",
-		}
-	}
-
-	// Add Express if selected in prompts
-	if express {
-		devDependencies = append(devDependencies, "@types/express")
-		dependencies = append(dependencies, "express")
+	// TypeScript dependencies
+	devDependencies = []string{
+		"typescript",
+		"@types/node",
+		"@types/cors",
+		"ts-node",
+		"nodemon",
+		"@typescript-eslint/eslint-plugin",
+		"@typescript-eslint/parser",
+		"@types/express",
+		"express",
 	}
 
 	// Install main dependencies
@@ -52,7 +40,7 @@ func InstallDependencies(language string, express bool) error {
 		}
 	}
 
-	// Install dev dependzencies
+	// Install dev dependencies
 	if len(devDependencies) > 0 {
 		color.New(color.FgBlue).Println("   Installing dev dependencies...")
 		args := append([]string{"install", "--save-dev"}, devDependencies...)

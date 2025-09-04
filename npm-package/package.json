@@ -1,0 +1,45 @@
+{
+    "name": "archits-cli",
+    "version": "1.9.0b",
+    "description": "CLI tool for TypeScript/JavaScript project architecture management",
+    "main": "bin/archits",
+    "bin": {
+      "archits": "./bin/archits",
+      "archi": "./bin/archits"
+    },
+    "scripts": {
+      "postinstall": "node scripts/install.js",
+      "preuninstall": "node scripts/uninstall.js"
+    },
+    "files": [
+      "bin/",
+      "scripts/",
+      "README.md"
+    ],
+    "os": ["linux", "darwin", "win32"],
+    "cpu": ["x64", "arm64"],
+    "keywords": [
+      "cli",
+      "typescript",
+      "javascript", 
+      "architecture",
+      "generator",
+      "scaffolding",
+      "nodejs",
+      "project-structure"
+    ],
+    "author": "Thomas Bressel",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/thomas-bressel/archi-ts-cli.git"
+    },
+    "bugs": {
+      "url": "https://github.com/thomas-bressel/archi-ts-cli/issues"
+    },
+    "homepage": "https://github.com/thomas-bressel/archi-ts-cli#readme",
+    "engines": {
+      "node": ">=14"
+    },
+    "preferGlobal": true
+  }
