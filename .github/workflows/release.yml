@@ -1,5 +1,5 @@
 # .github/workflows/release.yml
-name: Release on NPM
+name: Release
 
 on:
   push:
@@ -78,14 +78,18 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/v}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
     
-    - name: Update NPM package version
+    - name: Copy NPM package files
       run: |
-        cd npm-package
-        sed -i "s/\"version\": \".*\"/\"version\": \"${{ steps.extract_version.outputs.version }}\"/" package.json
+        mkdir -p npm-package
+        cp -r npm-files/* npm-package/
+        
+        # Update version in package.json
+        sed -i "s/\"version\": \".*\"/\"version\": \"${{ steps.extract_version.outputs.version }}\"/" npm-package/package.json
     
-    - name: Publish to NPM
+    - name: Install and publish to NPM
       run: |
         cd npm-package
+        npm ci --only=production || npm install
         npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
