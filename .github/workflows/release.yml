@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5  # ✅ CORRIGÉ: v4 → v5
       with:
         go-version: '1.21'
     
@@ -35,9 +35,9 @@ jobs:
         go build -ldflags "-s -w" -o dist/archits-${GOOS}-${GOARCH}${GOOS:+$([ "$GOOS" = "windows" ] && echo ".exe" || echo "")} .
     
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # ✅ CORRIGÉ: v3 → v4
       with:
-        name: binaries
+        name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}  # ✅ CORRIGÉ: nom unique
         path: dist/
 
   release:
@@ -46,14 +46,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Download artifacts
-      uses: actions/download-artifact@v3
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4  # ✅ CORRIGÉ: v3 → v4
       with:
-        name: binaries
         path: dist/
+        merge-multiple: true  # ✅ AJOUTÉ: fusion des artifacts
     
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2  # ✅ CORRIGÉ: v1 → v2
       with:
         files: dist/*
         generate_release_notes: true
@@ -69,7 +69,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'  # ✅ AMÉLIORÉ: 18 → 20 (LTS actuelle)
         registry-url: 'https://registry.npmjs.org'
     
     - name: Extract version from tag
@@ -78,18 +78,14 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/v}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
     
-    - name: Copy NPM package files
+    - name: Update NPM package version
       run: |
-        mkdir -p npm-package
-        cp -r npm-files/* npm-package/
-        
-        # Update version in package.json
-        sed -i "s/\"version\": \".*\"/\"version\": \"${{ steps.extract_version.outputs.version }}\"/" npm-package/package.json
+        cd npm-package  # ✅ CORRIGÉ: utilise directement npm-package/
+        sed -i "s/\"version\": \".*\"/\"version\": \"${{ steps.extract_version.outputs.version }}\"/" package.json
     
-    - name: Install and publish to NPM
+    - name: Publish to NPM
       run: |
         cd npm-package
-        npm ci --only=production || npm install
         npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
