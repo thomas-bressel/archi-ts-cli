@@ -8,19 +8,62 @@ Archi-TS-CLI is a Go-based command-line tool (CLI) designed to simplify project 
 - Analysis and validation of existing architectures.
 - Customizable configurations for various project types.
 
-## Prerequisites
+## Development Prerequisites
 - **Go** (version 1.18 or higher)
 - **Linux** (or use WSL on windows systems)
 - **Node & npm** (LTS version)
 
 
-## Installation
+## Development Build Instructions
 Clone the repository and build the project:
 ```bash
 git clone https://github.com/thomas-bressel/archi-ts-cli.git
 cd archi-ts-cli
 make install
 source ~/.bashrc
+```
+
+
+# ArchiTS Installation for Users
+
+## Prerequisites
+- **Node.js** and **npm** must be installed on your system
+- **For Windows users**: Consider using WSL (Windows Subsystem for Linux) for a smoother experience
+
+## Installation Steps
+
+### 1. Install ArchiTS CLI globally
+```bash
+npm install -g archits-cli
+```
+
+### 2. Create a shorter alias (optional but recommended)
+If you're using **nvm** (Node Version Manager), create a symlink for easier usage:
+
+```bash
+ln -sf /home/[your-username]/.nvm/versions/node/v[your-node-version]/lib/node_modules/archits-cli/bin/archits /home/[your-username]/.nvm/versions/node/v[your-node-version]/bin/archi
+```
+
+**Replace:**
+- `[your-username]` with your actual username
+- `[your-node-version]` with your Node.js version (e.g., `18.17.0`)
+
+### 3. Verify installation
+```bash
+archits --version
+# or if you created the alias:
+archi --version
+```
+
+## Alternative: Using alias instead of symlink
+Add this line to your `~/.bashrc` or `~/.zshrc`:
+```bash
+alias archi='archits'
+```
+
+Then reload your shell:
+```bash
+source ~/.bashrc  # or source ~/.zshrc
 ```
 
 ## Usage

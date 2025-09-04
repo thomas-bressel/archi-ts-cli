@@ -9,19 +9,17 @@ Archi-TS-CLI is a Go-based command-line tool designed to simplify project archit
 
 ## 🚀 Quick Start
 
-### Using NPX (Recommended)
-```bash
-# Create a new project
-npx archits-cli create
 
-# Generate entity files
-npx archits-cli generate entity User
-```
-
-### Global Installation
+### Global Installation (Recommended)
 ```bash
 # Install globally
 npm install -g archits-cli
+
+# Create a symlink for easier access (if using nvm)
+ln -sf /home/[your-username]/.nvm/versions/node/v[your-node-version]/lib/node_modules/archits-cli/bin/archits /home/[your-username]/.nvm/versions/node/v[your-node-version]/bin/archi
+
+# Verify installation
+archits --version
 
 # Use anywhere
 archits create
