@@ -1,82 +1,64 @@
 package project
 
-/*
- * getLayeredDirectories returns the directory structure for a refined Layered Architecture
- */
+import "archi-ts-cli/internal/models"
+
+// getLayeredDirectories returns the directory structure for a refined Layered Architecture
 func getLayeredDirectories() []string {
 	return []string{
 		"src",
+		// Presentation
+		"src/presentation",
+		"src/presentation/controllers",
+		"src/presentation/routes",
+		"src/presentation/middlewares",
+		"src/presentation/middlewares/auth",
+		"src/presentation/middlewares/validation",
+		"src/presentation/middlewares/security",
 
-		// Config & Core
-		"src/config",    // configuration (db, env, logger)
-		"src/errors",    // custom errors & handlers
-		"src/utils",     // utilities & helpers
-		"src/constants", // constants
-		"src/mappers",   // entity <-> dto mappers
+		// Business
+		"src/business",
+		"src/business/services",
+		"src/business/models",
+		"src/business/interfaces",
 
-		// Database Layer
-		"src/database",
-		"src/database/connections",
-		"src/database/migrations",
-		"src/database/seeds",
-		"src/database/queries",
+		// Data
+		"src/data",
+		"src/data/repositories",
+		"src/data/models",
+		"src/data/database",
+		"src/data/database/connection",
+		"src/data/database/migration",
+		"src/data/database/seeds",
 
-		// Entities (Domain Models)
-		"src/entities",
+		// Common utils
+		"src/common",
+		"src/common/utils",
+		"src/common/config",
+		"src/common/constants",
+		"src/common/errors",
+		"src/common/logging",
 
-		// DTOs (Data Transfer Objects)
-		"src/dtos",
-		"src/dtos/requests",
-		"src/dtos/responses",
-
-		// Repositories Layer
-		"src/repositories",
-		"src/repositories/base",
-
-		// Services Layer
-		"src/services",
-		"src/services/base",
-
-		// Controllers Layer
-		"src/controllers",
-		"src/controllers/base",
-
-		// Middleware Layer
-		"src/middleware",
-		"src/middleware/auth",
-		"src/middleware/validation",
-		"src/middleware/security",
-
-		// Routes Layer
-		"src/routes",
-		"src/routes/api",
-		"src/routes/web",
-
-		// Infrastructure (external integrations)
-		"src/infrastructure",
-		"src/infrastructure/cache",
-		"src/infrastructure/email",
-		"src/infrastructure/modules",
-
-		// External directories
+		// Base directories
 		"database",
 		"database/backups",
 		"database/schema",
 		"storage",
 		"storage/uploads",
-		"storage/uploads/avatars",
-		"storage/uploads/documents",
-		"storage/logs",
-
-		// Tests
+		"storage/avatars",
+		"storage/documents",
 		"tests",
 		"tests/unit",
-		"tests/integration",
+		"tests/unit/presnetation",
+		"tests/unit/business",
+		"tests/unit/data",
 		"tests/functional",
+		"tests/intergation",
+		"tests/intergation/api",
+		"tests/intergation/database",
 		"tests/e2e",
-
-		// CI/CD
-		".github",
+		"tests/e2e/api",
+		"logs",
+		".github/",
 		".github/workflows",
 	}
 }
@@ -144,75 +126,23 @@ func getHexagonalDirectories() []string {
 	return []string{
 		"src",
 
-		// Core (Application Hexagon)
-		"src/core",
-		"src/core/domain",
-		"src/core/domain/entities",
-		"src/core/domain/value-objects",
-		"src/core/domain/services",
-		"src/core/domain/exceptions",
-		"src/core/application",
-		"src/core/application/use-cases",
-		"src/core/application/commands",
-		"src/core/application/queries",
-		"src/core/application/handlers",
-		"src/core/application/handlers/commands",
-		"src/core/application/handlers/queries",
-		"src/core/application/dtos",
-
-		// Ports (Interfaces)
-		"src/ports",
-		"src/ports/inbound",
-		"src/ports/inbound/http",
-		"src/ports/inbound/cli",
-		"src/ports/outbound",
-		"src/ports/outbound/repositories",
-		"src/ports/outbound/external-services",
-		"src/ports/outbound/infrastructure",
-
-		// Adapters (Implementations)
+		// Adapters (vide pour le moment, TypeORM sera ajouté dynamiquement si choisi)
 		"src/adapters",
-		"src/adapters/inbound",
-		"src/adapters/inbound/http",
-		"src/adapters/inbound/http/controllers",
-		"src/adapters/inbound/http/middleware",
-		"src/adapters/inbound/http/routes",
-		"src/adapters/inbound/http/models",
-		"src/adapters/inbound/cli",
-		"src/adapters/inbound/cli/commands",
 
-		// Outbound Adapters
-		"src/adapters/outbound",
-		"src/adapters/outbound/repositories",
-		"src/adapters/outbound/repositories/mysql",
-		"src/adapters/outbound/repositories/redis",
-		"src/adapters/outbound/repositories/entities",
-		"src/adapters/outbound/repositories/queries",
-		"src/adapters/outbound/repositories/mappers",
-		"src/adapters/outbound/external-services",
-		"src/adapters/outbound/external-services/email",
-		"src/adapters/outbound/external-services/auth",
-		"src/adapters/outbound/external-services/storage",
-		"src/adapters/outbound/infrastructure",
-		"src/adapters/outbound/infrastructure/database",
-		"src/adapters/outbound/infrastructure/cache",
-		"src/adapters/outbound/infrastructure/server",
+		// Application
+		"src/application",
+		"src/application/dto",
+		"src/application/services",
 
-		// Shared/Common
-		"src/shared",
-		"src/shared/utils",
-		"src/shared/constants",
-		"src/shared/exceptions",
-		"src/shared/types",
+		// Domain
+		"src/domain",
+		"src/domain/entities",
+		"src/domain/ports",
 
-		// Configuration & DI
-		"src/config",
-		"src/config/dependencies",
-		"src/config/database",
-		"src/config/environment",
-
-		// Main (Bootstrap)
-		"src/main",
+		// Interfaces
+		"src/interfaces",
+		"src/interfaces/controllers",
+		"src/interfaces/routes",
 
 		// External directories
 		"database",
@@ -232,5 +162,20 @@ func getHexagonalDirectories() []string {
 		"tests/e2e",
 		".github",
 		".github/workflows",
+	}
+}
+
+/*
+ * getHexagonalORMDirectories returns ORM-specific directories for Hexagonal Architecture
+ */
+func getHexagonalORMDirectories(orm models.Orm) []string {
+	switch orm {
+	case models.TypeOrm:
+		return []string{
+			"src/adapters/typeorm",
+			"src/adapters/typeorm/repositories",
+		}
+	default:
+		return []string{}
 	}
 }

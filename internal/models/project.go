@@ -4,17 +4,22 @@ import "time"
 
 // Type of architecture
 type Architecture string
+type Orm string
 
 const (
 	LayeredArchitecture   Architecture = "Layered Architecture"
 	CleanArchitecture     Architecture = "Clean Architecture"
 	HexagonalArchitecture Architecture = "Hexagonal Architecture"
 )
+const (
+	TypeOrm Orm = "TypeORM"
+)
 
 // ProjectConfig type to define the configuration of the project
 type ProjectConfigBuilder struct {
 	Name         string       `json:"name"`
 	Architecture Architecture `json:"architecture"`
+	Orm          Orm          `json:"orm"`
 	Express      bool         `json:"express"`
 }
 
@@ -23,6 +28,7 @@ type ProjectConfigFile struct {
 	Name         string       `json:"name"`
 	Version      string       `json:"version"`
 	Architecture Architecture `json:"architecture"`
+	Orm          Orm          `json:"orm"`
 	Express      bool         `json:"express"`
 	CreatedAt    time.Time    `json:"created_at"`
 }
@@ -56,6 +62,7 @@ func (p ProjectConfigBuilder) ToConfigFile(version string) ProjectConfigFile {
 		Name:         p.Name,
 		Version:      version,
 		Architecture: p.Architecture,
+		Orm:          p.Orm,
 		Express:      p.Express,
 		CreatedAt:    time.Now(),
 	}

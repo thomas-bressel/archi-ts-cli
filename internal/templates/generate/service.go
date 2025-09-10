@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// GetServiceTemplate génère le template du service
+// GetServiceTemplate generate service template
 func GetServiceTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`

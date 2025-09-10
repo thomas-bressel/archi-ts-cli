@@ -16,12 +16,11 @@ import (
 
 // EntityPaths contains all paths for generated files INCLUDING TESTS
 type EntityPaths struct {
-	Entity     string
-	Controller string
-	Service    string
-	Repository string
-	Route      string
-	// AJOUT: Chemins pour les tests
+	Entity         string
+	Controller     string
+	Service        string
+	Repository     string
+	Route          string
 	ControllerTest string
 	ServiceTest    string
 	RepositoryTest string
@@ -43,28 +42,22 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 	}
 
 	ext := "ts"
-	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext)
-
-	// MODIFICATION: Ajout des fichiers de tests dans la génération
+	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext, string(projectConfig.Orm))
 	filesToGenerate := []struct {
 		path     string
 		template string
 		name     string
 	}{
-		// Fichiers source
 		{paths.Entity, generate.GetEntityTemplate(entityConfig), "Entity"},
 		{paths.Controller, generate.GetControllerTemplate(entityConfig), "Controller"},
 		{paths.Service, generate.GetServiceTemplate(entityConfig), "Service"},
 		{paths.Repository, generate.GetRepositoryTemplate(entityConfig), "Repository"},
 		{paths.Route, generate.GetRouteTemplate(entityConfig), "Route"},
-
-		// AJOUT: Fichiers de tests
 		{paths.ControllerTest, generate.GetControllerTestTemplate(entityConfig), "Controller Test"},
 		{paths.ServiceTest, generate.GetServiceTestTemplate(entityConfig), "Service Test"},
 		{paths.RepositoryTest, generate.GetRepositoryTestTemplate(entityConfig), "Repository Test"},
 	}
 
-	// AJOUT: Affichage séparé pour les sources et les tests
 	color.New(color.FgCyan, color.Bold).Println("📁 Generating source files...")
 	for i, file := range filesToGenerate {
 		if i == 5 {
@@ -83,7 +76,6 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 		color.New(color.FgGreen).Printf("  ✅ %s created: %s\n", file.name, file.path)
 	}
 
-	// AJOUT: Messages d'aide pour les tests
 	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated with tests!\n", entityName)
 	color.New(color.FgYellow).Println("💡 Don't forget to:")
@@ -93,42 +85,46 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func getEntityPaths(architecture string, entityName string, ext string) EntityPaths {
+func getEntityPaths(architecture string, entityName string, ext string, orm string) EntityPaths {
 	lowerName := strings.ToLower(entityName)
 
 	switch architecture {
 	case "Clean Architecture":
 		return EntityPaths{
-			Entity:     fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
-			Controller: fmt.Sprintf("src/presentation/controllers/%s.controller.%s", lowerName, ext),
-			Service:    fmt.Sprintf("src/data/services/%s.service.%s", lowerName, ext),
-			Repository: fmt.Sprintf("src/data/repositories/%s.repository.%s", lowerName, ext),
-			Route:      fmt.Sprintf("src/presentation/routes/%s.routes.%s", lowerName, ext),
-			// AJOUT: Chemins des tests
+			Entity:         fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
+			Controller:     fmt.Sprintf("src/presentation/controllers/%s.controller.%s", lowerName, ext),
+			Service:        fmt.Sprintf("src/data/services/%s.service.%s", lowerName, ext),
+			Repository:     fmt.Sprintf("src/data/repositories/%s.repository.%s", lowerName, ext),
+			Route:          fmt.Sprintf("src/presentation/routes/%s.routes.%s", lowerName, ext),
 			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
 			ServiceTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
 			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	case "Hexagonal Architecture":
+		repositoryPath := ""
+		if orm == "TypeORM" {
+			repositoryPath = fmt.Sprintf("src/adapters/typeorm/repositories/%s.repository.%s", lowerName, ext)
+		} else {
+			repositoryPath = fmt.Sprintf("src/adapters/repositories/%s.repository.%s", lowerName, ext)
+		}
+
 		return EntityPaths{
-			Entity:     fmt.Sprintf("src/core/domain/entities/%s.entity.%s", lowerName, ext),
-			Controller: fmt.Sprintf("src/adapters/inbound/http/controllers/%s.controller.%s", lowerName, ext),
-			Service:    fmt.Sprintf("src/core/application/use-cases/%s.use-case.%s", lowerName, ext),
-			Repository: fmt.Sprintf("src/adapters/outbound/repositories/%s.repository.%s", lowerName, ext),
-			Route:      fmt.Sprintf("src/adapters/inbound/http/routes/%s.routes.%s", lowerName, ext),
-			// AJOUT: Chemins des tests
+			Entity:         fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
+			Controller:     fmt.Sprintf("src/interfaces/controllers/%s.controller.%s", lowerName, ext),
+			Service:        fmt.Sprintf("src/application/services/%s.service.%s", lowerName, ext),
+			Repository:     repositoryPath,
+			Route:          fmt.Sprintf("src/interfaces/routes/%s.routes.%s", lowerName, ext),
 			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
-			ServiceTest:    fmt.Sprintf("tests/unit/use-cases/%s.use-case.test.%s", lowerName, ext),
+			ServiceTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
 			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	default: // Layered Architecture
 		return EntityPaths{
-			Entity:     fmt.Sprintf("src/entities/%s.entity.%s", lowerName, ext),
-			Controller: fmt.Sprintf("src/controllers/%s.controller.%s", lowerName, ext),
-			Service:    fmt.Sprintf("src/services/%s.service.%s", lowerName, ext),
-			Repository: fmt.Sprintf("src/repositories/%s.repository.%s", lowerName, ext),
-			Route:      fmt.Sprintf("src/routes/%s.routes.%s", lowerName, ext),
-			// AJOUT: Chemins des tests
+			Entity:         fmt.Sprintf("src/entities/%s.entity.%s", lowerName, ext),
+			Controller:     fmt.Sprintf("src/controllers/%s.controller.%s", lowerName, ext),
+			Service:        fmt.Sprintf("src/services/%s.service.%s", lowerName, ext),
+			Repository:     fmt.Sprintf("src/repositories/%s.repository.%s", lowerName, ext),
+			Route:          fmt.Sprintf("src/routes/%s.routes.%s", lowerName, ext),
 			ControllerTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
 			ServiceTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
 			RepositoryTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),

@@ -1,7 +1,7 @@
 package generate
 
-// EntityConfig représente la configuration pour générer une entité
+// EntityConfig configuration to generate an entity
 type EntityConfig struct {
 	Name    string
-	Variant string // "typescript" ou "javascript"
+	Variant string // "typescript" or "javascript"
 }

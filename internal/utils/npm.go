@@ -8,48 +8,13 @@ import (
 
 // InstallDependencies install dependencies for TypeScript only
 func InstallDependencies() error {
-	var dependencies []string
-	var devDependencies []string
-
-	// Common dependencies
-	dependencies = []string{
-		"cors",
-		"dotenv",
-	}
-
-	// TypeScript dependencies
-	devDependencies = []string{
-		"typescript",
-		"@types/node",
-		"@types/cors",
-		"ts-node",
-		"nodemon",
-		"@typescript-eslint/eslint-plugin",
-		"@typescript-eslint/parser",
-		"@types/express",
-		"express",
-	}
 
 	// Install main dependencies
-	if len(dependencies) > 0 {
-		color.New(color.FgBlue).Println("   Installing dependencies...")
-		args := append([]string{"install"}, dependencies...)
-		cmd := exec.Command("npm", args...)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
+	color.New(color.FgBlue).Println("   Installing dependencies & dev dependencies ...")
+	cmd := exec.Command("npm", "install")
+	if err := cmd.Run(); err != nil {
+		return err
 	}
-
-	// Install dev dependencies
-	if len(devDependencies) > 0 {
-		color.New(color.FgBlue).Println("   Installing dev dependencies...")
-		args := append([]string{"install", "--save-dev"}, devDependencies...)
-		cmd := exec.Command("npm", args...)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 

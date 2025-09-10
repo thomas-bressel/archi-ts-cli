@@ -1,8 +1,6 @@
 package files
 
-/*
-GetEnvTemplate return the template for a .env file
-*/
+// GetEnvTemplate return the template for a .env file
 func GetEnvTemplate() string {
 	return `
 # Environment
@@ -45,4 +43,35 @@ MAIL_AUTH_USER="exemple@domain.fr"
 MAIL_AUTH_PASSWORD="my-super-password"
 
 `
+}
+
+// GetEnvTemplateWithTypeORM return .env template with TypeORM variables
+func GetEnvTemplateWithTypeORM() string {
+	return `# Application
+NODE_ENV=development
+PORT=3000
+
+# Database Configuration
+DB_TYPE=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_NAME=archi_db
+
+# SQLite Configuration (if DB_TYPE=sqlite)
+SQLITE_FILE=database.sqlite
+
+# TypeORM Configuration
+TYPEORM_SYNCHRONIZE=true
+TYPEORM_DROP_SCHEMA=false
+TYPEORM_LOGGING=false
+
+# JWT Configuration
+JWT_SECRET=your-secret-key-here
+JWT_EXPIRES_IN=7d
+
+# API Configuration
+API_PREFIX=/api
+API_VERSION=v1`
 }

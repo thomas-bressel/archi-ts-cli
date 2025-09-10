@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// GetRepositoryTemplate génère le template du repository
+// GetRepositoryTemplate gégenerate the repository template
 func GetRepositoryTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`

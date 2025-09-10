@@ -52,13 +52,37 @@ func PromptArchitecture() (string, error) {
 	return result, nil
 }
 
+// PromptORM ask Whick ORM to use
+func PromptOrm() (string, error) {
+	prompt := promptui.Select{
+		Label: "Select an ORM",
+		Items: []string{
+			"I don't want to use any ORM",
+			"TypeORM",
+		},
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
+			Active:   color.New(color.FgCyan).Sprint("▸ {{ . | cyan }}"),
+			Inactive: "  {{ . | faint }}",
+			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
+		},
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		return "", err
+	}
+
+	return result, nil
+}
+
 // PromptExpress asks if the user wants to use ExpressJS library
 func PromptExpress() (bool, error) {
 	prompt := promptui.Select{
 		Label: "Do you want to use ExpressJS library?",
 		Items: []string{
-			"Yes, install Express",
 			"No, I don't need Express",
+			"Yes, install Express",
 		},
 		Templates: &promptui.SelectTemplates{
 			Label:    "{{ . }}:",

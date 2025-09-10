@@ -1,8 +1,6 @@
 package models
 
-/*
-ArchiConfig is about the whole CLI config
-*/
+// ArchiConfig is about the whole CLI config
 type ArchiConfig struct {
 	DefaultArchitecture string `json:"default_architecture"`
 	DefaultLanguage     string `json:"default_language"`

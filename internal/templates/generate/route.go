@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// GetRouteTemplate génère le template des routes
+// GetRouteTemplate generate route template
 func GetRouteTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`// Express importation

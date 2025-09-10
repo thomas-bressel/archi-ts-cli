@@ -13,8 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Create the project with user CLI choices
+// Architecture is the most important thing to know.
+// Always ask for the choice of a library or not : If there is no library, then it will impact the following prompt choice
+// ORM choice only if a library has been previously choosen
 func runCreate(cmd *cobra.Command, args []string) error {
-	// Banner
+	// Display a beautifull Banner
 	utils.DisplayBanner()
 	color.New(color.FgCyan, color.Bold).Println("🚀 ArchiTS CLI - Project Scaffolding")
 	fmt.Println()
@@ -33,10 +37,20 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error when choosing an architecture: %w", err)
 	}
 
-	// Prompt 3 - Express Library?
+	// Prompt 2 - Express Library?
 	express, err := prompts.PromptExpress()
 	if err != nil {
 		return fmt.Errorf("error when choosing express library: %w", err)
+	}
+
+	// Prompt 3 - ORM Type (only if a library was chosen)
+	var orm string
+	if express {
+		orm, err = prompts.PromptOrm()
+		if err != nil {
+			return fmt.Errorf("error when choosing an ORM: %w", err)
+		}
+
 	}
 
 	// Step 2: Create the project architecture
@@ -54,6 +68,9 @@ func runCreate(cmd *cobra.Command, args []string) error {
 
 	color.New(color.FgYellow).Printf("📁 Project created at: %s\n", projectPath)
 	color.New(color.FgBlue).Printf("Architecture: %s\n", architecture)
+	if orm != "none" {
+		color.New(color.FgCyan).Printf("ORM: %s\n", orm)
+	}
 	color.New(color.FgGreen).Printf("Language: TypeScript\n")
 	expressStatus := "No"
 	if express {
@@ -68,6 +85,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	config := models.ProjectConfigBuilder{
 		Name:         projectName,
 		Architecture: models.Architecture(architecture),
+		Orm:          models.Orm(orm),
 		Express:      express,
 	}
 
@@ -93,6 +111,11 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	color.New(color.FgCyan).Printf("📂 Project name: %s\n", projectName)
 	color.New(color.FgCyan).Printf("Architecture: %s\n", architecture)
 	color.New(color.FgCyan).Printf("Language: TypeScript\n")
+
+	// if an orm exist
+	if orm == "" || orm == "none" {
+		color.New(color.FgCyan).Printf("ORM: %s\n", orm)
+	}
 	color.New(color.FgCyan).Printf("ExpressJS: %s\n", expressStatus)
 	fmt.Println()
 	color.New(color.FgYellow).Println("To start:")
@@ -102,5 +125,9 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	fmt.Printf("  npm start (after npm build)\n")
 	fmt.Println()
 
+	if orm != "none" {
+		fmt.Printf("Don't forget to fill environnement DB_USERNAME and DB_PASSWORD in the .env file, before running npm command.\n")
+	}
+	fmt.Println()
 	return nil
 }
