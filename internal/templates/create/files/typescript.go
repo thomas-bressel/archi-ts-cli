@@ -5,7 +5,7 @@ import "archi-ts-cli/internal/models"
 // GetTsconfigTemplate generates template for tsconfig.json based on architecture
 // [X] Common template for all type of architecture
 func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) string {
-	paths := getTsconfigPaths(architecture, orm)
+	paths := getTsconfigPaths(architecture)
 
 	return `{
   "compilerOptions": {
@@ -38,8 +38,8 @@ func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) strin
 // getTsconfigPaths returns the paths configuration based on architecture and ORM
 // [X] Layered Architecture
 // [X] Clean Architecture
-// [ ] Hexagonal Architecture
-func getTsconfigPaths(architecture models.Architecture, orm models.Orm) string {
+// [X] Hexagonal Architecture
+func getTsconfigPaths(architecture models.Architecture) string {
 	switch architecture {
 	case models.CleanArchitecture:
 		return `{
@@ -64,28 +64,29 @@ func getTsconfigPaths(architecture models.Architecture, orm models.Orm) string {
     }`
 
 	case models.HexagonalArchitecture:
-		// For hexagonale with TypeORM
-		if orm == models.TypeOrm {
-			return `{
-      "@src/*": ["src/*"],
-      "@entities/*": ["src/domain/entities/*"],
-      "@controllers/*": ["src/interfaces/controllers/*"],
-      "@services/*": ["src/application/services/*"],
-      "@repositories/*": ["src/adapters/typeorm/repositories/*"],
-      "@ports/*": ["src/domain/ports/*"],
-      "@routes/*": ["src/interfaces/routes/*"],
-      "@adapters-typeorm/*": ["src/adapters/typeorm/*"],
-    }`
-		}
-		// for hexagonale whitout ORM
 		return `{
       "@src/*": ["src/*"],
-      "@entities/*": ["src/core/domain/entities/*"],
-      "@controllers/*": ["src/adapters/inbound/http/controllers/*"],
-      "@services/*": ["src/core/application/services/*"],
-      "@repositories/*": ["src/adapters/outbound/repositories/*"],
-      "@ports/*": ["src/ports/*"],
-      "@routes/*": ["src/adapters/inbound/http/routes/*"]
+      "@entities/*": ["src/domain/entities/*"],
+      "@objects/*": ["src/domain/value-objects/*"],
+      "@events/*": ["src/domain/events/*"],
+      "@exceptions/*": ["src/domain/exceptions/*"],
+      "@usecases/*": ["src/application/use-cases/*"],
+      "@services/*": ["src/application/use-cases/*"],
+      "@interfaces/*": ["src/application/ports/*"],
+      "@ports/*": ["src/application/ports/*"],
+      "@dtos/*": ["src/application/dtos/*"],
+      "@http/*": ["src/adapters/primary/http/*"],
+      "@controllers/*": ["src/adapters/primary/http/controllers/*"],
+      "@routes/*": ["src/adapters/primary/http/routes/*"],
+      "@middlewares/*": ["src/adapters/primary/http/middlewares/*"],
+      "@cli/*": ["src/adapters/primary/cli/*"],
+      "@orm/*": ["src/adapters/secondary/persistence/orm/*"],
+      "@orm-entities/*": ["src/adapters/secondary/persistence/orm/entities/*"],
+      "@orm-repositories/*": ["src/adapters/secondary/persistence/orm/repositories/*"],
+      "@email/*": ["src/adapters/secondary/email/*"],
+      "@cache/*": ["src/adapters/secondary/cache/*"],
+      "@config/*": ["src/config/*"],
+      "@storage/*": ["storage/*"],
     }`
 
 	case models.LayeredArchitecture:
@@ -114,16 +115,6 @@ func getTsconfigPaths(architecture models.Architecture, orm models.Orm) string {
     }`
 
 	default:
-		return `{
-      "@src/*": ["src/*"],
-      "@entities/*": ["src/entities/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@services/*": ["src/services/*"],
-      "@repositories/*": ["src/repositories/*"],
-      "@routes/*": ["src/routes/*"],
-      "@middlewares/*": ["src/middlewares/*"],
-      "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
-    }`
+		return ``
 	}
 }

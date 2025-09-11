@@ -1,7 +1,5 @@
 package project
 
-import "archi-ts-cli/internal/models"
-
 // getLayeredDirectories returns the directory structure for a refined Layered Architecture
 func getLayeredDirectories() []string {
 	return []string{
@@ -153,35 +151,76 @@ func getHexagonalDirectories() []string {
 	return []string{
 		"src",
 
-		// Adapters (vide pour le moment, TypeORM sera ajouté dynamiquement si choisi)
-		"src/adapters",
-
-		// Application
-		"src/application",
-		"src/application/dto",
-		"src/application/services",
-
-		// Domain
+		// Domain (hexagone center)
 		"src/domain",
 		"src/domain/entities",
-		"src/domain/ports",
+		"src/domain/value-objects",
+		"src/domain/events",
+		"src/domain/exceptions",
 
-		// Interfaces
-		"src/interfaces",
-		"src/interfaces/controllers",
-		"src/interfaces/routes",
+		// Application (Use Cases)
+		"src/application",
+		"src/application/use-cases", // serevicfes
+		"src/application/ports",     // interfaces / contracts
+		"src/application/ports/in",  // entering ports (commands)
+		"src/application/ports/out", // exit ports  (persistence)
+		"src/application/dtos",
+
+		// Primary adapters (left side - Enter)
+		"src/adapters/primary",
+		"src/adapters/primary/http", // API REST
+		"src/adapters/primary/http/controllers",
+		"src/adapters/primary/http/routes",
+		"src/adapters/primary/http/middlewares",
+		"src/adapters/primary/cli",  // Interface CLI
+		"src/adapters/primary/grpc", // If gRPC
+
+		// Secondary adapters (right side - Exit)
+		"src/adapters/secondary",
+		"src/adapters/secondary/persistence",
+		"src/adapters/secondary/persistence/orm",
+		"src/adapters/secondary/persistence/orm/entities",
+		"src/adapters/secondary/persistence/orm/repositories",
+		"src/adapters/secondary/email",
+		"src/adapters/secondary/cache",
+		"src/adapters/secondary/storage",
+
+		// Configuration
+		"src/config",
+		"src/config/dependencies", // dependencies injection
 
 		// External directories
-		"database",
-		"database/backups",
-		"database/schema",
-		"database/migrations",
-		"database/seeds",
+
 		"storage",
+		"storage/database",
+		"storage/database/backups",
+		"storage/database/schema",
+		"storage/database/migrations",
+		"storage/database/seeds",
 		"storage/uploads",
 		"storage/uploads/avatars",
 		"storage/uploads/documents",
 		"storage/logs",
+		"tests/unit/core",
+		"tests/unit/core/entities",
+		"tests/unit/core/value-objects",
+		"tests/unit/core/domain-services",
+		"tests/unit/core/specifications",
+		"tests/unit/ports",
+		"tests/unit/ports/primary",   // Ports primaires (driving)
+		"tests/unit/ports/secondary", // Ports secondaires (driven)
+		"tests/integration/adapters",
+		"tests/integration/adapters/primary",   // Adapters primaires (API, CLI, Web)
+		"tests/integration/adapters/secondary", // Adapters secondaires (BDD, Services)
+		"tests/integration/infrastructure",
+		"tests/integration/infrastructure/persistence", // Real database
+		"tests/integration/infrastructure/messaging",   // Queues, Events
+		"tests/integration/infrastructure/external",
+		"tests/integration/infrastructure/cache", // Cache (Redis, etc.)
+		"tests/integration/application",
+		"tests/integration/application/use-cases", // Use cases
+		"tests/integration/application/workflows",
+
 		"tests",
 		"tests/unit",
 		"tests/integration",
@@ -189,20 +228,5 @@ func getHexagonalDirectories() []string {
 		"tests/e2e",
 		".github",
 		".github/workflows",
-	}
-}
-
-/*
- * getHexagonalORMDirectories returns ORM-specific directories for Hexagonal Architecture
- */
-func getHexagonalORMDirectories(orm models.Orm) []string {
-	switch orm {
-	case models.TypeOrm:
-		return []string{
-			"src/adapters/typeorm",
-			"src/adapters/typeorm/repositories",
-		}
-	default:
-		return []string{}
 	}
 }

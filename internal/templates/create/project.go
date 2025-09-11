@@ -14,7 +14,7 @@ import (
 func GenerateProject(cfg models.ProjectConfigBuilder) error {
 
 	// Create the project directory structure based on architecture and ORM
-	if err := createDirectoryStructure(cfg.Architecture, cfg.Orm); err != nil {
+	if err := createDirectoryStructure(cfg.Architecture); err != nil {
 		return fmt.Errorf("error during the folders creation: %w", err)
 	}
 
@@ -51,8 +51,8 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 // createDirectoryStructure creates the directory structure based on the chosen architecture and ORM
 // [X] Layered Architecture
 // [X] Clean Architecture
-// [ ] Hexagonal Architecture
-func createDirectoryStructure(architecture models.Architecture, orm models.Orm) error {
+// [X] Hexagonal Architecture
+func createDirectoryStructure(architecture models.Architecture) error {
 	var directories []string
 
 	switch architecture {
@@ -62,10 +62,6 @@ func createDirectoryStructure(architecture models.Architecture, orm models.Orm) 
 		directories = getCleanDirectories()
 	case models.HexagonalArchitecture:
 		directories = getHexagonalDirectories()
-		// Si TypeORM est choisi, ajouter les dossiers spécifiques
-		if orm == models.TypeOrm {
-			directories = append(directories, getHexagonalORMDirectories(orm)...)
-		}
 	default:
 		directories = getLayeredDirectories() // Default
 	}
@@ -80,8 +76,8 @@ func createDirectoryStructure(architecture models.Architecture, orm models.Orm) 
 
 // generateBaseFiles create the base files for the project
 // [X] Layered Architecture
-// [ ] Clean Architecture
-// [ ] Hexagonal Architecture
+// [X] Clean Architecture
+// [X] Hexagonal Architecture
 func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 	// Package.json - Dissociate architecture and ORM
 	var packageContent string
@@ -124,16 +120,16 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 
 	// src/index.ts - Use the new template with ORM support
 	// [X] Node.js template for Layered Architecture
-	// [ ] Express.js template for Layered Architecture
-	// [ ] Express.js & Type ORM template for Layered Architecture
+	// [X] Express.js template for Layered Architecture
+	// [X] Express.js & Type ORM template for Layered Architecture
 
-	// [ ] Node.js template for Clean Architecture
-	// [ ] Express.js template for Clean Architecture
-	// [ ] Express.js & Type ORM template for Clean Architecture
+	// [X] Node.js template for Clean Architecture
+	// [X] Express.js template for Clean Architecture
+	// [X] Express.js & Type ORM template for Clean Architecture
 
-	// [ ] Node.js template for Hexagonal Architecture
-	// [ ] Express.js template for Hexagonal Architecture
-	// [ ] Express.js & Type ORM template for Hexagonal Architecture
+	// [X] Node.js template for Hexagonal Architecture
+	// [X] Express.js template for Hexagonal Architecture
+	// [X] Express.js & Type ORM template for Hexagonal Architecture
 
 	if err := utils.WriteFile("src/index.ts", files.GetIndexTemplate(cfg.Architecture, cfg.Express, cfg.Orm)); err != nil {
 		return err
@@ -145,7 +141,7 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 // generateORMFiles generates ORM specific files if the architecture is Hexagonal and ORM is TypeORM
 // [X] Layered Architecture
 // [X] Clean Architecture
-// [ ] Hexagonal Architecture
+// [X] Hexagonal Architecture
 func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	ormPath := ""
 
@@ -155,7 +151,7 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	case models.CleanArchitecture:
 		ormPath = filepath.Join("src", "infrastructure", "database", "config")
 	case models.HexagonalArchitecture:
-		ormPath = filepath.Join("src", "data", "database", "connection")
+		ormPath = filepath.Join("src", "adapters", "secondary", "persistence", "orm")
 	default:
 		ormPath = ""
 	}

@@ -237,8 +237,8 @@ func getImportPaths(architecture models.Architecture) string {
         import { createDatabaseIfNotExists } from "@config/create-database";`
 	case models.HexagonalArchitecture:
 		imports = `
-        import { AppDataSource } from "@adapters-typeorm/data-source";
-        import { createDatabaseIfNotExists } from "@adapters-typeorm/create-database";`
+        import { AppDataSource } from "@orm/data-source";
+        import { createDatabaseIfNotExists } from "@orm/create-database";`
 	default:
 		return ""
 	}
