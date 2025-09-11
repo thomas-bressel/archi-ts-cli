@@ -24,9 +24,6 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	}
 
 	// Generate ORM specific files if needed
-	// [ ] Layered Architecture
-	// [ ] Clean Architecture
-	// [ ] Hexagonal Architecture
 	if err := generateORMFiles(cfg); err != nil {
 		return fmt.Errorf("error during ORM files creation: %w", err)
 	}
@@ -38,6 +35,7 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 		Architecture: cfg.Architecture,
 		Orm:          cfg.Orm,
 		Express:      cfg.Express,
+		Port:         cfg.Port,
 		CreatedAt:    time.Now(),
 	}
 
@@ -99,13 +97,12 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 		return err
 	}
 
-	// .env - Add  TypeORM variables if needed
-	envContent := files.GetEnvTemplate()
-	if cfg.Orm == models.TypeOrm {
-		envContent = files.GetEnvTemplateWithTypeORM()
-	}
-	if err := utils.WriteFile(".env", envContent); err != nil {
-		return err
+	// .env files
+	envFiles := []string{".env", ".env.exemple", ".env.docker", ".env.production", ".env.staging"}
+	for _, file := range envFiles {
+		if err := utils.WriteFile(file, files.GetEnvTemplate(cfg.Port)); err != nil {
+			return err
+		}
 	}
 
 	// [X] tsconfig.json
@@ -144,16 +141,21 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 }
 
 // generateORMFiles generates ORM specific files if the architecture is Hexagonal and ORM is TypeORM
+// [X] Layered Architecture
+// [ ] Clean Architecture
+// [ ] Hexagonal Architecture
 func generateORMFiles(cfg models.ProjectConfigBuilder) error {
-	// Only generate TypeORM files for Hexagonal architecture with TypeORM
-	if cfg.Architecture != models.HexagonalArchitecture || cfg.Orm != models.TypeOrm {
-		return nil
-	}
+	ormPath := ""
 
-	// Create adapters/typeorm directory (structure simplifiée)
-	ormPath := filepath.Join("src", "adapters", "typeorm")
-	if err := utils.CreateDirectory(ormPath); err != nil {
-		return err
+	switch cfg.Architecture {
+	case models.LayeredArchitecture:
+		ormPath = filepath.Join("src", "data", "database", "connection")
+	case models.CleanArchitecture:
+		ormPath = filepath.Join("src", "data", "database", "connection")
+	case models.HexagonalArchitecture:
+		ormPath = filepath.Join("src", "data", "database", "connection")
+	default:
+		ormPath = ""
 	}
 
 	// Generate data-source.ts

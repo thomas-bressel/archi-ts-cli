@@ -20,6 +20,7 @@ type ProjectConfigBuilder struct {
 	Name         string       `json:"name"`
 	Architecture Architecture `json:"architecture"`
 	Orm          Orm          `json:"orm"`
+	Port         int          `json:"port"`
 	Express      bool         `json:"express"`
 }
 
@@ -30,6 +31,7 @@ type ProjectConfigFile struct {
 	Architecture Architecture `json:"architecture"`
 	Orm          Orm          `json:"orm"`
 	Express      bool         `json:"express"`
+	Port         int          `json:"port"`
 	CreatedAt    time.Time    `json:"created_at"`
 }
 
@@ -64,6 +66,7 @@ func (p ProjectConfigBuilder) ToConfigFile(version string) ProjectConfigFile {
 		Architecture: p.Architecture,
 		Orm:          p.Orm,
 		Express:      p.Express,
+		Port:         p.Port,
 		CreatedAt:    time.Now(),
 	}
 }

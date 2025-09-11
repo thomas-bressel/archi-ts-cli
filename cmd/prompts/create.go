@@ -2,6 +2,7 @@ package prompts
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
@@ -99,4 +100,45 @@ func PromptExpress() (bool, error) {
 
 	// Return true if user wants Express, false otherwise
 	return result == "Yes, install Express", nil
+}
+
+// PromptPort asks the number of listening port, 3000 is by default
+func PromptPort() (int, error) {
+	validate := func(input string) error {
+		port, err := strconv.Atoi(input)
+		if err != nil {
+			return fmt.Errorf("invalid number: %v", err)
+		}
+		if port < 1024 || port > 65535 {
+			return fmt.Errorf("port must be between 1024 and 65535")
+		}
+
+		// liste des ports interdits (exemple)
+		forbidden := []int{3306, 5432, 6379, 27017}
+		for _, p := range forbidden {
+			if port == p {
+				return fmt.Errorf("port %d is reserved and cannot be used", port)
+			}
+		}
+
+		return nil
+	}
+
+	prompt := promptui.Prompt{
+		Label:    "Port Number",
+		Default:  "3000",
+		Validate: validate,
+	}
+
+	result, err := prompt.Run()
+	if err != nil {
+		return 0, err
+	}
+
+	port, err := strconv.Atoi(result)
+	if err != nil {
+		return 0, err
+	}
+
+	return port, nil
 }

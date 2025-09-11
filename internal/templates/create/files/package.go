@@ -166,6 +166,7 @@ func getDependencies(orm models.Orm, express bool) map[string]string {
 		deps["typeorm"] = "^0.3.26"
 		deps["mysql2"] = "^3.14.4"
 		deps["sqlite3"] = "^5.1.7"
+
 	}
 	if express {
 		deps["express"] = "^4.18.2"

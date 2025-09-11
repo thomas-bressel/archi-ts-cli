@@ -53,6 +53,12 @@ func runCreate(cmd *cobra.Command, args []string) error {
 
 	}
 
+	// Prompt 4 - Port listen
+	port, err := prompts.PromptPort()
+	if err != nil {
+		return fmt.Errorf("error when entering listen port: %w", err)
+	}
+
 	// Step 2: Create the project architecture
 
 	// Create the project directory
@@ -86,6 +92,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		Name:         projectName,
 		Architecture: models.Architecture(architecture),
 		Orm:          models.Orm(orm),
+		Port:         port,
 		Express:      express,
 	}
 
