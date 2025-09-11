@@ -107,30 +107,59 @@ func getDefaultIndexPlain() string {
 }
 
 // Default Index file with Express but no Orm
+// [X] Layered, Clean or Hexagonale Architecture
+// [X] Express.js
+func getDefaultIndexWithExpress() string {
+	return `
+/**
+ * The main server file 
+ * @module index
+**/
+
+import express, { Request, Response } from 'express';
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
+// import routes here
+
+const server = express();
+server.use(express.json());
+
+// Route paths here
+
+// Default route (health check)
+server.get('/', (req: Request, res: Response) => {
+  res.json({
+    message: 'Welcome to ArchiTS API',
+    version: '1.0.0',
+    status: 'running',
+    stack: 'NodeJS, TypeScript',
+    library: 'ExpressJS'
+  });
+});
+
+
+
+// Start server
+const PORT = process.env.LISTEN_PORT ?? 3000;
+server.listen(PORT, () => {
+  console.log(` + "`🚀 Server running on http://localhost:${PORT}`" + `);
+});
+
+export default server;
+`
+}
+
+// Default Index file with Express but no Orm
 // [X] Layered Architecture
-// [O] Clean Architecture
+// [X] Clean Architecture
 // [X] Hexagonal Architecture
 // [X] Express.js
 // [X] TypeORM
 func getDefaultIndexWithExpressAndTypeORM(architecture models.Architecture) string {
-	var imports string = ""
-	switch architecture {
-	case models.LayeredArchitecture:
-		imports = `
-        import { AppDataSource } from "@connection/data-source";
-        import { createDatabaseIfNotExists } from "@connection/create-database";`
-	case models.CleanArchitecture:
-		imports = `
-        import { AppDataSource } from "@connection/data-source";
-        import { createDatabaseIfNotExists } from "@connection/create-database";`
-	case models.HexagonalArchitecture:
-		imports = `
-        import { AppDataSource } from "@adapters-typeorm/data-source";
-        import { createDatabaseIfNotExists } from "@adapters-typeorm/create-database";`
-	default:
-		return ""
-	}
-
+	imports := getImportPaths(architecture)
 	return `
     /**
      * The main server file
@@ -191,68 +220,27 @@ func getDefaultIndexWithExpressAndTypeORM(architecture models.Architecture) stri
     export default server;`
 }
 
-// Default Index file with Express but no Orm
-// [X] Layered, Clean or Hexagonale Architecture
-// [X] Express.js
-func getDefaultIndexWithExpress() string {
+// getImportPaths return import paths depending on chosen architecture
+// [X] Layered Architecture
+// [X] Clean Architecture
+// [X] Hexagonal Architecture
+func getImportPaths(architecture models.Architecture) string {
 	var imports string = ""
-
-	return `
-    /**
-     * The main server file
-     * @module index
-    **/
-
-    // External dependencies
-    import express, { Request, Response } from "express";
-    import dotenv from "dotenv";
-
-    // Internal dependencies
-    ` + imports + `
-
-    // import routes here
-
-    // Load environment variables from .env file
-    dotenv.config();
-
-    // Initialize Express app
-    const server = express();
-    server.use(express.json());
-
-    // Default route (health check)
-    server.get("/", (req: Request, res: Response) => {
-      res.json({
-        message: "Welcome to ArchiTS API",
-        version: "1.0.0",
-        status: "running",
-        stack: "NodeJS, TypeScript",
-        library: "ExpressJS + TypeORM",
-      });
-    });
-
-    // Start server with DB
-    (async () => {
-      try {
-
-        // Initialize database connection
-        await createDatabaseIfNotExists();
-
-        // Initialize TypeORM data source
-        await AppDataSource.initialize();
-        console.log("✅ Data source initialized");
-
-        // Route paths here
-
-        // Start server
-        const PORT = process.env.LISTEN_PORT ?? 3000;
-        server.listen(PORT, () => {
-          console.log(` + "`🤘 Server running on http://localhost:${PORT}`" + `);
-        });
-      } catch (err) {
-        console.error("❌ Failed to start server:", err);
-        process.exit(1);
-      }
-    })();
-
-    export default server;`
+	switch architecture {
+	case models.LayeredArchitecture:
+		imports = `
+        import { AppDataSource } from "@connection/data-source";
+        import { createDatabaseIfNotExists } from "@connection/create-database";`
+	case models.CleanArchitecture:
+		imports = `
+        import { AppDataSource } from "@config/data-source";
+        import { createDatabaseIfNotExists } from "@config/create-database";`
+	case models.HexagonalArchitecture:
+		imports = `
+        import { AppDataSource } from "@adapters-typeorm/data-source";
+        import { createDatabaseIfNotExists } from "@adapters-typeorm/create-database";`
+	default:
+		return ""
+	}
+	return imports
 }

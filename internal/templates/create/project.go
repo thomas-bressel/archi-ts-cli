@@ -24,8 +24,10 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	}
 
 	// Generate ORM specific files if needed
-	if err := generateORMFiles(cfg); err != nil {
-		return fmt.Errorf("error during ORM files creation: %w", err)
+	if cfg.Orm == models.TypeOrm {
+		if err := generateORMFiles(cfg); err != nil {
+			return fmt.Errorf("error during ORM files creation: %w", err)
+		}
 	}
 
 	// Generate the config file of the project
@@ -48,7 +50,7 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 
 // createDirectoryStructure creates the directory structure based on the chosen architecture and ORM
 // [X] Layered Architecture
-// [ ] Clean Architecture
+// [X] Clean Architecture
 // [ ] Hexagonal Architecture
 func createDirectoryStructure(architecture models.Architecture, orm models.Orm) error {
 	var directories []string
@@ -142,7 +144,7 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 
 // generateORMFiles generates ORM specific files if the architecture is Hexagonal and ORM is TypeORM
 // [X] Layered Architecture
-// [ ] Clean Architecture
+// [X] Clean Architecture
 // [ ] Hexagonal Architecture
 func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	ormPath := ""
@@ -151,7 +153,7 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	case models.LayeredArchitecture:
 		ormPath = filepath.Join("src", "data", "database", "connection")
 	case models.CleanArchitecture:
-		ormPath = filepath.Join("src", "data", "database", "connection")
+		ormPath = filepath.Join("src", "infrastructure", "database", "config")
 	case models.HexagonalArchitecture:
 		ormPath = filepath.Join("src", "data", "database", "connection")
 	default:

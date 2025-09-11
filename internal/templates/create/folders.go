@@ -39,13 +39,13 @@ func getLayeredDirectories() []string {
 		"src/common/logging",
 
 		// Base directories
-		"database",
-		"database/backups",
-		"database/schema",
 		"storage",
 		"storage/uploads",
 		"storage/avatars",
 		"storage/documents",
+		"storage/database",
+		"storage/database/backups",
+		"storage/database/schema",
 		"tests",
 		"tests/unit",
 		"tests/unit/presnetation",
@@ -69,50 +69,77 @@ getCleanDirectories returns the directory structure for Clean Architecture
 func getCleanDirectories() []string {
 	return []string{
 		"src",
-		// Domain
+
+		// 1. Domain (business entities)
 		"src/domain",
 		"src/domain/entities",
+		"src/domain/value-objects",
+		"src/domain/errors",
 
-		// Data
-		"src/data",
-		"src/data/repositories",
-		"src/data/data-sources",
-		"src/data/data-sources/local",
-		"src/data/services",
-		"src/data/dtos",
-		"src/data/models",
-		"src/data/mappers",
+		// 2. Application/Use Cases (business logic)
+		"src/application",
+		"src/application/use-cases",
+		"src/application/interfaces", // repositories interfaces
+		"src/application/dtos",
 
-		// Presentation
+		// 4. Presentation (Web)
 		"src/presentation",
 		"src/presentation/controllers",
 		"src/presentation/routes",
 		"src/presentation/middlewares",
-		"src/presentation/models",
+		"src/presentation/validators",
 
-		// Main Layer (Composition Root)
+		// 3. Infrastructure (Implementations)
 		"src/infrastructure",
+		"src/infrastructure/repositories", // Real Implementations
 		"src/infrastructure/database",
+		"src/infrastructure/database/config",
 		"src/infrastructure/cache",
 		"src/infrastructure/email",
-		"src/infrastructure/server",
+		"src/infrastructure/mappers",
 
 		// Shared
 		"src/shared",
-		"src/shared/utils",
-		"src/shared/constants",
 
 		// Base directories
-		"database",
-		"database/backups",
-		"database/schema",
 		"storage",
 		"storage/uploads",
 		"storage/avatars",
 		"storage/documents",
-		"__tests__",
-		"__tests__/unit",
-		"__tests__/functional",
+		"storage/database",
+		"storage/database/backups",
+		"storage/database/schema",
+		"tests",
+
+		// 1. Unit test by layers
+		"tests/unit",
+		"tests/unit/domain", // Entities, Value Objects
+		"tests/unit/domain/entities",
+		"tests/unit/domain/value-objects",
+
+		"tests/unit/application", // Use Cases (IMPORTANT!)
+		"tests/unit/application/use-cases",
+
+		"tests/unit/infrastructure", // Repositories, exernal services
+		"tests/unit/infrastructure/repositories",
+		"tests/unit/infrastructure/services",
+
+		"tests/unit/presentation", // Controllers, validators
+		"tests/unit/presentation/controllers",
+		"tests/unit/presentation/middlewares",
+
+		// 2. Integration tests
+		"tests/integration",
+		"tests/integration/repositories", // real BDD
+		"tests/integration/api",          // Routes and controllers
+		"tests/integration/use-cases",    // Use cases with true dependancies
+		"tests/integration/external",     // other services (email, etc.)
+
+		// 3. E2E Tests
+		"tests/e2e",
+		"tests/e2e/scenarios", // Full scenari
+		"tests/e2e/api",       // full API
+
 		"logs",
 		".github/",
 		".github/workflows",

@@ -29,7 +29,7 @@ export default config;`
 
 // getJestConfigPaths returns the paths configuration based on architecture and ORM
 // [X] Layered Architecture
-// [ ] Clean Architecture
+// [X] Clean Architecture
 // [ ] Hexagonal Architecture
 func getJestConfigPaths(architecture models.Architecture) string {
 	switch architecture {
@@ -52,10 +52,30 @@ func getJestConfigPaths(architecture models.Architecture) string {
     "^@connection/(.*)$": "<rootDir>/src/data/database/connection/$1",
     "^@migration/(.*)$": "<rootDir>/src/data/database/migration/$1",
     "^@seeds/(.*)$": "<rootDir>/src/data/database/seeds/$1",
+    "^@storage/(.*)$": "<rootDir>/storage/$1",
 	}`
 
 	case models.CleanArchitecture:
-		return ""
+		return `{
+      "^@src/(.*)$": "<rootDir>/src/$1",
+      "^@entities/(.*)$": "<rootDir>/src/domain/entities/$1",
+      "^@errors/(.*)$": "<rootDir>/src/domain/errors/$1",
+      "^@usecases/(.*)$": "<rootDir>/src/application/use-cases/$1",
+      "^@services/(.*)$": "<rootDir>/src/application/use-cases/$1",
+      "^@interfaces/(.*)$": "<rootDir>/src/application/interfaces/$1",
+      "^@dtos/(.*)$": "<rootDir>/src/application/dtos/$1",
+      "^@controllers/(.*)$": "<rootDir>/src/presentation/controllers/$1",
+      "^@routes/(.*)$": "<rootDir>/src/presentation/routes/$1",
+      "^@middlewares/(.*)$": "<rootDir>/src/presentation/middlewares/$1",
+      "^@validators/(.*)$": "<rootDir>/src/presentation/validators/$1",
+      "^@repositories/(.*)$": "<rootDir>/src/infrastructure/repositories/$1",
+      "^@cache/(.*)$": "<rootDir>/src/infrastructure/cache/$1",
+      "^@email/(.*)$": "<rootDir>/src/infrastructure/email/$1",
+      "^@mappers/(.*)$": "<rootDir>/src/infrastructure/mappers/$1",
+      "^@config/(.*)$": "<rootDir>/src/infrastructure/database/config/$1",
+      "^@utils/(.*)$": "<rootDir>/src/shared/utils/$1",
+      "^@storage/(.*)$": "<rootDir>/storage/$1",
+    }`
 
 	case models.HexagonalArchitecture:
 		return ""

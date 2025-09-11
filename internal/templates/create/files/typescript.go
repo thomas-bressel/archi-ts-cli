@@ -38,19 +38,29 @@ func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) strin
 // getTsconfigPaths returns the paths configuration based on architecture and ORM
 // [X] Layered Architecture
 // [X] Clean Architecture
-// [X] Hexagonal Architecture
+// [ ] Hexagonal Architecture
 func getTsconfigPaths(architecture models.Architecture, orm models.Orm) string {
 	switch architecture {
 	case models.CleanArchitecture:
 		return `{
       "@src/*": ["src/*"],
       "@entities/*": ["src/domain/entities/*"],
+      "@errors/*": ["src/domain/errors/*"],
+      "@usecases/*": ["src/application/use-cases/*"],
+      "@services/*": ["src/application/use-cases/*"],
+      "@interfaces/*": ["src/application/interfaces/*"],
+      "@dtos/*": ["src/application/dtos/*"],
       "@controllers/*": ["src/presentation/controllers/*"],
-      "@services/*": ["src/data/services/*"],
-      "@repositories/*": ["src/data/repositories/*"],
       "@routes/*": ["src/presentation/routes/*"],
       "@middlewares/*": ["src/presentation/middlewares/*"],
-      "@utils/*": ["src/shared/utils/*"]
+      "@validators/*": ["src/presentation/validators/*"],
+      "@repositories/*": ["src/infrastructure/repositories/*"],
+      "@cache/*": ["src/infrastructure/cache/*"],
+      "@email/*": ["src/infrastructure/email/*"],
+      "@mappers/*": ["src/infrastructure/mappers/*"],
+      "@config/*": ["src/infrastructure/database/config/*"],
+      "@utils/*": ["src/shared/utils/*"],
+      "@storage/*": ["storage/*"],
     }`
 
 	case models.HexagonalArchitecture:
@@ -86,17 +96,21 @@ func getTsconfigPaths(architecture models.Architecture, orm models.Orm) string {
       "@errors/*": ["src/common/errors/*"],
       "@logging/*": ["src/common/logging/*"],
       "@utils/*": ["src/common/utils/*"],
+
       "@controllers/*": ["src/presentation/controllers/*"],
       "@middlewares/*": ["src/presentation/middlewares/*"],
       "@routes/*": ["src/presentation/routes/*"],
+
       "@services/*": ["src/business/services/*"],
       "@interfaces/*": ["src/business/interfaces/*"],
       "@businessmodels/*": ["src/business/models/*"],
+
       "@repositories/*": ["src/data/repositories/*"],
       "@datamodels/*": ["src/data/models/*"],
       "@connection/*": ["src/data/database/connection/*"],
       "@migration/*": ["src/data/database/migration/*"],
       "@seeds/*": ["src/data/database/seeds/*"],
+      "@storage/*": ["storage/*"],
     }`
 
 	default:
