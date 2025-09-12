@@ -6,7 +6,7 @@ import (
 )
 
 // GetControllerTestTemplate generates unit test template for controllers
-func GetControllerTestTemplate(cfg EntityConfig) string {
+func GetControllerUnitTestTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
 	return fmt.Sprintf(`// Express importation
@@ -136,7 +136,7 @@ describe('%sController', () => {
 }
 
 // GetServiceTestTemplate generates unit test template for services
-func GetServiceTestTemplate(cfg EntityConfig) string {
+func GetServiceUnitTestTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
 	return fmt.Sprintf(`import { %sService } from '@services/%s.service';
@@ -228,7 +228,7 @@ describe('%sService', () => {
 }
 
 // GetRepositoryTestTemplate generates unit test template for repositories
-func GetRepositoryTestTemplate(cfg EntityConfig) string {
+func GetRepositoryUnitTestTemplate(cfg EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
 	return fmt.Sprintf(`import { %sRepository } from '@repositories/%s.repository';

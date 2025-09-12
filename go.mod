@@ -1,6 +1,6 @@
 module archi-ts-cli
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.6
 
@@ -8,7 +8,7 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.9.1
-	golang.org/x/text v0.28.0
+	golang.org/x/text v0.29.0
 )
 
 require (

@@ -46,7 +46,7 @@ func getLayeredDirectories() []string {
 		"storage/database/schema",
 		"tests",
 		"tests/unit",
-		"tests/unit/presnetation",
+		"tests/unit/presentation",
 		"tests/unit/business",
 		"tests/unit/data",
 		"tests/functional",
