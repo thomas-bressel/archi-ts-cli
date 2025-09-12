@@ -1,17 +1,18 @@
 package generate
 
 import (
+	"archi-ts-cli/internal/models"
 	"fmt"
 	"strings"
 )
 
 // GetServiceTemplate generate service template
-func GetServiceTemplate(cfg EntityConfig) string {
+func GetServiceTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`
 // Layer imports
 import { %sRepository } from '@repositories/%s.repository';
-import %s from '@entities/%s.entity';
+import { %s } from '@businessmodels/%s.model';
 
 export class %sService {
   private %sRepository: %sRepository;

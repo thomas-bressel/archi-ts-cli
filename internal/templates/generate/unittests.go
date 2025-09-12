@@ -1,16 +1,42 @@
 package generate
 
 import (
+	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/generate/exports"
 	"fmt"
 	"strings"
 )
 
 // GetControllerTestTemplate generates unit test template for controllers
-func GetControllerUnitTestTemplate(cfg EntityConfig) string {
+func GetControllerUnitTestTemplate(cfg models.EntityConfig) string {
+
 	lowerName := strings.ToLower(cfg.Name)
-	lowerPlural := lowerName + "s"
-	return fmt.Sprintf(`// Express importation
-import { Request, Response } from 'express';
+	libraryImport := ""
+	testReqResMock := ""
+	testReqResMockSetup := ""
+	testAct := ""
+	testAssert200 := ""
+	testAssert500 := ""
+
+	// is Express used ?
+	if cfg.Express {
+		libraryImport = exports.ExpressImportation()
+		testReqResMock = exports.ExpressReqResMock()
+		testReqResMockSetup = exports.ExpressReqResMockSetup()
+		testAct = exports.ExpressActController()
+		testAssert200 = exports.ExpressAssertController(200)
+		testAssert500 = exports.ExpressAssertController(500)
+	} else {
+		libraryImport = exports.NodeImportation()
+		testReqResMock = exports.NodeReqResMock()
+		testReqResMockSetup = exports.NodeReqResMockSetup()
+		testAct = exports.NodeActController()
+		testAssert200 = exports.NodeAssertController(200)
+		testAssert500 = exports.NodeAssertController(500)
+	}
+
+	return fmt.Sprintf(`%s
+
 
 // Layers importation
 import { %sController } from '@controllers/%s.controller';
@@ -23,8 +49,8 @@ jest.mock('@services/%s.service');
 describe('%sController', () => {
   let controller: %sController;
   let mockService: jest.Mocked<%sService>;
-  let mockRequest: Partial<Request>;
-  let mockResponse: Partial<Response>;
+
+%s
 
   beforeEach(() => {
     // Clear all mocks before each test
@@ -36,24 +62,12 @@ describe('%sController', () => {
     // Initialize controller with mock service (dependency injection)
     controller = new %sController(mockService);
 
-    // Setup mock request
-    mockRequest = {
-      params: {},
-      body: {},
-      query: {},
-      headers: {},
-    };
+%s
 
-    // Setup mock response with chainable methods
-    mockResponse = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
-      send: jest.fn().mockReturnThis(),
-    };
   });
 
   describe('getAll', () => {
-    it('should return all %s successfully with status 200', async () => {
+    it('should return all %ss successfully with status 200', async () => {
       // Arrange
       const mock%sData = [
         { id_%s: 1 },
@@ -62,15 +76,12 @@ describe('%sController', () => {
       mockService.findAll.mockResolvedValue(mock%sData);
 
       // Act
-      await controller.getAll(mockRequest as Request, mockResponse as Response);
+     %s
 
       // Assert
       expect(mockService.findAll).toHaveBeenCalledTimes(1);
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        data: mock%sData,
-      });
+     %s
+      
     });
 
     it('should return 200 with empty array when service returns empty array', async () => {
@@ -78,15 +89,11 @@ describe('%sController', () => {
       mockService.findAll.mockResolvedValue([]);
 
       // Act
-      await controller.getAll(mockRequest as Request, mockResponse as Response);
+      %s
 
       // Assert
       expect(mockService.findAll).toHaveBeenCalledTimes(1);
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        data: [],
-      });
+      %s
     });
 
     it('should handle errors when fetching %s fails', async () => {
@@ -95,48 +102,41 @@ describe('%sController', () => {
       mockService.findAll.mockRejectedValue(new Error(errorMessage));
 
       // Act
-      await controller.getAll(mockRequest as Request, mockResponse as Response);
+      %s
 
       // Assert
       expect(mockService.findAll).toHaveBeenCalledTimes(1);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(errorMessage);
-    });
+      %s
+  });
 
     it('should return "Internal server error" for non-Error exceptions', async () => {
       // Arrange
       mockService.findAll.mockRejectedValue('Unknown error');
 
       // Act
-      await controller.getAll(mockRequest as Request, mockResponse as Response);
-
+      %s
+      
       // Assert
       expect(mockService.findAll).toHaveBeenCalledTimes(1);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith("Internal server error");
-    });
+      %s
   });
-});
-`,
-		// Arguments for fmt.Sprintf, in order of appearance of %s
-		cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName, // Imports
-		lowerName,          // jest.mock
-		cfg.Name,           // describe block
-		cfg.Name, cfg.Name, // let declarations
-		cfg.Name, cfg.Name, cfg.Name, // beforeEach: new Service()
-		cfg.Name,    // beforeEach: new Controller()
-		lowerPlural, // it should return all...
-		cfg.Name,    // mock%sData
-		lowerName,   // id_%s: 1
-		lowerName,   // id_%s: 2
-		cfg.Name,    // mockResolvedValue
-		cfg.Name,    // expect mockData
-		lowerPlural, // it should handle errors...
+  });
+});`, libraryImport,
+		cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName,
+		lowerName, cfg.Name, cfg.Name, cfg.Name,
+		testReqResMock,
+		cfg.Name, cfg.Name, cfg.Name, cfg.Name,
+		testReqResMockSetup,
+		lowerName, cfg.Name, lowerName, lowerName, cfg.Name,
+		testAct, testAssert200,
+		testAct, testAssert200,
+		lowerName, testAct, testAssert500,
+		testAct, testAssert500,
 	)
 }
 
 // GetServiceTestTemplate generates unit test template for services
-func GetServiceUnitTestTemplate(cfg EntityConfig) string {
+func GetServiceUnitTestTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
 	return fmt.Sprintf(`import { %sService } from '@services/%s.service';
@@ -228,7 +228,7 @@ describe('%sService', () => {
 }
 
 // GetRepositoryTestTemplate generates unit test template for repositories
-func GetRepositoryUnitTestTemplate(cfg EntityConfig) string {
+func GetRepositoryUnitTestTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
 	return fmt.Sprintf(`import { %sRepository } from '@repositories/%s.repository';

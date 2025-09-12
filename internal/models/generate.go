@@ -13,3 +13,9 @@ type EntityPaths struct {
 	ServiceUnitTest    string
 	RepositoryUnitTest string
 }
+
+// EntityConfig configuration to generate an entity
+type EntityConfig struct {
+	Name    string
+	Express bool
+}

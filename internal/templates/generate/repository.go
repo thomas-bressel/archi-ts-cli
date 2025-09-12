@@ -1,16 +1,17 @@
 package generate
 
 import (
+	"archi-ts-cli/internal/models"
 	"fmt"
 	"strings"
 )
 
 // GetRepositoryTemplate gégenerate the repository template
-func GetRepositoryTemplate(cfg EntityConfig) string {
+func GetRepositoryTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`
 // Layer importations
-import %s from '@entities/%s.entity';
+import %s from '@datamodels/%s.model';
 
 export class %sRepository {
   // TODO: Add your database connection/ORM here

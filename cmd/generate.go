@@ -31,11 +31,9 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get config of the entity
-	//
-	// REFACTO --> simplify this data struct
-	//
-	entityConfig := generate.EntityConfig{
-		Name: entityName,
+	entityConfig := models.EntityConfig{
+		Name:    entityName,
+		Express: projectConfig.Express,
 	}
 
 	// Define suffixe and paths of each files
@@ -43,30 +41,6 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext, string(projectConfig.Orm))
 
 	createListFilesToGenerate(string(projectConfig.Architecture), entityConfig, paths)
-
-	// color.New(color.FgCyan, color.Bold).Println("📁 Generating source files...")
-	// for i, file := range filesToGenerate {
-	// 	if i == 5 {
-	// 		fmt.Println()
-	// 		color.New(color.FgCyan, color.Bold).Println("🧪 Generating test files...")
-	// 	}
-
-	// 	dir := filepath.Dir(file.path)
-	// 	if err := utils.CreateDirectory(dir); err != nil {
-	// 		return fmt.Errorf("error while creating the directory %s: %w", dir, err)
-	// 	}
-
-	// 	if err := utils.WriteFile(file.path, file.template); err != nil {
-	// 		return fmt.Errorf("error while creating the file %s: %w", file.path, err)
-	// 	}
-	// 	color.New(color.FgGreen).Printf("  ✅ %s created: %s\n", file.name, file.path)
-	// }
-
-	// fmt.Println()
-	// color.New(color.FgGreen, color.Bold).Printf("✨ '%s' entity has been generated with tests!\n", entityName)
-	// color.New(color.FgYellow).Println("💡 Don't forget to:")
-	// fmt.Println("  - Run tests: npm test")
-	// fmt.Println("  - Update test files with your specific business logic")
 
 	return nil
 }
@@ -126,7 +100,8 @@ func getEntityPaths(architecture string, entityName string, ext string, orm stri
 	}
 }
 
-func createListFilesToGenerate(architecture string, entityConfig generate.EntityConfig, paths models.EntityPaths) {
+// createListFilesToGenerate return an array with all files to create
+func createListFilesToGenerate(architecture string, entityConfig models.EntityConfig, paths models.EntityPaths) {
 
 	switch architecture {
 	case string(models.CleanArchitecture):
@@ -155,6 +130,18 @@ func createListFilesToGenerate(architecture string, entityConfig generate.Entity
 
 }
 
+// Generate all files in right folders
+// [X] Layered - route.go
+// [X] Layered - controller.go
+// [X] Layered - service.go
+// [X] Layered - repository.go
+// [X] Layered - model.go
+// [X] Layered - rawmodel.go
+// [ ] Layered - unittests.go
+// [ ] Layered
+// [ ] Layered
+// [ ] Layered
+// [ ] Layered
 func GenerateAllFiles(filesToGenerate []struct {
 	path     string
 	template string
