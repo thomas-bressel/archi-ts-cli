@@ -97,6 +97,8 @@ func getEntityPaths(architecture string, entityName string, ext string, orm stri
 			ControllerUnitTest: fmt.Sprintf("tests/unit/presentation/%s.controller.test.%s", lowerName, ext),
 			ServiceUnitTest:    fmt.Sprintf("tests/unit/business/%s.service.test.%s", lowerName, ext),
 			RepositoryUnitTest: fmt.Sprintf("tests/unit/data/%s.repository.test.%s", lowerName, ext),
+
+			ApiIntegrationTest: fmt.Sprintf("tests/integration/api/%s.integration.test.%s", lowerName, ext),
 		}
 	}
 }
@@ -124,6 +126,7 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
 			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig), "Service Unit Test"},
 			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig), "Repository Unit Test"},
+			{paths.ApiIntegrationTest, tests.GetApiIntegrationTestTemplate(entityConfig), "Api Integration. Test"},
 		}
 
 		GenerateAllFiles(filesToGenerate)

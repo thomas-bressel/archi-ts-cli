@@ -12,6 +12,7 @@ type EntityPaths struct {
 	ControllerUnitTest string
 	ServiceUnitTest    string
 	RepositoryUnitTest string
+	ApiIntegrationTest string
 }
 
 // EntityConfig configuration to generate an entity
