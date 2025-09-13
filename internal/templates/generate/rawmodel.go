@@ -10,9 +10,11 @@ import (
 func GetRawModelTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	return fmt.Sprintf(`
-export default interface %s {
-    id_%s: number | null;
-    // Add other database entity fields here
+export default class %s {
+	constructor(
+		public readonly id_%s: number | null
+		// Add other database entity fields here
+	) {}
 }
 `, cfg.Name, lowerName)
 }

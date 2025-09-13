@@ -4,6 +4,7 @@ import (
 	"archi-ts-cli/internal/config"
 	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/templates/generate"
+	"archi-ts-cli/internal/templates/generate/tests"
 
 	"archi-ts-cli/internal/utils"
 	"fmt"
@@ -120,9 +121,9 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.Service, generate.GetServiceTemplate(entityConfig), "Service"},
 			{paths.Repository, generate.GetRepositoryTemplate(entityConfig), "Repository"},
 			{paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
-			{paths.ControllerUnitTest, generate.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
-			{paths.ServiceUnitTest, generate.GetServiceUnitTestTemplate(entityConfig), "Service Unit Test"},
-			{paths.RepositoryUnitTest, generate.GetRepositoryUnitTestTemplate(entityConfig), "Repository Unit Test"},
+			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
+			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig), "Service Unit Test"},
+			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig), "Repository Unit Test"},
 		}
 
 		GenerateAllFiles(filesToGenerate)
