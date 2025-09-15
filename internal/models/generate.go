@@ -19,4 +19,5 @@ type EntityPaths struct {
 type EntityConfig struct {
 	Name    string
 	Express bool
+	Orm     Orm
 }

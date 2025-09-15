@@ -15,7 +15,7 @@ func GeneratePackageJson(cfg models.ProjectConfigBuilder) (string, error) {
 		Version:     "1.0.0",
 		Description: getDescription(cfg),
 		Main:        getMain(cfg.Architecture),
-		Scripts:     getScripts(cfg.Architecture),
+		Scripts:     getScripts(cfg.Architecture, cfg.Orm),
 		Keywords:    getKeywords(cfg.Architecture, cfg.Express, cfg.Orm),
 		Author:      "",
 		License:     "MIT",
@@ -98,11 +98,12 @@ func getMain(architecture models.Architecture) string {
 // [X] Layered Architecture
 // [X] Clean Architecture
 // [X] Hexagonal Architecture
-func getScripts(architecture models.Architecture) map[string]string {
+func getScripts(architecture models.Architecture, orm models.Orm) map[string]string {
+	var scripts map[string]string
 
 	switch architecture {
 	case models.HexagonalArchitecture:
-		return map[string]string{
+		scripts = map[string]string{
 			"build":         "tsc",
 			"dev":           "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
 			"lint":          "eslint src/**/*.ts",
@@ -114,18 +115,28 @@ func getScripts(architecture models.Architecture) map[string]string {
 			"watch":         "tsc --watch",
 		}
 	default:
-		return map[string]string{
-			"start":         "node dist/src/index.js",
-			"dev":           "nodemon --watch 'src/**/*.ts' --exec 'ts-node -r tsconfig-paths/register' src/index.ts",
+		scripts = map[string]string{
 			"build":         "tsc",
-			"watch":         "tsc --watch",
+			"dev":           "nodemon --watch 'src/**/*.ts' --exec 'ts-node -r tsconfig-paths/register' src/index.ts",
 			"lint":          "eslint src/**/*.ts",
 			"lint:fix":      "eslint src/**/*.ts --fix",
+			"start":         "node dist/src/index.js",
 			"test":          "jest",
-			"test:watch":    "jest --watch",
 			"test:coverage": "jest --coverage",
+			"test:watch":    "jest --watch",
+			"watch":         "tsc --watch",
 		}
 	}
+
+	// Add TypeORM migration scripts if needed
+	if orm == models.TypeOrm {
+		typeOrmScripts := getTypeOrmMigrationScripts()
+		for key, value := range typeOrmScripts {
+			scripts[key] = value
+		}
+	}
+
+	return scripts
 }
 
 // getKeywords returns keywords based on Express usage (standard architectures)
@@ -203,4 +214,19 @@ func getDevDependencies(express bool) map[string]string {
 	}
 
 	return devDeps
+}
+
+// getTypeOrmMigrationScripts returns TypeORM specific migration scripts
+// npm run migration:generate -- NameOfTheMigration
+func getTypeOrmMigrationScripts() map[string]string {
+	return map[string]string{
+		"migration:generate": "TS_NODE_PROJECT=./tsconfig.json ts-node -r tsconfig-paths/register scripts/generate-migration.ts",
+		"migration:run":      "TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./src/data/database/connection/data-source.ts",
+		"migration:revert":   "TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:revert -d ./src/data/database/connection/data-source.ts",
+		"migration:show":     "TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:show -d ./src/data/database/connection/data-source.ts",
+		"m:gen":              "npm run migration:generate",
+		"m:run":              "npm run migration:run",
+		"m:revert":           "npm run migration:revert",
+		"m:show":             "npm run migration:show",
+	}
 }

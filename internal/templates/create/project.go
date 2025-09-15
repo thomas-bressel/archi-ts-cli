@@ -144,16 +144,21 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 // [X] Hexagonal Architecture
 func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	ormPath := ""
+	scriptPath := ""
 
 	switch cfg.Architecture {
 	case models.LayeredArchitecture:
 		ormPath = filepath.Join("src", "data", "database", "connection")
+		scriptPath = filepath.Join("scripts")
 	case models.CleanArchitecture:
 		ormPath = filepath.Join("src", "infrastructure", "database", "config")
+		scriptPath = filepath.Join("scripts")
 	case models.HexagonalArchitecture:
 		ormPath = filepath.Join("src", "adapters", "secondary", "persistence", "orm")
+		scriptPath = filepath.Join("scripts")
 	default:
 		ormPath = ""
+		scriptPath = ""
 	}
 
 	// Generate data-source.ts
@@ -166,6 +171,12 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 	createDbPath := filepath.Join(ormPath, "create-database.ts")
 	if err := utils.WriteFile(createDbPath, files.GetTypeORMCreateDatabaseTemplate()); err != nil {
 		return fmt.Errorf("error creating create-database.ts: %w", err)
+	}
+
+	// Generate generate-migration.ts
+	createScriptsPath := filepath.Join(scriptPath, "generate-migration.ts")
+	if err := utils.WriteFile(createScriptsPath, files.GetHelperORMScriptTemplate()); err != nil {
+		return fmt.Errorf("error creating generate-migration.ts: %w", err)
 	}
 
 	return nil

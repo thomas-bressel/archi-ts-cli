@@ -25,7 +25,7 @@ func getLayeredDirectories() []string {
 		"src/data/models",
 		"src/data/database",
 		"src/data/database/connection",
-		"src/data/database/migration",
+		"src/data/database/migrations",
 		"src/data/database/seeds",
 
 		// Common utils
@@ -37,6 +37,7 @@ func getLayeredDirectories() []string {
 		"src/common/logging",
 
 		// Base directories
+		"scripts",
 		"storage",
 		"storage/uploads",
 		"storage/avatars",
@@ -92,6 +93,7 @@ func getCleanDirectories() []string {
 		"src/infrastructure/repositories", // Real Implementations
 		"src/infrastructure/database",
 		"src/infrastructure/database/config",
+		"src/infrastructure/database/migrations",
 		"src/infrastructure/cache",
 		"src/infrastructure/email",
 		"src/infrastructure/mappers",
@@ -100,6 +102,7 @@ func getCleanDirectories() []string {
 		"src/shared",
 
 		// Base directories
+		"scripts",
 		"storage",
 		"storage/uploads",
 		"storage/avatars",
@@ -181,6 +184,7 @@ func getHexagonalDirectories() []string {
 		"src/adapters/secondary/persistence/orm",
 		"src/adapters/secondary/persistence/orm/entities",
 		"src/adapters/secondary/persistence/orm/repositories",
+		"src/adapters/secondary/persistence/orm/migrations",
 		"src/adapters/secondary/email",
 		"src/adapters/secondary/cache",
 		"src/adapters/secondary/storage",
@@ -190,7 +194,7 @@ func getHexagonalDirectories() []string {
 		"src/config/dependencies", // dependencies injection
 
 		// External directories
-
+		"scripts",
 		"storage",
 		"storage/database",
 		"storage/database/backups",

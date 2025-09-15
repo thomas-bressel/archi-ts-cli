@@ -5,10 +5,14 @@ func GetTypeORMDataSourceTemplate() string {
 	return `
     import "reflect-metadata";
     import { DataSource, DataSourceOptions } from "typeorm";
+
+    // node.js imports
     import path from "path";
     import dotenv from "dotenv";
-
     dotenv.config();
+
+    // ORM Entities imports
+    // exemple : import Product from "@datamodels/product.model";
 
     const isSQLite = process.env.DB_TYPE === "sqlite";
 
@@ -18,17 +22,21 @@ func GetTypeORMDataSourceTemplate() string {
     // Function to get the SQLite database path
     const getSQLitePath = (): string => {
       if (process.env.SQLITE_FILE) {
+
         // If SQLITE_FILE starts with './', it's relative to project root
         if (process.env.SQLITE_FILE.startsWith("./")) {
           return path.join(process.cwd(), process.env.SQLITE_FILE.substring(2));
         }
+
         // If it's an absolute path, use it as is
         if (path.isAbsolute(process.env.SQLITE_FILE)) {
           return process.env.SQLITE_FILE;
         }
+
         // Otherwise, treat it as relative to project root
         return path.join(process.cwd(), process.env.SQLITE_FILE);
       }
+
       // Default path
       return path.join(STORAGE_DATABASE_PATH, "database.sqlite");
     };
@@ -37,9 +45,15 @@ func GetTypeORMDataSourceTemplate() string {
       ? {
           type: "sqlite",
           database: getSQLitePath(),
-          // entities: [
-          // ],
-          synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",
+          // Add entities ORM here, exemple :
+          // entities: [Product],
+          migrations: [
+              path.join(process.cwd(), "src/data/database/migrations/*.ts")
+          ],
+          subscribers: [
+              path.join(process.cwd(), "src/data/subscribers/*.ts")
+          ],
+          synchronize: process.env.TYPEORM_SYNCHRONIZE === "false",
           dropSchema: process.env.TYPEORM_DROP_SCHEMA === "true",
           logging: process.env.TYPEORM_LOGGING === "true" || false,
         }
@@ -50,9 +64,15 @@ func GetTypeORMDataSourceTemplate() string {
           username: process.env.DB_USERNAME || "",
           password: process.env.DB_PASSWORD || "",
           database: process.env.DB_NAME || "",
-          // entities: [
-          // ],
-          synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",
+          // Add entities ORM here, exemple :
+          // entities: [Product],
+          migrations: [
+            path.join(process.cwd(), "src/data/database/migrations/*.ts")
+          ],
+          subscribers: [
+            path.join(process.cwd(), "src/data/subscribers/*.ts")
+          ],
+          synchronize: process.env.TYPEORM_SYNCHRONIZE === "false",
           dropSchema: process.env.TYPEORM_DROP_SCHEMA === "true",
           logging: process.env.TYPEORM_LOGGING === "true" || false,
         };
@@ -63,13 +83,23 @@ func GetTypeORMDataSourceTemplate() string {
 // GetTypeORMCreateDatabaseTemplate return template for create-database.ts file
 func GetTypeORMCreateDatabaseTemplate() string {
 	return `
+    // mysql imports
     import mysql from "mysql2/promise";
+
+    // node.js imports
     import fs from "fs";
     import path from "path";
     
+
+      /**
+     * Create the database if it does not exist.
+     * @returns Promise<void>
+     */
     export async function createDatabaseIfNotExists() {
+
       // Create sqlite file if it doesn't exist
       if (process.env.DB_TYPE === "sqlite") {
+
         // Use process.cwd() to get the project root directory
         const sqlitePath = path.join(process.cwd(), "storage/database");
         const sqliteFile = path.join(sqlitePath, "database.sqlite");
@@ -106,4 +136,40 @@ func GetTypeORMCreateDatabaseTemplate() string {
         throw error;
       }
     }`
+}
+
+// GetHeloperORMScriptTemplate return template for generate-migration.ts file
+func GetHelperORMScriptTemplate() string {
+	return `#!/usr/bin/env node
+
+const { execSync } = require('child_process');
+const path = require('path');
+
+// Get the migration name from command line arguments
+const migrationName = process.argv[2];
+
+if (!migrationName) {
+  console.error('❌ Erreur: It is necessary to provide a name for the migration.');
+  console.log('Usage: npm run migration:generate -- NameOfTheMigration');
+  process.exit(1);
+}
+
+// Build the full path for the migration file
+const migrationPath = path.join('src/data/database/migrations', migrationName);
+
+// Build the TypeORM CLI command
+const command = 'npx typeorm-ts-node-commonjs migration:generate ' + migrationPath + ' -d ./src/data/database/connection/data-source.ts -p';
+
+console.log('📝 Generation of the migration: ', migrationName);
+console.log('📂 Into: ', migrationPath);
+
+try {
+  // Launch the command
+  execSync(command, { stdio: 'inherit' });
+  console.log('✅ Migration successfull generated!');
+} catch (error) {
+  console.error('❌ Error during migration generation:', error);
+  process.exit(1);
+}`
+
 }

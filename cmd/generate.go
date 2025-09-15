@@ -35,6 +35,7 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 	entityConfig := models.EntityConfig{
 		Name:    entityName,
 		Express: projectConfig.Express,
+		Orm:     projectConfig.Orm,
 	}
 
 	// Define suffixe and paths of each files
@@ -141,11 +142,8 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 // [X] Layered - repository.go
 // [X] Layered - model.go
 // [X] Layered - rawmodel.go
-// [ ] Layered - unittests.go
-// [ ] Layered
-// [ ] Layered
-// [ ] Layered
-// [ ] Layered
+// [X] Layered - unittests.go
+// [X] Layered - integrationtests.go
 func GenerateAllFiles(filesToGenerate []struct {
 	path     string
 	template string

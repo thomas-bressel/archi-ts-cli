@@ -23,6 +23,11 @@ func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) strin
     "emitDecoratorMetadata": true,
     "paths": ` + paths + `
   },
+    "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
+    "files": true
+  },
   "include": [
     "src/**/*",
     "tests/**/*"
