@@ -2,16 +2,178 @@ package tests
 
 import (
 	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/generate/exports"
 	"fmt"
 	"strings"
 )
 
 // GetRepositoryTestTemplate generates unit test template for repositories
-func GetRepositoryUnitTestTemplate(cfg models.EntityConfig) string {
+func GetRepositoryUnitTestTemplate(cfg models.EntityConfig, architecture string) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
-	return fmt.Sprintf(`import { %sRepository } from '@repositories/%s.repository';
+
+	upperName := cfg.Name
+	layerImport := ""
+
+	switch architecture {
+	case string(models.CleanArchitecture):
+		layerImport = exports.GetTestCleanImports(upperName, lowerName)
+	case string(models.LayeredArchitecture):
+		layerImport = exports.GetTestLayeredImports(upperName, lowerName)
+	}
+
+	if cfg.Orm == models.TypeOrm {
+		return fmt.Sprintf(`
+import { %sRepository } from '@repositories/%s.repository';
 import %s from '@datamodels/%s.model';
+import { AppDataSource } from '@connection/data-source';
+import { Repository } from 'typeorm';
+
+// Mock the data source module
+jest.mock('@connection/data-source', () => ({
+  AppDataSource: {
+    getRepository: jest.fn()
+  }
+}));
+
+describe('%sRepository', () => {
+  let %sRepository: %sRepository;
+  let mockTypeOrmRepository: jest.Mocked<Repository<%s>>;
+
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+    
+    // Create a mock TypeORM repository with all necessary methods
+    mockTypeOrmRepository = {
+      find: jest.fn(),
+      findOne: jest.fn(),
+      save: jest.fn(),
+      remove: jest.fn(),
+      delete: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      count: jest.fn(),
+      findAndCount: jest.fn(),
+      // Add other Repository methods as needed
+    } as unknown as jest.Mocked<Repository<%s>>;
+
+    // Mock getRepository to return our mock repository
+    (AppDataSource.getRepository as jest.Mock).mockReturnValue(mockTypeOrmRepository);
+    
+    // Initialize repository - this will now use the mocked AppDataSource
+    %sRepository = new %sRepository();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('findAll', () => {
+    it('should return all %ss from database', async () => {
+      // Arrange
+      const mock%ss: %s[] = [
+        Object.assign(new %s(), { 
+          id_%s: 1
+          // Add other properties as needed based on your %s model
+        }),
+        Object.assign(new %s(), { 
+          id_%s: 2
+          // Add other properties as needed
+        }),
+        Object.assign(new %s(), { 
+          id_%s: 3
+          // Add other properties as needed
+        })
+      ];
+
+      // Mock the find method to return our test data
+      mockTypeOrmRepository.find.mockResolvedValue(mock%ss);
+
+      // Act
+      const result = await %sRepository.findAll();
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toEqual(mock%ss);
+      expect(result).toHaveLength(3);
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledWith();
+    });
+
+    it('should return empty array when no %ss found', async () => {
+      // Arrange
+      mockTypeOrmRepository.find.mockResolvedValue([]);
+
+      // Act
+      const result = await %sRepository.findAll();
+
+      // Assert
+      expect(result).toEqual([]);
+      expect(result).toHaveLength(0);
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle database errors properly', async () => {
+      // Arrange
+      const dbError = new Error('Database connection failed');
+      mockTypeOrmRepository.find.mockRejectedValue(dbError);
+
+      // Act & Assert
+      await expect(%sRepository.findAll()).rejects.toThrow('Database connection failed');
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle null response from database', async () => {
+      // Arrange
+      mockTypeOrmRepository.find.mockResolvedValue(null as any);
+
+      // Act
+      const result = await %sRepository.findAll();
+
+      // Assert
+      expect(result).toBeNull();
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call repository.find with no parameters', async () => {
+      // Arrange
+      mockTypeOrmRepository.find.mockResolvedValue([]);
+
+      // Act
+      await %sRepository.findAll();
+
+      // Assert
+      expect(mockTypeOrmRepository.find).toHaveBeenCalledWith();
+      // Verify no parameters were passed
+      expect(mockTypeOrmRepository.find).not.toHaveBeenCalledWith(expect.anything());
+    });
+  });
+
+  describe('Repository Initialization', () => {
+    it('should get %s repository from AppDataSource', () => {
+      // Assert
+      expect(AppDataSource.getRepository).toHaveBeenCalledWith(%s);
+      expect(AppDataSource.getRepository).toHaveBeenCalledTimes(1);
+    });
+
+    it('should create repository instance successfully', () => {
+      // Assert
+      expect(%sRepository).toBeDefined();
+      expect(%sRepository).toBeInstanceOf(%sRepository);
+    });
+  });
+});`, cfg.Name, lowerName, cfg.Name, lowerName,
+			cfg.Name, lowerName, cfg.Name, cfg.Name, cfg.Name, lowerName, cfg.Name,
+			lowerName, cfg.Name, cfg.Name, cfg.Name, lowerName, cfg.Name, cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name,
+			lowerName, lowerName, lowerName, lowerName, lowerName,
+			cfg.Name, cfg.Name, lowerName, lowerName, cfg.Name,
+		)
+	}
+
+	return fmt.Sprintf(`import { %sRepository } from '@repositories/%s.repository';
+%s
 
 // Mock database/ORM if needed
 // jest.mock('@config/database');
@@ -69,7 +231,7 @@ describe('%sRepository', () => {
 });
 `,
 		// Arguments for fmt.Sprintf
-		cfg.Name, lowerName, cfg.Name, lowerName, // imports
+		cfg.Name, lowerName, layerImport, // imports
 		cfg.Name,                               // describe
 		cfg.Name,                               // let declaration
 		cfg.Name,                               // new Repository

@@ -2,20 +2,30 @@ package generate
 
 import (
 	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/generate/exports"
 	"fmt"
 	"strings"
 )
 
 // GetRepositoryTemplate gégenerate the repository template
-func GetRepositoryTemplate(cfg models.EntityConfig) string {
+func GetRepositoryTemplate(cfg models.EntityConfig, architecture string) string {
 	lowerName := strings.ToLower(cfg.Name)
+	upperName := cfg.Name
 	ormName := cfg.Orm
+	layerImport := ""
+
+	switch architecture {
+	case string(models.CleanArchitecture):
+		layerImport = exports.GetCleanRepositoryLayerImports(upperName, lowerName)
+	case string(models.LayeredArchitecture):
+		layerImport = exports.GetLayeredRepositoryLayerImports(upperName, lowerName)
+	}
 
 	if ormName == models.TypeOrm {
 		return fmt.Sprintf(`
 // Layer importations
 import { AppDataSource } from "@connection/data-source";
-import %s from '@datamodels/%s.model';
+%s
 
 export class %sRepository {
   private repository = AppDataSource.getRepository(%s);
@@ -30,7 +40,7 @@ export class %sRepository {
      return await this.repository.find();
   }
 }
-`, cfg.Name, lowerName,
+`, layerImport,
 			cfg.Name, cfg.Name, lowerName, cfg.Name,
 			lowerName, cfg.Name,
 			cfg.Name)
@@ -39,7 +49,7 @@ export class %sRepository {
 
 	return fmt.Sprintf(`
 // Layer importations
-import %s from '@datamodels/%s.model';
+%s
 
 export class %sRepository {
   // TODO: Add your database connection/ORM here
@@ -55,7 +65,7 @@ export class %sRepository {
     return [];
   }
 }
-`, cfg.Name, lowerName,
+`, layerImport,
 		cfg.Name, lowerName, cfg.Name,
 		lowerName, cfg.Name,
 		cfg.Name)

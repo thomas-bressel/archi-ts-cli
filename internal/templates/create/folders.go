@@ -114,9 +114,6 @@ func getCleanDirectories() []string {
 
 		// 1. Unit test by layers
 		"tests/unit",
-		"tests/unit/domain", // Entities, Value Objects
-		"tests/unit/domain/entities",
-		"tests/unit/domain/value-objects",
 
 		"tests/unit/application", // Use Cases (IMPORTANT!)
 		"tests/unit/application/use-cases",

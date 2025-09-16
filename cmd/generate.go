@@ -49,22 +49,29 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 
 // getEntityPaths return paths where each files should be created
 // [X] Layered Architecture
-// [ ] Clean Architecture
+// [X] Clean Architecture
 // [ ] Hexagonal Architecture
 func getEntityPaths(architecture string, entityName string, ext string, orm string) models.EntityPaths {
 	lowerName := strings.ToLower(entityName)
 
 	switch architecture {
 	case "Clean Architecture":
+		fmt.Println("🧪 Generating clean architecture files...")
 		return models.EntityPaths{
-			Entity:             fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
-			Controller:         fmt.Sprintf("src/presentation/controllers/%s.controller.%s", lowerName, ext),
-			Service:            fmt.Sprintf("src/data/services/%s.service.%s", lowerName, ext),
-			Repository:         fmt.Sprintf("src/data/repositories/%s.repository.%s", lowerName, ext),
-			Route:              fmt.Sprintf("src/presentation/routes/%s.routes.%s", lowerName, ext),
-			ControllerUnitTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
-			ServiceUnitTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
-			RepositoryUnitTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
+			Entity: fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
+
+			Route:      fmt.Sprintf("src/presentation/routes/%s.routes.%s", lowerName, ext),
+			Controller: fmt.Sprintf("src/presentation/controllers/%s.controller.%s", lowerName, ext),
+
+			Service: fmt.Sprintf("src/application/use-cases/%s.service.%s", lowerName, ext),
+
+			Repository: fmt.Sprintf("src/infrastructure/repositories/%s.repository.%s", lowerName, ext),
+
+			ControllerUnitTest: fmt.Sprintf("tests/unit/presentation/controllers/%s.controller.test.%s", lowerName, ext),
+			ServiceUnitTest:    fmt.Sprintf("tests/unit/application/use-cases/%s.service.test.%s", lowerName, ext),
+			RepositoryUnitTest: fmt.Sprintf("tests/unit/infrastructure/repositories/%s.repository.test.%s", lowerName, ext),
+
+			ApiIntegrationTest: fmt.Sprintf("tests/integration/api/%s.integration.test.%s", lowerName, ext),
 		}
 	case "Hexagonal Architecture":
 		repositoryPath := ""
@@ -109,10 +116,34 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 
 	switch architecture {
 	case string(models.CleanArchitecture):
+		// List all file to create for clean architecture
+		filesToGenerate := []struct {
+			path     string
+			template string
+			name     string
+		}{
+			{paths.Entity, generate.GetEntityTemplate(entityConfig), "Entity"},
+
+			{paths.Route, generate.GetRouteTemplate(entityConfig), "Route"},
+			{paths.Controller, generate.GetControllerTemplate(entityConfig), "Controller"},
+
+			{paths.Service, generate.GetServiceTemplate(entityConfig, architecture), "Service"},
+
+			{paths.Repository, generate.GetRepositoryTemplate(entityConfig, architecture), "Repository"},
+
+			// {paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
+			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
+			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig, architecture), "Service Unit Test"},
+			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig, architecture), "Repository Unit Test"},
+
+			{paths.ApiIntegrationTest, tests.GetApiIntegrationTestTemplate(entityConfig, architecture), "Api Integration. Test"},
+		}
+
+		GenerateAllFiles(filesToGenerate)
 	case string(models.HexagonalArchitecture):
 	default:
 
-		// List all file to create
+		// List all file to create for layered architecture
 		filesToGenerate := []struct {
 			path     string
 			template string
@@ -121,13 +152,13 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.Route, generate.GetRouteTemplate(entityConfig), "Route"},
 			{paths.Controller, generate.GetControllerTemplate(entityConfig), "Controller"},
 			{paths.Model, generate.GetModelTemplate(entityConfig), "Model"},
-			{paths.Service, generate.GetServiceTemplate(entityConfig), "Service"},
-			{paths.Repository, generate.GetRepositoryTemplate(entityConfig), "Repository"},
+			{paths.Service, generate.GetServiceTemplate(entityConfig, architecture), "Service"},
+			{paths.Repository, generate.GetRepositoryTemplate(entityConfig, architecture), "Repository"},
 			{paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
 			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
-			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig), "Service Unit Test"},
-			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig), "Repository Unit Test"},
-			{paths.ApiIntegrationTest, tests.GetApiIntegrationTestTemplate(entityConfig), "Api Integration. Test"},
+			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig, architecture), "Service Unit Test"},
+			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig, architecture), "Repository Unit Test"},
+			{paths.ApiIntegrationTest, tests.GetApiIntegrationTestTemplate(entityConfig, architecture), "Api Integration. Test"},
 		}
 
 		GenerateAllFiles(filesToGenerate)

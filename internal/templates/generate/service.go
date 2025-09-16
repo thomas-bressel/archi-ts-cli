@@ -2,17 +2,26 @@ package generate
 
 import (
 	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/generate/exports"
 	"fmt"
 	"strings"
 )
 
 // GetServiceTemplate generate service template
-func GetServiceTemplate(cfg models.EntityConfig) string {
+func GetServiceTemplate(cfg models.EntityConfig, architecture string) string {
 	lowerName := strings.ToLower(cfg.Name)
+	upperName := cfg.Name
+	layerImport := ""
+
+	switch architecture {
+	case string(models.CleanArchitecture):
+		layerImport = exports.GetCleanServiceLayerImports(upperName, lowerName)
+	case string(models.LayeredArchitecture):
+		layerImport = exports.GetLayeredServiceLayerImports(upperName, lowerName)
+	}
+
 	return fmt.Sprintf(`
-// Layer imports
-import { %sRepository } from '@repositories/%s.repository';
-import { %s } from '@businessmodels/%s.model';
+%s
 
 export class %sService {
   private %sRepository: %sRepository;
@@ -35,8 +44,7 @@ export class %sService {
 }
 `,
 		// Arguments for fmt.Sprintf, in order of appearance of %s
-		cfg.Name, lowerName, // imports
-		cfg.Name, lowerName, // imports
+		layerImport,
 		cfg.Name, lowerName, cfg.Name, // class name and private repository declaration
 		lowerName, cfg.Name, lowerName, lowerName, // constructor
 		lowerName+"s", // JSDoc comment

@@ -2,18 +2,29 @@ package tests
 
 import (
 	"archi-ts-cli/internal/models"
+	"archi-ts-cli/internal/templates/generate/exports"
 	"fmt"
 	"strings"
 )
 
 // GetServiceTestTemplate generates unit test template for services
-func GetServiceUnitTestTemplate(cfg models.EntityConfig) string {
+func GetServiceUnitTestTemplate(cfg models.EntityConfig, architecture string) string {
 	lowerName := strings.ToLower(cfg.Name)
 	lowerPlural := lowerName + "s"
+	upperName := cfg.Name
+	layerImport := ""
+
+	switch architecture {
+	case string(models.CleanArchitecture):
+		layerImport = exports.GetTestCleanImports(upperName, lowerName)
+	case string(models.LayeredArchitecture):
+		layerImport = exports.GetTestLayeredImports(upperName, lowerName)
+	}
+
 	return fmt.Sprintf(`// Layers importation
 import { %sService } from '@services/%s.service';
 import { %sRepository } from '@repositories/%s.repository';
-import %s from '@datamodels/%s.model';
+%s
 
 // Mock the repository module
 jest.mock('@repositories/%s.repository');
@@ -83,7 +94,7 @@ describe('%sService', () => {
 });
 `,
 		// Arguments for fmt.Sprintf
-		cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName, // imports
+		cfg.Name, lowerName, cfg.Name, lowerName, layerImport, // imports
 		lowerName,          // jest.mock
 		cfg.Name,           // describe
 		cfg.Name, cfg.Name, // let declarations
