@@ -8,6 +8,7 @@ func GetEnvTemplate(port int) string {
 		# API Configuration
 		NODE_ENV=development
 		LISTEN_PORT=%d
+		LISTEN_PORT_TEST=%d
 		SERVER_NAME="ArchiTS API"
 		VERSION=1.0.0
 		API_PREFIX=/api
@@ -57,5 +58,5 @@ func GetEnvTemplate(port int) string {
 		MAIL_PORT=465
 		MAIL_SECURE=true
 		MAIL_AUTH_USER=exemple@domain.fr
-		MAIL_AUTH_PASSWORD=my-super-password`, port)
+		MAIL_AUTH_PASSWORD=my-super-password`, port, port+2000)
 }

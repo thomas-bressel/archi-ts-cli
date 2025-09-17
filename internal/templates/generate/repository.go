@@ -13,18 +13,21 @@ func GetRepositoryTemplate(cfg models.EntityConfig, architecture string) string 
 	upperName := cfg.Name
 	ormName := cfg.Orm
 	layerImport := ""
+	aliasPath := ""
 
 	switch architecture {
 	case string(models.CleanArchitecture):
+		aliasPath = "@config"
 		layerImport = exports.GetCleanRepositoryLayerImports(upperName, lowerName)
 	case string(models.LayeredArchitecture):
+		aliasPath = "@connection"
 		layerImport = exports.GetLayeredRepositoryLayerImports(upperName, lowerName)
 	}
 
 	if ormName == models.TypeOrm {
 		return fmt.Sprintf(`
 // Layer importations
-import { AppDataSource } from "@connection/data-source";
+import { AppDataSource } from "%s/data-source";
 %s
 
 export class %sRepository {
@@ -40,7 +43,7 @@ export class %sRepository {
      return await this.repository.find();
   }
 }
-`, layerImport,
+`, aliasPath, layerImport,
 			cfg.Name, cfg.Name, lowerName, cfg.Name,
 			lowerName, cfg.Name,
 			cfg.Name)

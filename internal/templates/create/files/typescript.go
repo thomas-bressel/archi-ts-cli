@@ -59,6 +59,7 @@ func getTsconfigPaths(architecture models.Architecture) string {
       "@routes/*": ["src/presentation/routes/*"],
       "@middlewares/*": ["src/presentation/middlewares/*"],
       "@validators/*": ["src/presentation/validators/*"],
+      "@datamodels/*": ["src/infrastructure/models/*"],
       "@repositories/*": ["src/infrastructure/repositories/*"],
       "@cache/*": ["src/infrastructure/cache/*"],
       "@email/*": ["src/infrastructure/email/*"],

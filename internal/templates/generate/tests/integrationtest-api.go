@@ -20,6 +20,7 @@ func GetApiIntegrationTestTemplate(cfg models.EntityConfig, architecture string)
 		layerImport = exports.GetTestLayeredImports(upperName, lowerName)
 	}
 
+	// Adapte template depending if there is an orm of not
 	if cfg.Orm == models.TypeOrm {
 		return fmt.Sprintf(`// Imports
 import express, { Application } from 'express';
@@ -81,9 +82,9 @@ describe('%s Integration Tests - Express', () => {
     it('should return all %ss with status 200', async () => {
       // Arrange
       const mock%ss = [
-        Object.assign(new %s(), { id_%s: 1 }),
-        Object.assign(new %s(), { id_%s: 2 }),
-        Object.assign(new %s(), { id_%s: 3 })
+        Object.assign(new %s(1), { id_%s: 1 }),
+        Object.assign(new %s(2), { id_%s: 2 }),
+        Object.assign(new %s(3), { id_%s: 3 })
       ];
       
       mockRepository.findAll = jest.fn().mockResolvedValue(mock%ss);
@@ -226,7 +227,7 @@ describe('%s Integration Tests - Express', () => {
     it('should return consistent response structure for success', async () => {
       // Arrange
       const mock%ss = [
-        Object.assign(new %s(), { id_%s: 1 })
+        Object.assign(new %s(1), { id_%s: 1 })
       ];
       mockRepository.findAll = jest.fn().mockResolvedValue(mock%ss);
 
@@ -308,8 +309,8 @@ describe('%s Integration Tests - Express', () => {
     it('should handle multiple concurrent requests', async () => {
       // Arrange
       const mock%ss = [
-        Object.assign(new %s(), { id_%s: 1 }),
-        Object.assign(new %s(), { id_%s: 2 })
+        Object.assign(new %s(1), { id_%s: 1 }),
+        Object.assign(new %s(2), { id_%s: 2 })
       ];
       mockRepository.findAll = jest.fn().mockResolvedValue(mock%ss);
 
@@ -334,7 +335,7 @@ describe('%s Integration Tests - Express', () => {
     it('should handle large dataset response', async () => {
       // Arrange - Create 1000 %ss
       const large%sSet = Array.from({ length: 1000 }, (_, i) => 
-        Object.assign(new %s(), { id_%s: i + 1 })
+        Object.assign(new %s(1), { id_%s: i + 1 })
       );
       mockRepository.findAll = jest.fn().mockResolvedValue(large%sSet);
 
@@ -354,7 +355,7 @@ describe('%s Integration Tests - Express', () => {
       // Arrange - Simulate slow database with 2 second delay
       mockRepository.findAll = jest.fn().mockImplementation(() => 
         new Promise(resolve => 
-          setTimeout(() => resolve([Object.assign(new %s(), { id_%s: 1 })]), 100)
+          setTimeout(() => resolve([Object.assign(new %s(1), { id_%s: 1 })]), 100)
         )
       );
 
@@ -748,6 +749,8 @@ import * as http from "http";
 import { %sRepository } from '@repositories/%s.repository';
 import { %sService } from '@services/%s.service';
 import { %sController } from '@controllers/%s.controller';
+import dotenv from "dotenv";
+dotenv.config();
 
 %s
 
@@ -757,7 +760,7 @@ jest.mock('@repositories/%s.repository');
 describe('%s Integration Tests - Node.js Native', () => {
   let mockRepository: jest.Mocked<%sRepository>;
   let %sController: %sController;
-  const basePort = 3001; // Base port for tests
+  const basePort = Number(process.env.LISTEN_PORT_TEST); // Base port for tests
 
   // Utility function to create a server for each test
   const createTestServer = (): http.Server => {

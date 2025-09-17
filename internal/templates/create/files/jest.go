@@ -69,6 +69,7 @@ func getJestConfigPaths(architecture models.Architecture) string {
       "^@middlewares/(.*)$": "<rootDir>/src/presentation/middlewares/$1",
       "^@validators/(.*)$": "<rootDir>/src/presentation/validators/$1",
       "^@repositories/(.*)$": "<rootDir>/src/infrastructure/repositories/$1",
+      "^@datamodels/(.*)$": "<rootDir>/src/infrastructure/models/$1",
       "^@cache/(.*)$": "<rootDir>/src/infrastructure/cache/$1",
       "^@email/(.*)$": "<rootDir>/src/infrastructure/email/$1",
       "^@mappers/(.*)$": "<rootDir>/src/infrastructure/mappers/$1",

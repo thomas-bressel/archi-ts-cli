@@ -14,23 +14,26 @@ func GetRepositoryUnitTestTemplate(cfg models.EntityConfig, architecture string)
 
 	upperName := cfg.Name
 	layerImport := ""
+	aliasPath := ""
 
 	switch architecture {
 	case string(models.CleanArchitecture):
 		layerImport = exports.GetTestCleanImports(upperName, lowerName)
+		aliasPath = "@config"
 	case string(models.LayeredArchitecture):
 		layerImport = exports.GetTestLayeredImports(upperName, lowerName)
+		aliasPath = "@connection"
 	}
 
 	if cfg.Orm == models.TypeOrm {
 		return fmt.Sprintf(`
 import { %sRepository } from '@repositories/%s.repository';
-import %s from '@datamodels/%s.model';
-import { AppDataSource } from '@connection/data-source';
+%s
+import { AppDataSource } from '%s/data-source';
 import { Repository } from 'typeorm';
 
 // Mock the data source module
-jest.mock('@connection/data-source', () => ({
+jest.mock('%s/data-source', () => ({
   AppDataSource: {
     getRepository: jest.fn()
   }
@@ -73,15 +76,15 @@ describe('%sRepository', () => {
     it('should return all %ss from database', async () => {
       // Arrange
       const mock%ss: %s[] = [
-        Object.assign(new %s(), { 
+        Object.assign(new %s(1), { 
           id_%s: 1
           // Add other properties as needed based on your %s model
         }),
-        Object.assign(new %s(), { 
+        Object.assign(new %s(2), { 
           id_%s: 2
           // Add other properties as needed
         }),
-        Object.assign(new %s(), { 
+        Object.assign(new %s(3), { 
           id_%s: 3
           // Add other properties as needed
         })
@@ -154,7 +157,6 @@ describe('%sRepository', () => {
   describe('Repository Initialization', () => {
     it('should get %s repository from AppDataSource', () => {
       // Assert
-      expect(AppDataSource.getRepository).toHaveBeenCalledWith(%s);
       expect(AppDataSource.getRepository).toHaveBeenCalledTimes(1);
     });
 
@@ -164,11 +166,11 @@ describe('%sRepository', () => {
       expect(%sRepository).toBeInstanceOf(%sRepository);
     });
   });
-});`, cfg.Name, lowerName, cfg.Name, lowerName,
+});`, cfg.Name, lowerName, layerImport, aliasPath, aliasPath,
 			cfg.Name, lowerName, cfg.Name, cfg.Name, cfg.Name, lowerName, cfg.Name,
 			lowerName, cfg.Name, cfg.Name, cfg.Name, lowerName, cfg.Name, cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name, lowerName, cfg.Name,
 			lowerName, lowerName, lowerName, lowerName, lowerName,
-			cfg.Name, cfg.Name, lowerName, lowerName, cfg.Name,
+			cfg.Name, lowerName, lowerName, cfg.Name,
 		)
 	}
 

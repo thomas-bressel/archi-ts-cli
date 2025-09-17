@@ -66,6 +66,7 @@ func getEntityPaths(architecture string, entityName string, ext string, orm stri
 			Service: fmt.Sprintf("src/application/use-cases/%s.service.%s", lowerName, ext),
 
 			Repository: fmt.Sprintf("src/infrastructure/repositories/%s.repository.%s", lowerName, ext),
+			RawModel:   fmt.Sprintf("src/infrastructure/models/%s.model.%s", lowerName, ext),
 
 			ControllerUnitTest: fmt.Sprintf("tests/unit/presentation/controllers/%s.controller.test.%s", lowerName, ext),
 			ServiceUnitTest:    fmt.Sprintf("tests/unit/application/use-cases/%s.service.test.%s", lowerName, ext),
@@ -131,7 +132,7 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 
 			{paths.Repository, generate.GetRepositoryTemplate(entityConfig, architecture), "Repository"},
 
-			// {paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
+			{paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
 			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
 			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig, architecture), "Service Unit Test"},
 			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig, architecture), "Repository Unit Test"},

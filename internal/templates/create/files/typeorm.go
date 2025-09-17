@@ -1,8 +1,24 @@
 package files
 
+import (
+	"archi-ts-cli/internal/models"
+	"fmt"
+)
+
 // GetTypeORMDataSourceTemplate return template for data-source.ts file
-func GetTypeORMDataSourceTemplate() string {
-	return `
+func GetTypeORMDataSourceTemplate(architecture string) string {
+	migrationPath := ""
+
+	switch architecture {
+	case string(models.LayeredArchitecture):
+		migrationPath = "src/data"
+	case string(models.CleanArchitecture):
+		migrationPath = "src/infrastructure"
+	case string(models.HexagonalArchitecture):
+		migrationPath = "src/data"
+	}
+
+	return fmt.Sprintf(`
     import "reflect-metadata";
     import { DataSource, DataSourceOptions } from "typeorm";
 
@@ -12,7 +28,7 @@ func GetTypeORMDataSourceTemplate() string {
     dotenv.config();
 
     // ORM Entities imports
-    // exemple : import Product from "@datamodels/product.model";
+    // exemple for layered architecture : import Product from "@datamodels/product.model";
 
     const isSQLite = process.env.DB_TYPE === "sqlite";
 
@@ -48,10 +64,10 @@ func GetTypeORMDataSourceTemplate() string {
           // Add entities ORM here, exemple :
           // entities: [Product],
           migrations: [
-              path.join(process.cwd(), "src/data/database/migrations/*.ts")
+              path.join(process.cwd(), "%s/database/migrations/*.ts")
           ],
           subscribers: [
-              path.join(process.cwd(), "src/data/subscribers/*.ts")
+              path.join(process.cwd(), "%s/subscribers/*.ts")
           ],
           synchronize: process.env.TYPEORM_SYNCHRONIZE === "false",
           dropSchema: process.env.TYPEORM_DROP_SCHEMA === "true",
@@ -67,17 +83,17 @@ func GetTypeORMDataSourceTemplate() string {
           // Add entities ORM here, exemple :
           // entities: [Product],
           migrations: [
-            path.join(process.cwd(), "src/data/database/migrations/*.ts")
+            path.join(process.cwd(), "%s/database/migrations/*.ts")
           ],
           subscribers: [
-            path.join(process.cwd(), "src/data/subscribers/*.ts")
+            path.join(process.cwd(), "%s/subscribers/*.ts")
           ],
           synchronize: process.env.TYPEORM_SYNCHRONIZE === "false",
           dropSchema: process.env.TYPEORM_DROP_SCHEMA === "true",
           logging: process.env.TYPEORM_LOGGING === "true" || false,
         };
 
-    export const AppDataSource = new DataSource(databaseConfig);`
+    export const AppDataSource = new DataSource(databaseConfig);`, migrationPath, migrationPath, migrationPath, migrationPath)
 }
 
 // GetTypeORMCreateDatabaseTemplate return template for create-database.ts file
@@ -139,8 +155,23 @@ func GetTypeORMCreateDatabaseTemplate() string {
 }
 
 // GetHeloperORMScriptTemplate return template for generate-migration.ts file
-func GetHelperORMScriptTemplate() string {
-	return `#!/usr/bin/env node
+func GetHelperORMScriptTemplate(architecture string) string {
+	migrationPath := ""
+	datasourcePath := ""
+
+	switch architecture {
+	case string(models.LayeredArchitecture):
+		migrationPath = "src/data"
+		datasourcePath = "connection"
+	case string(models.CleanArchitecture):
+		migrationPath = "src/infrastructure"
+		datasourcePath = "config"
+	case string(models.HexagonalArchitecture):
+		migrationPath = "src/data"
+		datasourcePath = "connection"
+	}
+
+	return fmt.Sprintf(`#!/usr/bin/env node
 
 const { execSync } = require('child_process');
 const path = require('path');
@@ -155,10 +186,10 @@ if (!migrationName) {
 }
 
 // Build the full path for the migration file
-const migrationPath = path.join('src/data/database/migrations', migrationName);
+const migrationPath = path.join('%s/database/migrations', migrationName);
 
 // Build the TypeORM CLI command
-const command = 'npx typeorm-ts-node-commonjs migration:generate ' + migrationPath + ' -d ./src/data/database/connection/data-source.ts -p';
+const command = 'npx typeorm-ts-node-commonjs migration:generate ' + migrationPath + ' -d ./%s/database/%s/data-source.ts -p';
 
 console.log('📝 Generation of the migration: ', migrationName);
 console.log('📂 Into: ', migrationPath);
@@ -170,6 +201,6 @@ try {
 } catch (error) {
   console.error('❌ Error during migration generation:', error);
   process.exit(1);
-}`
+}`, migrationPath, migrationPath, datasourcePath)
 
 }

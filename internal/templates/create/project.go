@@ -163,7 +163,7 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 
 	// Generate data-source.ts
 	dataSourcePath := filepath.Join(ormPath, "data-source.ts")
-	if err := utils.WriteFile(dataSourcePath, files.GetTypeORMDataSourceTemplate()); err != nil {
+	if err := utils.WriteFile(dataSourcePath, files.GetTypeORMDataSourceTemplate(string(cfg.Architecture))); err != nil {
 		return fmt.Errorf("error creating data-source.ts: %w", err)
 	}
 
@@ -175,7 +175,7 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 
 	// Generate generate-migration.ts
 	createScriptsPath := filepath.Join(scriptPath, "generate-migration.ts")
-	if err := utils.WriteFile(createScriptsPath, files.GetHelperORMScriptTemplate()); err != nil {
+	if err := utils.WriteFile(createScriptsPath, files.GetHelperORMScriptTemplate(string(cfg.Architecture))); err != nil {
 		return fmt.Errorf("error creating generate-migration.ts: %w", err)
 	}
 
