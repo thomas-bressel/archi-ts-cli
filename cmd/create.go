@@ -61,7 +61,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 
 	// Prompt 3 - ORM Type (only if a library was chosen)
 	var orm string
-	if express {
+	if express || library != "" {
 		orm, err = prompts.PromptOrm(string(models.HexagonalArchitecture))
 		if err != nil {
 			return fmt.Errorf("error when choosing an ORM: %w", err)
@@ -98,6 +98,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		expressStatus = "Yes"
 	}
 	color.New(color.FgHiMagenta).Printf("Express Library: %s\n", expressStatus)
+	color.New(color.FgHiMagenta).Printf("Library Name: %s\n", library)
 	fmt.Println()
 
 	// Step 3: Generation and dependencies installation
@@ -111,8 +112,6 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		Express:      express,
 		Library:      library,
 	}
-
-	fmt.Println(config)
 
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the project: %w", err)
@@ -142,6 +141,8 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		color.New(color.FgCyan).Printf("ORM: %s\n", orm)
 	}
 	color.New(color.FgCyan).Printf("ExpressJS: %s\n", expressStatus)
+	color.New(color.FgCyan).Printf("Library Name: %s\n", library)
+
 	fmt.Println()
 	color.New(color.FgYellow).Println("To start:")
 	fmt.Printf("  cd %s\n", projectName)

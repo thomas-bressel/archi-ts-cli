@@ -80,6 +80,7 @@ temp/
 
 # Test directories (existant + ajouts)
 archi-test/
+archi-project/
 hexa*/
 layer*/
 test-results/

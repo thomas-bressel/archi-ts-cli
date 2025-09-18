@@ -6,6 +6,10 @@ import "archi-ts-cli/internal/models"
 // [X] Common template for all type of architecture
 func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) string {
 	paths := getTsconfigPaths(architecture)
+	types := ""
+	if architecture == models.HexagonalArchitecture {
+		types = `"types": ["reflect-metadata"],`
+	}
 
 	return `{
   "compilerOptions": {
@@ -21,6 +25,7 @@ func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) strin
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    ` + types + `
     "paths": ` + paths + `
   },
     "ts-node": {
@@ -72,26 +77,25 @@ func getTsconfigPaths(architecture models.Architecture) string {
 	case models.HexagonalArchitecture:
 		return `{
       "@src/*": ["src/*"],
-      "@entities/*": ["src/domain/entities/*"],
-      "@objects/*": ["src/domain/value-objects/*"],
+      "@entities/*": ["src/domain/entities/*"], 
+      "@objects/*": ["src/domain/value-objects/*"], 
       "@events/*": ["src/domain/events/*"],
       "@exceptions/*": ["src/domain/exceptions/*"],
-      "@usecases/*": ["src/application/use-cases/*"],
+      "@usecases/*": ["src/application/use-cases/*"], 
       "@services/*": ["src/application/use-cases/*"],
-      "@interfaces/*": ["src/application/ports/*"],
-      "@ports/*": ["src/application/ports/*"],
+      "@ports/*": ["src/application/ports/*"], 
       "@dtos/*": ["src/application/dtos/*"],
       "@http/*": ["src/adapters/primary/http/*"],
-      "@controllers/*": ["src/adapters/primary/http/controllers/*"],
-      "@routes/*": ["src/adapters/primary/http/routes/*"],
+      "@controllers/*": ["src/adapters/primary/http/controllers/*"], 
+      "@routes/*": ["src/adapters/primary/http/routes/*"],  
       "@middlewares/*": ["src/adapters/primary/http/middlewares/*"],
       "@cli/*": ["src/adapters/primary/cli/*"],
-      "@orm/*": ["src/adapters/secondary/persistence/orm/*"],
-      "@orm-entities/*": ["src/adapters/secondary/persistence/orm/entities/*"],
-      "@orm-repositories/*": ["src/adapters/secondary/persistence/orm/repositories/*"],
+      "@orm/*": ["src/adapters/secondary/persistence/orm/*"], 
+      "@models/*": ["src/adapters/secondary/persistence/models/*"], 
+      "@repositories/*": ["src/adapters/secondary/persistence/repositories/*"],
       "@email/*": ["src/adapters/secondary/email/*"],
       "@cache/*": ["src/adapters/secondary/cache/*"],
-      "@config/*": ["src/config/*"],
+      "@config/*": ["src/config/*"],  
       "@storage/*": ["storage/*"],
     }`
 

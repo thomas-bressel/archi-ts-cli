@@ -129,7 +129,7 @@ func getScripts(architecture models.Architecture, orm models.Orm) map[string]str
 	}
 
 	// Add TypeORM migration scripts if needed
-	if orm == models.TypeOrm {
+	if orm == "typeorm" {
 		typeOrmScripts := getTypeOrmMigrationScripts(architecture)
 		for key, value := range typeOrmScripts {
 			scripts[key] = value
@@ -172,12 +172,12 @@ func getDependencies(orm models.Orm, express bool) map[string]string {
 	deps["cors"] = "^2.8.5"
 	deps["tsconfig-paths"] = "^4.2.0"
 
-	if orm == models.TypeOrm {
+	if orm == "typeorm" {
 		deps["reflect-metadata"] = "^0.2.2"
 		deps["typeorm"] = "^0.3.26"
 		deps["mysql2"] = "^3.14.4"
 		deps["sqlite3"] = "^5.1.7"
-
+		deps["inversify"] = "^7.10.0"
 	}
 	if express {
 		deps["express"] = "^4.18.2"
@@ -224,21 +224,21 @@ func getTypeOrmMigrationScripts(architecture models.Architecture) map[string]str
 
 	switch architecture {
 	case models.LayeredArchitecture:
-		migrationPath = "src/data"
+		migrationPath = "src/data/database"
 		datasourcePath = "connection"
 	case models.CleanArchitecture:
-		migrationPath = "src/infrastructure"
+		migrationPath = "src/infrastructure/database"
 		datasourcePath = "config"
 	case models.HexagonalArchitecture:
-		migrationPath = "src/data"
-		datasourcePath = "connection"
+		migrationPath = "src/adapters/secondary/persistence"
+		datasourcePath = "orm"
 	}
 
 	return map[string]string{
 		"migration:generate": "TS_NODE_PROJECT=./tsconfig.json ts-node -r tsconfig-paths/register scripts/generate-migration.ts",
-		"migration:run":      fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/database/%s/data-source.ts`, migrationPath, datasourcePath),
-		"migration:revert":   fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/database/%s/data-source.ts`, migrationPath, datasourcePath),
-		"migration:show":     fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/database/%s/data-source.ts`, migrationPath, datasourcePath),
+		"migration:run":      fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/%s/data-source.ts`, migrationPath, datasourcePath),
+		"migration:revert":   fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/%s/data-source.ts`, migrationPath, datasourcePath),
+		"migration:show":     fmt.Sprintf(`TS_NODE_PROJECT=./tsconfig.json typeorm-ts-node-commonjs migration:run -d ./%s/%s/data-source.ts`, migrationPath, datasourcePath),
 		"m:gen":              "npm run migration:generate",
 		"m:run":              "npm run migration:run",
 		"m:revert":           "npm run migration:revert",

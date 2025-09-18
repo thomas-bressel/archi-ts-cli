@@ -118,12 +118,10 @@ func PromptOrm(architecture string) (string, error) {
 		orms = []models.ORMOption{
 			{Display: "I don't want to use any ORM", ID: "none"},
 			{Display: "TypeORM", ID: "typeorm"},
-			{Display: "Prisma", ID: "prisma"},
 		}
 	} else {
 		orms = []models.ORMOption{
 			{Display: "TypeORM", ID: "typeorm"},
-			{Display: "Prisma", ID: "prisma"},
 		}
 	}
 
