@@ -13,6 +13,7 @@ const (
 )
 const (
 	TypeOrm Orm = "TypeORM"
+	Prisma  Orm = "Prisma"
 )
 
 // ProjectConfig type to define the configuration of the project
@@ -22,6 +23,7 @@ type ProjectConfigBuilder struct {
 	Orm          Orm          `json:"orm"`
 	Port         int          `json:"port"`
 	Express      bool         `json:"express"`
+	Library      string       `json:"library"`
 }
 
 // ProjectConfig is about the project pre-config
@@ -31,6 +33,7 @@ type ProjectConfigFile struct {
 	Architecture Architecture `json:"architecture"`
 	Orm          Orm          `json:"orm"`
 	Express      bool         `json:"express"`
+	Library      string       `json:"library"`
 	Port         int          `json:"port"`
 	CreatedAt    time.Time    `json:"created_at"`
 }
@@ -47,6 +50,16 @@ type PackageJSON struct {
 	License         string            `json:"license"`
 	Dependencies    map[string]string `json:"dependencies,omitempty"`
 	DevDependencies map[string]string `json:"devDependencies"`
+}
+
+type LibraryOption struct {
+	Display string
+	ID      string
+}
+
+type ORMOption struct {
+	Display string
+	ID      string
 }
 
 // GetFileExtension returns ts extension
@@ -66,6 +79,7 @@ func (p ProjectConfigBuilder) ToConfigFile(version string) ProjectConfigFile {
 		Architecture: p.Architecture,
 		Orm:          p.Orm,
 		Express:      p.Express,
+		Library:      p.Library,
 		Port:         p.Port,
 		CreatedAt:    time.Now(),
 	}

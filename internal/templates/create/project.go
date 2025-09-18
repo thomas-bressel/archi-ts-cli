@@ -37,6 +37,7 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 		Architecture: cfg.Architecture,
 		Orm:          cfg.Orm,
 		Express:      cfg.Express,
+		Library:      cfg.Library,
 		Port:         cfg.Port,
 		CreatedAt:    time.Now(),
 	}

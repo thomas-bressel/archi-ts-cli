@@ -75,20 +75,17 @@ func getEntityPaths(architecture string, entityName string, ext string, orm stri
 			ApiIntegrationTest: fmt.Sprintf("tests/integration/api/%s.integration.test.%s", lowerName, ext),
 		}
 	case "Hexagonal Architecture":
-		repositoryPath := ""
-		if orm == "TypeORM" {
-			repositoryPath = fmt.Sprintf("src/adapters/typeorm/repositories/%s.repository.%s", lowerName, ext)
-		} else {
-			repositoryPath = fmt.Sprintf("src/adapters/repositories/%s.repository.%s", lowerName, ext)
-		}
-
 		return models.EntityPaths{
-			Entity:             fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
-			Controller:         fmt.Sprintf("src/interfaces/controllers/%s.controller.%s", lowerName, ext),
-			Service:            fmt.Sprintf("src/application/services/%s.service.%s", lowerName, ext),
-			Repository:         repositoryPath,
-			Route:              fmt.Sprintf("src/interfaces/routes/%s.routes.%s", lowerName, ext),
-			ControllerUnitTest: fmt.Sprintf("tests/unit/controllers/%s.controller.test.%s", lowerName, ext),
+			Entity: fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
+
+			Controller: fmt.Sprintf("src/adapters/primary/http/controllers/%s.controller.%s", lowerName, ext),
+			Route:      fmt.Sprintf("src/adapters/primary/http/routes/%s.routes.%s", lowerName, ext),
+
+			Service: fmt.Sprintf("src/application/use-cases/%s.service.%s", lowerName, ext),
+
+			Repository: fmt.Sprintf("src/adapters/secondary/persistence/repositories/%s.repository.%s", lowerName, ext),
+
+			ControllerUnitTest: fmt.Sprintf("tests/unit/ports/primary/%s.controller.test.%s", lowerName, ext),
 			ServiceUnitTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
 			RepositoryUnitTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}

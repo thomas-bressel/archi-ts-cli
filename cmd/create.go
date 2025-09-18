@@ -3,9 +3,11 @@ package cmd
 import (
 	"archi-ts-cli/cmd/prompts"
 	"archi-ts-cli/internal/models"
+
 	project "archi-ts-cli/internal/templates/create"
 	"archi-ts-cli/internal/utils"
 	"fmt"
+
 	"os"
 	"path/filepath"
 
@@ -38,19 +40,32 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Prompt 2 - Express Library?
-	express, err := prompts.PromptExpress()
-	if err != nil {
-		return fmt.Errorf("error when choosing express library: %w", err)
+	var express bool
+	var library string
+	if architecture != string(models.HexagonalArchitecture) {
+		express, err = prompts.PromptExpress()
+		if err != nil {
+			return fmt.Errorf("error when choosing express library: %w", err)
+		}
+	} else {
+		// Prompt 2alt - Which Library?
+		library, err = prompts.PromptExpressOnly()
+		if library == "express" {
+			express = true
+		}
+
+		if err != nil {
+			return fmt.Errorf("error when choosing express library: %w", err)
+		}
 	}
 
 	// Prompt 3 - ORM Type (only if a library was chosen)
 	var orm string
 	if express {
-		orm, err = prompts.PromptOrm()
+		orm, err = prompts.PromptOrm(string(models.HexagonalArchitecture))
 		if err != nil {
 			return fmt.Errorf("error when choosing an ORM: %w", err)
 		}
-
 	}
 
 	// Prompt 4 - Port listen
@@ -87,14 +102,17 @@ func runCreate(cmd *cobra.Command, args []string) error {
 
 	// Step 3: Generation and dependencies installation
 
-	// Store the configuration in a struct and generate the project
+	//Store the configuration in a struct and generate the project
 	config := models.ProjectConfigBuilder{
 		Name:         projectName,
 		Architecture: models.Architecture(architecture),
 		Orm:          models.Orm(orm),
 		Port:         port,
 		Express:      express,
+		Library:      library,
 	}
+
+	fmt.Println(config)
 
 	if err := project.GenerateProject(config); err != nil {
 		return fmt.Errorf("error during the generation of the project: %w", err)

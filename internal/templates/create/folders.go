@@ -157,10 +157,11 @@ func getHexagonalDirectories() []string {
 		"src/domain/value-objects",
 		"src/domain/events",
 		"src/domain/exceptions",
+		"src/domain/services",
 
 		// Application (Use Cases)
 		"src/application",
-		"src/application/use-cases", // serevicfes
+		"src/application/use-cases", // serevices
 		"src/application/ports",     // interfaces / contracts
 		"src/application/ports/in",  // entering ports (commands)
 		"src/application/ports/out", // exit ports  (persistence)
@@ -178,10 +179,8 @@ func getHexagonalDirectories() []string {
 		// Secondary adapters (right side - Exit)
 		"src/adapters/secondary",
 		"src/adapters/secondary/persistence",
-		"src/adapters/secondary/persistence/orm",
-		"src/adapters/secondary/persistence/orm/entities",
-		"src/adapters/secondary/persistence/orm/repositories",
-		"src/adapters/secondary/persistence/orm/migrations",
+		"src/adapters/secondary/persistence/models",
+		"src/adapters/secondary/persistence/repositories",
 		"src/adapters/secondary/email",
 		"src/adapters/secondary/cache",
 		"src/adapters/secondary/storage",
@@ -202,31 +201,29 @@ func getHexagonalDirectories() []string {
 		"storage/uploads/avatars",
 		"storage/uploads/documents",
 		"storage/logs",
-		"tests/unit/core",
-		"tests/unit/core/entities",
-		"tests/unit/core/value-objects",
-		"tests/unit/core/domain-services",
-		"tests/unit/core/specifications",
-		"tests/unit/ports",
-		"tests/unit/ports/primary",   // Ports primaires (driving)
-		"tests/unit/ports/secondary", // Ports secondaires (driven)
-		"tests/integration/adapters",
-		"tests/integration/adapters/primary",   // Adapters primaires (API, CLI, Web)
-		"tests/integration/adapters/secondary", // Adapters secondaires (BDD, Services)
-		"tests/integration/infrastructure",
-		"tests/integration/infrastructure/persistence", // Real database
-		"tests/integration/infrastructure/messaging",   // Queues, Events
-		"tests/integration/infrastructure/external",
-		"tests/integration/infrastructure/cache", // Cache (Redis, etc.)
-		"tests/integration/application",
-		"tests/integration/application/use-cases", // Use cases
-		"tests/integration/application/workflows",
 
+		// Tests - Structure alignée avec src/
 		"tests",
 		"tests/unit",
+		"tests/unit/domain",
+		"tests/unit/domain/entities",
+		"tests/unit/domain/value-objects",
+		"tests/unit/domain/services",
+		"tests/unit/application",
+		"tests/unit/application/use-cases",
+		"tests/unit/application/ports",
+		"tests/unit/application/ports/in",
+		"tests/unit/application/ports/out",
+
 		"tests/integration",
-		"tests/functional",
-		"tests/e2e",
+		"tests/integration/adapters",
+		"tests/integration/adapters/primary",
+		"tests/integration/adapters/secondary",
+		"tests/integration/application", // tests d'intégration use-cases
+
+		"tests/functional", // tests bout-en-bout des fonctionnalités
+		"tests/e2e",        // tests end-to-end complets
+
 		".github",
 		".github/workflows",
 	}

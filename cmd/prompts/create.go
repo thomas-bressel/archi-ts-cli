@@ -1,6 +1,7 @@
 package prompts
 
 import (
+	"archi-ts-cli/internal/models"
 	"fmt"
 	"strconv"
 
@@ -53,30 +54,6 @@ func PromptArchitecture() (string, error) {
 	return result, nil
 }
 
-// PromptORM ask Whick ORM to use
-func PromptOrm() (string, error) {
-	prompt := promptui.Select{
-		Label: "Select an ORM",
-		Items: []string{
-			"I don't want to use any ORM",
-			"TypeORM",
-		},
-		Templates: &promptui.SelectTemplates{
-			Label:    "{{ . }}:",
-			Active:   color.New(color.FgCyan).Sprint("▸ {{ . | cyan }}"),
-			Inactive: "  {{ . | faint }}",
-			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
-		},
-	}
-
-	_, result, err := prompt.Run()
-	if err != nil {
-		return "", err
-	}
-
-	return result, nil
-}
-
 // PromptExpress asks if the user wants to use ExpressJS library
 func PromptExpress() (bool, error) {
 	prompt := promptui.Select{
@@ -100,6 +77,80 @@ func PromptExpress() (bool, error) {
 
 	// Return true if user wants Express, false otherwise
 	return result == "Yes, install Express", nil
+}
+
+// PromptExpressOnly asks if the user wants to use ExpressJS library
+func PromptExpressOnly() (string, error) {
+	libraries := []models.LibraryOption{
+		{Display: "Express.js", ID: "express"},
+	}
+
+	// Exctact name
+	displayItems := make([]string, len(libraries))
+	for i, lib := range libraries {
+		displayItems[i] = lib.Display
+	}
+
+	prompt := promptui.Select{
+		Label: "Choose a library in the list ?",
+		Items: displayItems,
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
+			Active:   color.New(color.FgYellow).Sprint("▸ {{ . | yellow }}"),
+			Inactive: "  {{ . | faint }}",
+			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
+		},
+	}
+
+	index, _, err := prompt.Run()
+	if err != nil {
+		return "", err
+	}
+
+	// Return index
+	return libraries[index].ID, nil
+}
+
+// PromptORM ask Which ORM to use
+func PromptOrm(architecture string) (string, error) {
+	var orms = []models.ORMOption{}
+	if architecture != string(models.HexagonalArchitecture) {
+		orms = []models.ORMOption{
+			{Display: "I don't want to use any ORM", ID: "none"},
+			{Display: "TypeORM", ID: "typeorm"},
+			{Display: "Prisma", ID: "prisma"},
+		}
+	} else {
+		orms = []models.ORMOption{
+			{Display: "TypeORM", ID: "typeorm"},
+			{Display: "Prisma", ID: "prisma"},
+		}
+	}
+
+	// Extraire les noms d'affichage
+	displayItems := make([]string, len(orms))
+	for i, orm := range orms {
+		displayItems[i] = orm.Display
+	}
+
+	prompt := promptui.Select{
+		Label: "Select an ORM",
+		Items: displayItems,
+		Templates: &promptui.SelectTemplates{
+			Label:    "{{ . }}:",
+			Active:   color.New(color.FgCyan).Sprint("▸ {{ . | cyan }}"),
+			Inactive: "  {{ . | faint }}",
+			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
+		},
+	}
+
+	index, _, err := prompt.Run()
+	if err != nil {
+		return "", err
+	}
+
+	// Retourner l'ID basé sur l'index sélectionné
+	return orms[index].ID, nil
 }
 
 // PromptPort asks the number of listening port, 3000 is by default
