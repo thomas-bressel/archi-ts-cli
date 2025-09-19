@@ -4,6 +4,7 @@ import (
 	"archi-ts-cli/internal/config"
 	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/templates/generate"
+	"archi-ts-cli/internal/templates/generate/hexagonal"
 	"archi-ts-cli/internal/templates/generate/tests"
 
 	"archi-ts-cli/internal/utils"
@@ -33,14 +34,15 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 
 	// Get config of the entity
 	entityConfig := models.EntityConfig{
-		Name:    entityName,
-		Express: projectConfig.Express,
-		Orm:     projectConfig.Orm,
+		Name:         entityName,
+		Express:      projectConfig.Express,
+		Orm:          projectConfig.Orm,
+		Architecture: projectConfig.Architecture,
 	}
 
 	// Define suffixe and paths of each files
 	ext := "ts"
-	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext, string(projectConfig.Orm))
+	paths := getEntityPaths(string(projectConfig.Architecture), entityName, ext)
 
 	createListFilesToGenerate(string(projectConfig.Architecture), entityConfig, paths)
 
@@ -51,7 +53,7 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 // [X] Layered Architecture
 // [X] Clean Architecture
 // [ ] Hexagonal Architecture
-func getEntityPaths(architecture string, entityName string, ext string, orm string) models.EntityPaths {
+func getEntityPaths(architecture string, entityName string, ext string) models.EntityPaths {
 	lowerName := strings.ToLower(entityName)
 
 	switch architecture {
@@ -76,18 +78,21 @@ func getEntityPaths(architecture string, entityName string, ext string, orm stri
 		}
 	case "Hexagonal Architecture":
 		return models.EntityPaths{
-			Entity: fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
-
-			Controller: fmt.Sprintf("src/adapters/primary/http/controllers/%s.controller.%s", lowerName, ext),
-			Route:      fmt.Sprintf("src/adapters/primary/http/routes/%s.routes.%s", lowerName, ext),
-
-			Service: fmt.Sprintf("src/application/use-cases/%s.service.%s", lowerName, ext),
-
-			Repository: fmt.Sprintf("src/adapters/secondary/persistence/repositories/%s.repository.%s", lowerName, ext),
-
-			ControllerUnitTest: fmt.Sprintf("tests/unit/ports/primary/%s.controller.test.%s", lowerName, ext),
-			ServiceUnitTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
-			RepositoryUnitTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
+			Entity:                 fmt.Sprintf("src/domain/entities/%s.entity.%s", lowerName, ext),
+			ValueObject:            fmt.Sprintf("src/domain/value-objects/%s-id.value-object.%s", lowerName, ext),
+			Exception:              fmt.Sprintf("src/domain/exceptions/%s-not-found.exception.%s", lowerName, ext),
+			Route:                  fmt.Sprintf("src/adapters/primary/http/routes/%s.routes.%s", lowerName, ext),
+			Controller:             fmt.Sprintf("src/adapters/primary/http/controllers/%s.controller.%s", lowerName, ext),
+			Model:                  fmt.Sprintf("src/adapters/secondary/persistence/models/%s.model.%s", lowerName, ext),
+			OrmRepository:          fmt.Sprintf("src/adapters/secondary/persistence/repositories/orm-%s.repository.%s", lowerName, ext),
+			UseCase:                fmt.Sprintf("src/application/use-cases/get-%s.use-case.%s", lowerName, ext),
+			Repository:             fmt.Sprintf("src/application/ports/out/%s.repository.%s", lowerName, ext),
+			Dto:                    fmt.Sprintf("src/application/dtos/%s.dto.%s", lowerName, ext),
+			DependenciesTypes:      fmt.Sprintf("src/config/dependencies/%s-types.%s", lowerName, ext),
+			DependenciesContainers: fmt.Sprintf("src/config/dependencies/%s-containers.%s", lowerName, ext),
+			// ControllerUnitTest: fmt.Sprintf("tests/unit/ports/primary/%s.controller.test.%s", lowerName, ext),
+			// ServiceUnitTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
+			// RepositoryUnitTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
 		}
 	default: // Layered Architecture
 		return models.EntityPaths{
@@ -139,8 +144,28 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 
 		GenerateAllFiles(filesToGenerate)
 	case string(models.HexagonalArchitecture):
-	default:
+		// List all file to create for clean architecture
+		filesToGenerate := []struct {
+			path     string
+			template string
+			name     string
+		}{
+			{paths.Entity, generate.GetEntityTemplate(entityConfig), "Entity"},
+			{paths.ValueObject, generate.GetValueObjectTemplate(entityConfig), "ValueObject"},
+			{paths.Exception, generate.GetExceptionTemplate(entityConfig), "Exception"},
+			{paths.Route, hexagonal.GetRouteTemplate(entityConfig), "Route"},
+			{paths.DependenciesTypes, hexagonal.GetDependenciesTypesTemplate(entityConfig), "DependenciesTypes"},
+			{paths.DependenciesContainers, hexagonal.GetDependenciesContainersTemplate(entityConfig), "DependenciesContainers"},
+			{paths.Repository, hexagonal.GetRepositoryTemplate(entityConfig), "Repository"},
+			{paths.OrmRepository, hexagonal.GetOrmRepositoryTemplate(entityConfig), "OrmRepository"},
+			{paths.Dto, hexagonal.GetDtoTemplate(entityConfig), "Dto"},
+			{paths.UseCase, hexagonal.GetUseCaseTemplate(entityConfig), "UseCase"},
+			{paths.Model, hexagonal.GetModelTemplate(entityConfig), "Model"},
+			{paths.Controller, hexagonal.GetControllerTemplate(entityConfig), "Controller"},
+		}
+		GenerateAllFiles(filesToGenerate)
 
+	default:
 		// List all file to create for layered architecture
 		filesToGenerate := []struct {
 			path     string
@@ -158,10 +183,8 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig, architecture), "Repository Unit Test"},
 			{paths.ApiIntegrationTest, tests.GetApiIntegrationTestTemplate(entityConfig, architecture), "Api Integration. Test"},
 		}
-
 		GenerateAllFiles(filesToGenerate)
 	}
-
 }
 
 // Generate all files in right folders

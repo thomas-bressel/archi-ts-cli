@@ -1,5 +1,7 @@
 package project
 
+import "fmt"
+
 // getLayeredDirectories returns the directory structure for a refined Layered Architecture
 func getLayeredDirectories() []string {
 	return []string{
@@ -148,6 +150,7 @@ func getCleanDirectories() []string {
  * getHexagonalDirectories returns the directory structure for Hexagonal Architecture
  */
 func getHexagonalDirectories() []string {
+	fmt.Println("Génération d'une architecture Hexagonale")
 	return []string{
 		"src",
 

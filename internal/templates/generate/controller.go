@@ -20,7 +20,6 @@ func GetControllerTemplate(cfg models.EntityConfig) string {
 	} else {
 		libraryImport = exports.NodeImportation()
 		controller = exports.NodeController(lowerName, cfg.Name)
-
 	}
 
 	return fmt.Sprintf(`
@@ -41,8 +40,7 @@ export class %sController {
   }
 
 %s
-}
-`,
+}`,
 		libraryImport,
 		// Arguments for fmt.Sprintf, in order of appearance of %s
 		cfg.Name, lowerName, // Service import and path

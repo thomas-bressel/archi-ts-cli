@@ -48,7 +48,7 @@ func getDescription(cfg models.ProjectConfigBuilder) string {
 		library = "Express"
 	}
 	orm := "no ORM"
-	if cfg.Orm == models.TypeOrm {
+	if cfg.Orm == "typeorm" {
 		orm = "Type ORM"
 	}
 

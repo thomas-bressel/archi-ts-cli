@@ -161,14 +161,14 @@ func GetHelperORMScriptTemplate(architecture string) string {
 
 	switch architecture {
 	case string(models.LayeredArchitecture):
-		migrationPath = "src/data"
-		datasourcePath = "connection"
+		migrationPath = "src/data/database/migrations"
+		datasourcePath = "src/data/database/connection"
 	case string(models.CleanArchitecture):
-		migrationPath = "src/infrastructure"
-		datasourcePath = "config"
+		migrationPath = "src/infrastructure/database/migrations"
+		datasourcePath = "src/infrastructure/database/config"
 	case string(models.HexagonalArchitecture):
-		migrationPath = "src/data"
-		datasourcePath = "connection"
+		migrationPath = "storage/database/migrations"
+		datasourcePath = "src/adapters/secondary/persistence/orm"
 	}
 
 	return fmt.Sprintf(`#!/usr/bin/env node
@@ -186,10 +186,10 @@ if (!migrationName) {
 }
 
 // Build the full path for the migration file
-const migrationPath = path.join('%s/database/migrations', migrationName);
+const migrationPath = path.join('%s', migrationName);
 
 // Build the TypeORM CLI command
-const command = 'npx typeorm-ts-node-commonjs migration:generate ' + migrationPath + ' -d ./%s/database/%s/data-source.ts -p';
+const command = 'npx typeorm-ts-node-commonjs migration:generate ' + migrationPath + ' -d ./%s/data-source.ts -p';
 
 console.log('📝 Generation of the migration: ', migrationName);
 console.log('📂 Into: ', migrationPath);
@@ -201,6 +201,6 @@ try {
 } catch (error) {
   console.error('❌ Error during migration generation:', error);
   process.exit(1);
-}`, migrationPath, migrationPath, datasourcePath)
+}`, migrationPath, datasourcePath)
 
 }
