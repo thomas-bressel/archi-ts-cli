@@ -1,0 +1,10 @@
+{
+  "name": "*",
+  "version": "1.0.0",
+  "architecture": "Hexagonal Architecture",
+  "orm": "typeorm",
+  "express": true,
+  "library": "express",
+  "port": 3000,
+  "created_at": "2025-09-19T10:24:15.356277254+02:00"
+}

@@ -24,7 +24,7 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	}
 
 	// Generate ORM specific files if needed
-	if cfg.Orm == models.TypeOrm {
+	if cfg.Orm == "typeorm" {
 		if err := generateORMFiles(cfg); err != nil {
 			return fmt.Errorf("error during ORM files creation: %w", err)
 		}

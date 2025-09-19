@@ -8,7 +8,7 @@ import "archi-ts-cli/internal/models"
 func GetIndexTemplate(architecture models.Architecture, express bool, orm models.Orm) string {
 
 	// If an Orm is chosen then Express too
-	if orm == models.TypeOrm {
+	if orm == "typeorm" {
 		return getDefaultIndexWithExpressAndTypeORM(architecture)
 	}
 
@@ -26,67 +26,66 @@ func GetIndexTemplate(architecture models.Architecture, express bool, orm models
 // [X] Layered, Clean or Hexagonale Architecture
 func getDefaultIndexPlain() string {
 
-	return `
-    /**
-     * The main server file
-     * @module index
-    **/
-    import * as http from "http";
-    import dotenv from "dotenv";
+	return `/**
+ * The main server file
+ * @module index
+**/
+import * as http from "http";
+import dotenv from "dotenv";
 
-    // Layers importation HERE
-    // exemple : import { handleUserRoutes } from "@routes/user.routes";
+// Layers importation HERE
+// exemple : import { handleUserRoutes } from "@routes/user.routes";
 
-    // Load environment variables
-    dotenv.config();
-    const PORT: number = process.env.LISTEN_PORT ? parseInt(process.env.LISTEN_PORT) : 3000;
+// Load environment variables
+dotenv.config();
+const PORT: number = process.env.LISTEN_PORT ? parseInt(process.env.LISTEN_PORT) : 3000;
 
-    /**
-     * Default route handler
-     */
-    function defaultRoute(req: http.IncomingMessage, res: http.ServerResponse) {
-        res.statusCode = 404;
+/**
+ * Default route handler
+ */
+function defaultRoute(req: http.IncomingMessage, res: http.ServerResponse) {
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({
+        message: 'Route '+ req.url + ' not found'
+    }));
+}
+
+/**
+ * Static routes
+ */
+const staticRoutes: Record<string, (req: http.IncomingMessage, res: http.ServerResponse) => void> = {
+    "/": (req, res) => {
+        res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify({
-            message: 'Route '+ req.url + ' not found'
+            message: 'Welcome to Archi API',
+            version: '1.10.0',
+            status: 'running',
+            stack: 'NodeJS, TypeScript',
+            library: "no library, I'm a badass developer"
         }));
+    },
+    "/ping": (req, res) => {
+        res.statusCode = 200;
+        res.end("pong");
     }
+};
 
-    /**
-     * Static routes
-     */
-    const staticRoutes: Record<string, (req: http.IncomingMessage, res: http.ServerResponse) => void> = {
-        "/": (req, res) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify({
-                message: 'Welcome to Archi API',
-                version: '1.10.0',
-                status: 'running',
-                stack: 'NodeJS, TypeScript',
-                library: "no library, I'm a badass developer"
-            }));
-        },
-        "/ping": (req, res) => {
-            res.statusCode = 200;
-            res.end("pong");
+/**
+ * Create HTTP server
+ */
+const server = http.createServer(async (req, res) => {
+    try {
+        if (req.url && staticRoutes[req.url]) {
+            staticRoutes[req.url](req, res);
+            return;
         }
-    };
 
-    /**
-     * Create HTTP server
-     */
-    const server = http.createServer(async (req, res) => {
-        try {
-            if (req.url && staticRoutes[req.url]) {
-                staticRoutes[req.url](req, res);
-                return;
-            }
+    		// Handle routes HERE
+        // exemple : if (await handleUserRoutes(req, res)) return;
 
-    		 // Handle routes HERE
-            // exemple : if (await handleUserRoutes(req, res)) return;
-
-            defaultRoute(req, res);
+    defaultRoute(req, res);
 
         } catch (error) {
             res.statusCode = 500;
@@ -95,15 +94,14 @@ func getDefaultIndexPlain() string {
                 message: error instanceof Error ? error.message : "Internal server error"
             }));
         }
-    });
+});
 
-    /**
-     * Start server
-     */
-    server.listen(PORT, () => {
-        console.log('Server running on http://localhost:' + PORT);
-    });
-    `
+/**
+ * Start server
+ */
+server.listen(PORT, () => {
+    console.log('Server running on http://localhost:' + PORT);
+});`
 }
 
 // Default Index file with Express but no Orm
@@ -160,64 +158,67 @@ export default server;
 // [X] TypeORM
 func getDefaultIndexWithExpressAndTypeORM(architecture models.Architecture) string {
 	imports := getImportPaths(architecture)
-	return `
-    /**
-     * The main server file
-     * @module index
-    **/
+	dependenciesImport := getDependenciesImport(architecture)
+	return `/**
+ * The main server file
+ * @module index
+**/
 
-    // External dependencies
-    import express, { Request, Response } from "express";
-    import dotenv from "dotenv";
+// External dependencies
+` + dependenciesImport + `
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
 
-    // Internal dependencies
-    ` + imports + `
+// Internal dependencies
+` + imports + `
 
-    // import routes here
+// import routes here
+// exemple : import { userRouter } from "@routes/user.routes";
 
-    // Load environment variables from .env file
-    dotenv.config();
+// Load environment variables from .env file
+dotenv.config();
 
-    // Initialize Express app
-    const server = express();
-    server.use(express.json());
+// Initialize Express app
+const server = express();
+server.use(express.json());
 
-    // Default route (health check)
-    server.get("/", (req: Request, res: Response) => {
-      res.json({
-        message: "Welcome to ArchiTS API",
-        version: "1.0.0",
-        status: "running",
-        stack: "NodeJS, TypeScript",
-        library: "ExpressJS + TypeORM",
-      });
+// Default route (health check)
+server.get("/", (req: Request, res: Response) => {
+  res.json({
+    message: "Welcome to ArchiTS API",
+    version: "1.0.0",
+    status: "running",
+    stack: "NodeJS, TypeScript",
+    library: "ExpressJS + TypeORM",
+  });
+});
+
+// Start server with DB
+(async () => {
+  try {
+
+    // Initialize database connection
+    await createDatabaseIfNotExists();
+
+    // Initialize TypeORM data source
+    await AppDataSource.initialize();
+    console.log("✅ Data source initialized");
+
+    // Route paths here
+    // exemple : server.use('/api', userRouter);
+
+    // Start server
+    const PORT = process.env.LISTEN_PORT ?? 3000;
+    server.listen(PORT, () => {
+      console.log(` + "`🤘 Server running on http://localhost:${PORT}`" + `);
     });
+  } catch (err) {
+    console.error("❌ Failed to start server:", err);
+    process.exit(1);
+  }
+})();
 
-    // Start server with DB
-    (async () => {
-      try {
-
-        // Initialize database connection
-        await createDatabaseIfNotExists();
-
-        // Initialize TypeORM data source
-        await AppDataSource.initialize();
-        console.log("✅ Data source initialized");
-
-        // Route paths here
-
-        // Start server
-        const PORT = process.env.LISTEN_PORT ?? 3000;
-        server.listen(PORT, () => {
-          console.log(` + "`🤘 Server running on http://localhost:${PORT}`" + `);
-        });
-      } catch (err) {
-        console.error("❌ Failed to start server:", err);
-        process.exit(1);
-      }
-    })();
-
-    export default server;`
+export default server;`
 }
 
 // getImportPaths return import paths depending on chosen architecture
@@ -228,19 +229,24 @@ func getImportPaths(architecture models.Architecture) string {
 	var imports string = ""
 	switch architecture {
 	case models.LayeredArchitecture:
-		imports = `
-        import { AppDataSource } from "@connection/data-source";
-        import { createDatabaseIfNotExists } from "@connection/create-database";`
+		imports = `import { AppDataSource } from "@connection/data-source";
+import { createDatabaseIfNotExists } from "@connection/create-database";`
 	case models.CleanArchitecture:
-		imports = `
-        import { AppDataSource } from "@config/data-source";
-        import { createDatabaseIfNotExists } from "@config/create-database";`
+		imports = `import { AppDataSource } from "@config/data-source";
+import { createDatabaseIfNotExists } from "@config/create-database";`
 	case models.HexagonalArchitecture:
-		imports = `
-        import { AppDataSource } from "@orm/data-source";
-        import { createDatabaseIfNotExists } from "@orm/create-database";`
+		imports = `import { AppDataSource } from "@orm/data-source";
+import { createDatabaseIfNotExists } from "@orm/create-database";`
 	default:
 		return ""
 	}
 	return imports
+}
+
+func getDependenciesImport(architecture models.Architecture) string {
+	if architecture == models.HexagonalArchitecture {
+		return `import 'reflect-metadata';`
+	}
+
+	return ""
 }

@@ -180,6 +180,7 @@ func getHexagonalDirectories() []string {
 		"src/adapters/secondary",
 		"src/adapters/secondary/persistence",
 		"src/adapters/secondary/persistence/models",
+		"src/adapters/secondary/persistence/orm",
 		"src/adapters/secondary/persistence/repositories",
 		"src/adapters/secondary/email",
 		"src/adapters/secondary/cache",

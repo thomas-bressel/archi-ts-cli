@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["reflect-metadata"],
+    "paths": {
+      "@src/*": ["src/*"],
+      "@entities/*": ["src/domain/entities/*"], 
+      "@objects/*": ["src/domain/value-objects/*"], 
+      "@events/*": ["src/domain/events/*"],
+      "@exceptions/*": ["src/domain/exceptions/*"],
+      "@usecases/*": ["src/application/use-cases/*"], 
+      "@services/*": ["src/application/use-cases/*"],
+      "@ports/*": ["src/application/ports/*"], 
+      "@dtos/*": ["src/application/dtos/*"],
+      "@http/*": ["src/adapters/primary/http/*"],
+      "@controllers/*": ["src/adapters/primary/http/controllers/*"], 
+      "@routes/*": ["src/adapters/primary/http/routes/*"],  
+      "@middlewares/*": ["src/adapters/primary/http/middlewares/*"],
+      "@cli/*": ["src/adapters/primary/cli/*"],
+      "@orm/*": ["src/adapters/secondary/persistence/orm/*"], 
+      "@models/*": ["src/adapters/secondary/persistence/models/*"], 
+      "@repositories/*": ["src/adapters/secondary/persistence/repositories/*"],
+      "@email/*": ["src/adapters/secondary/email/*"],
+      "@cache/*": ["src/adapters/secondary/cache/*"],
+      "@config/*": ["src/config/*"],  
+      "@storage/*": ["storage/*"],
+    }
+  },
+    "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
+    "files": true
+  },
+  "include": [
+    "src/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
