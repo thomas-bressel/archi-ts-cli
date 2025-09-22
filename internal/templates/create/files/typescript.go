@@ -8,7 +8,7 @@ func GetTsconfigTemplate(architecture models.Architecture, orm models.Orm) strin
 	paths := getTsconfigPaths(architecture)
 	types := ""
 	if architecture == models.HexagonalArchitecture {
-		types = `"types": ["reflect-metadata"],`
+		types = `"types": ["reflect-metadata", "jest"],`
 	}
 
 	return `{

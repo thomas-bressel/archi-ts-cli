@@ -99,7 +99,7 @@ func getJestConfigPaths(architecture models.Architecture) string {
       "^@repositories/(.*)$": "<rootDir>/src/adapters/secondary/persistence/repositories/$1",
       "^@email/(.*)$": "<rootDir>/src/adapters/secondary/email/$1",
       "^@cache/(.*)$": "<rootDir>/src/adapters/secondary/cache/$1",
-      "^@config/(.*)$": "<rootDir>/src/config/*$1", 
+      "^@config/(.*)$": "<rootDir>/src/config/$1", 
       "^@storage/(.*)$": "<rootDir>/storage/$1",
     }`
 	default:

@@ -20,6 +20,8 @@ type EntityPaths struct {
 	Exception              string
 	DependenciesTypes      string
 	DependenciesContainers string
+	ValueObjectUnitTest    string
+	UseCaseUnitTest        string
 }
 
 // EntityConfig configuration to generate an entity

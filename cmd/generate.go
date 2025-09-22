@@ -5,6 +5,7 @@ import (
 	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/templates/generate"
 	"archi-ts-cli/internal/templates/generate/hexagonal"
+	"archi-ts-cli/internal/templates/generate/layered"
 	"archi-ts-cli/internal/templates/generate/tests"
 
 	"archi-ts-cli/internal/utils"
@@ -90,9 +91,8 @@ func getEntityPaths(architecture string, entityName string, ext string) models.E
 			Dto:                    fmt.Sprintf("src/application/dtos/%s.dto.%s", lowerName, ext),
 			DependenciesTypes:      fmt.Sprintf("src/config/dependencies/%s-types.%s", lowerName, ext),
 			DependenciesContainers: fmt.Sprintf("src/config/dependencies/%s-containers.%s", lowerName, ext),
-			// ControllerUnitTest: fmt.Sprintf("tests/unit/ports/primary/%s.controller.test.%s", lowerName, ext),
-			// ServiceUnitTest:    fmt.Sprintf("tests/unit/services/%s.service.test.%s", lowerName, ext),
-			// RepositoryUnitTest: fmt.Sprintf("tests/unit/repositories/%s.repository.test.%s", lowerName, ext),
+			ValueObjectUnitTest:    fmt.Sprintf("tests/unit/domain/value-objects/%s-id.value-object.test.%s", lowerName, ext),
+			UseCaseUnitTest:        fmt.Sprintf("tests/unit/application/use-cases/get-%s.use-case.test.%s", lowerName, ext),
 		}
 	default: // Layered Architecture
 		return models.EntityPaths{
@@ -162,6 +162,8 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.UseCase, hexagonal.GetUseCaseTemplate(entityConfig), "UseCase"},
 			{paths.Model, hexagonal.GetModelTemplate(entityConfig), "Model"},
 			{paths.Controller, hexagonal.GetControllerTemplate(entityConfig), "Controller"},
+			{paths.ValueObjectUnitTest, hexagonal.GetValueObjectUnitTestTemplate(entityConfig), "ValueObjectUnitTest"},
+			{paths.UseCaseUnitTest, hexagonal.GetUseCaseUnitTestTemplate(entityConfig), "UseCaseUnitTest"},
 		}
 		GenerateAllFiles(filesToGenerate)
 
@@ -177,7 +179,7 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.Model, generate.GetModelTemplate(entityConfig), "Model"},
 			{paths.Service, generate.GetServiceTemplate(entityConfig, architecture), "Service"},
 			{paths.Repository, generate.GetRepositoryTemplate(entityConfig, architecture), "Repository"},
-			{paths.RawModel, generate.GetRawModelTemplate(entityConfig), "Raw Model"},
+			{paths.RawModel, layered.GetRawModelTemplate(entityConfig), "Raw Model"},
 			{paths.ControllerUnitTest, tests.GetControllerUnitTestTemplate(entityConfig), "Controller Unit Test"},
 			{paths.ServiceUnitTest, tests.GetServiceUnitTestTemplate(entityConfig, architecture), "Service Unit Test"},
 			{paths.RepositoryUnitTest, tests.GetRepositoryUnitTestTemplate(entityConfig, architecture), "Repository Unit Test"},

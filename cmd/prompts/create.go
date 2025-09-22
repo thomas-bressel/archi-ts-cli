@@ -114,6 +114,7 @@ func PromptExpressOnly() (string, error) {
 // PromptORM ask Which ORM to use
 func PromptOrm(architecture string) (string, error) {
 	var orms = []models.ORMOption{}
+	fmt.Println("architecture choisit : ", architecture)
 	if architecture != string(models.HexagonalArchitecture) {
 		orms = []models.ORMOption{
 			{Display: "I don't want to use any ORM", ID: "none"},

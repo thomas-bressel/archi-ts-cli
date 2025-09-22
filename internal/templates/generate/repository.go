@@ -24,7 +24,7 @@ func GetRepositoryTemplate(cfg models.EntityConfig, architecture string) string 
 		layerImport = exports.GetLayeredRepositoryLayerImports(upperName, lowerName)
 	}
 
-	if ormName == models.TypeOrm {
+	if ormName == "typeorm" {
 		return fmt.Sprintf(`
 // Layer importations
 import { AppDataSource } from "%s/data-source";

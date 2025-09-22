@@ -11,7 +11,7 @@ func GetRawModelTemplate(cfg models.EntityConfig) string {
 	lowerName := strings.ToLower(cfg.Name)
 	ormName := cfg.Orm
 
-	if ormName == models.TypeOrm {
+	if ormName == "typeorm" {
 		return fmt.Sprintf(`
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 

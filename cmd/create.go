@@ -62,7 +62,7 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	// Prompt 3 - ORM Type (only if a library was chosen)
 	var orm string
 	if express || library != "" {
-		orm, err = prompts.PromptOrm(string(models.HexagonalArchitecture))
+		orm, err = prompts.PromptOrm(architecture)
 		if err != nil {
 			return fmt.Errorf("error when choosing an ORM: %w", err)
 		}

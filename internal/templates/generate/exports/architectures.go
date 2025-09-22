@@ -25,8 +25,8 @@ import { %s } from '@businessmodels/%s.model';`, upperName, lowerName)
 }
 
 func GetTestLayeredImports(upperName string, lowerName string) string {
-	return fmt.Sprintf(`// Layer import
-	import { %s } from '@businessmodels/%s.model';`, upperName, lowerName)
+	return fmt.Sprintf(`// Data model imports
+import { %s } from '@businessmodels/%s.model';`, upperName, lowerName)
 }
 
 func GetTestCleanImports(upperName string, lowerName string) string {
