@@ -53,7 +53,7 @@ func runGenerateEntity(cmd *cobra.Command, args []string) error {
 // getEntityPaths return paths where each files should be created
 // [X] Layered Architecture
 // [X] Clean Architecture
-// [ ] Hexagonal Architecture
+// [X] Hexagonal Architecture
 func getEntityPaths(architecture string, entityName string, ext string) models.EntityPaths {
 	lowerName := strings.ToLower(entityName)
 
@@ -166,7 +166,6 @@ func createListFilesToGenerate(architecture string, entityConfig models.EntityCo
 			{paths.UseCaseUnitTest, hexagonal.GetUseCaseUnitTestTemplate(entityConfig), "UseCaseUnitTest"},
 		}
 		GenerateAllFiles(filesToGenerate)
-
 	default:
 		// List all file to create for layered architecture
 		filesToGenerate := []struct {

@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/archits-cli.svg)](https://badge.fury.io/js/archits-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Archi-TS-CLI is a Go-based command-line tool designed to simplify project architecture management for TypeScript and JavaScript projects. It provides features to generate, organize, and analyze project structures with clean architecture patterns.
+Archi-TS-CLI is a Go-based command-line tool designed to simplify project architecture management for TypeScript projects. It provides features to generate, organize, and analyze project structures with clean architecture patterns.
 
 ## 🚀 Quick Start
 
@@ -19,12 +19,12 @@ npm install -g archits-cli
 ln -sf /home/[your-username]/.nvm/versions/node/v[your-node-version]/lib/node_modules/archits-cli/bin/archits /home/[your-username]/.nvm/versions/node/v[your-node-version]/bin/archi
 
 # Verify installation
-archits --version
+archi version
 
 # Use anywhere
-archits create
-archits generate entity User
-archits --help
+archi create
+archi generate entity User
+archi --help
 ```
 
 ## 📋 Features
@@ -41,7 +41,7 @@ archits --help
 
 ### Create New Project
 ```bash
-npx archits-cli create
+archi create
 ```
 
 This will prompt you to choose:
@@ -53,8 +53,7 @@ This will prompt you to choose:
 
 ### Generate Entity Files
 ```bash
-npx archits-cli generate entity Product
-# Aliases: npx archits-cli g e Product
+archi generate entity Product
 ```
 
 Generates:
@@ -68,53 +67,12 @@ Generates:
 ### Other Commands
 ```bash
 # Show version
-npx archits-cli version
+archi version
 
 # Show help
-npx archits-cli --help
+archi --help
 ```
 
-## 📁 Generated Project Structure
-
-```
-my-project/
-├── src/
-│   ├── controllers/
-│   ├── services/
-│   ├── repositories/
-│   ├── entities/
-│   ├── routes/
-│   └── index.ts
-├── tests/
-├── package.json
-├── tsconfig.json
-├── jest.config.ts
-├── .env
-└── .gitignore
-```
-
-## 🔧 Requirements
-
-- Node.js >= 14
-- npm or yarn
-
-## 📖 Examples
-
-### Creating a User Management Project
-```bash
-npx archits-cli create
-# Follow the prompts...
-cd my-project
-npm install
-npm run dev
-```
-
-### Adding a new Entity
-```bash
-cd my-project
-npx archits-cli generate entity Order
-# Files generated in appropriate folders
-```
 
 ## 🤝 Contributing
 
