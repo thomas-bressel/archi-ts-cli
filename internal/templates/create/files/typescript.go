@@ -19,6 +19,25 @@ func GetTsconfigTemplate(architecture models.Architecture) string {
 		types = `"types": ["reflect-metadata", "jest"],`
 	}
 
+	return getTsconfigBaseTemplate(types, paths)
+}
+
+// getTsconfigPaths returns the paths configuration based on architecture and ORM
+func getTsconfigPaths(architecture models.Architecture) string {
+	switch architecture {
+	case models.CleanArchitecture:
+		return clean.GetTsconfigPaths()
+	case models.HexagonalArchitecture:
+		return hexagonal.GetTsconfigPaths()
+	case models.LayeredArchitecture:
+		return layered.GetTsconfigPaths()
+	default:
+		return ``
+	}
+}
+
+// getTsconfigBaseTemplate returns default base template
+func getTsconfigBaseTemplate(types string, paths string) string {
 	return `{
   "compilerOptions": {
     "baseUrl": "./",
@@ -50,18 +69,4 @@ func GetTsconfigTemplate(architecture models.Architecture) string {
     "dist"
   ]
 }`
-}
-
-// getTsconfigPaths returns the paths configuration based on architecture and ORM
-func getTsconfigPaths(architecture models.Architecture) string {
-	switch architecture {
-	case models.CleanArchitecture:
-		return clean.GetTsconfigPaths()
-	case models.HexagonalArchitecture:
-		return hexagonal.GetTsconfigPaths()
-	case models.LayeredArchitecture:
-		return layered.GetTsconfigPaths()
-	default:
-		return ``
-	}
 }

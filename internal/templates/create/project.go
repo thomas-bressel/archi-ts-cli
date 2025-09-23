@@ -4,6 +4,7 @@ import (
 	"archi-ts-cli/internal/config"
 	"archi-ts-cli/internal/models"
 	"archi-ts-cli/internal/templates/create/files"
+	folder "archi-ts-cli/internal/templates/create/folders"
 	"archi-ts-cli/internal/utils"
 	"fmt"
 	"path/filepath"
@@ -14,12 +15,12 @@ import (
 func GenerateProject(cfg models.ProjectConfigBuilder) error {
 
 	// Create the project directory structure based on architecture and ORM
-	if err := createDirectoryStructure(cfg.Architecture); err != nil {
+	if err := createArchitecture(cfg.Architecture); err != nil {
 		return fmt.Errorf("error during the folders creation: %w", err)
 	}
 
 	// Generate the base files
-	if err := generateBaseFiles(cfg); err != nil {
+	if err := createBaseFiles(cfg); err != nil {
 		return fmt.Errorf("error during the files creation: %w", err)
 	}
 
@@ -49,23 +50,11 @@ func GenerateProject(cfg models.ProjectConfigBuilder) error {
 	return nil
 }
 
-// createDirectoryStructure creates the directory structure based on the chosen architecture and ORM
-// [X] Layered Architecture
-// [X] Clean Architecture
-// [X] Hexagonal Architecture
-func createDirectoryStructure(architecture models.Architecture) error {
-	var directories []string
+// createArchitecture creates the directory structure based on the chosen architecture and ORM
+func createArchitecture(architecture models.Architecture) error {
 
-	switch architecture {
-	case models.LayeredArchitecture:
-		directories = getLayeredDirectories()
-	case models.CleanArchitecture:
-		directories = getCleanDirectories()
-	case models.HexagonalArchitecture:
-		directories = getHexagonalDirectories()
-	default:
-		directories = getLayeredDirectories() // Default
-	}
+	var directories []string
+	directories = folder.GetArchitecture(architecture)
 
 	for _, dir := range directories {
 		if err := utils.CreateDirectory(dir); err != nil {
@@ -75,17 +64,17 @@ func createDirectoryStructure(architecture models.Architecture) error {
 	return nil
 }
 
-// generateBaseFiles create the base files for the project
+// createBaseFiles create the base files for the project
 // [X] Layered Architecture
 // [X] Clean Architecture
 // [X] Hexagonal Architecture
-func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
+func createBaseFiles(cfg models.ProjectConfigBuilder) error {
 	// Package.json - Dissociate architecture and ORM
 	var packageContent string
 	var err error
 
 	// Generate package.json based on architecture and ORM
-	packageContent, err = files.GeneratePackageJson(cfg)
+	packageContent, err = files.CreatePackageJson(cfg)
 
 	if err != nil {
 		return err
