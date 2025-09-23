@@ -105,7 +105,7 @@ func generateBaseFiles(cfg models.ProjectConfigBuilder) error {
 	}
 
 	// [X] tsconfig.json
-	if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate(cfg.Architecture, cfg.Orm)); err != nil {
+	if err := utils.WriteFile("tsconfig.json", files.GetTsconfigTemplate(cfg.Architecture)); err != nil {
 		return err
 	}
 
@@ -176,7 +176,7 @@ func generateORMFiles(cfg models.ProjectConfigBuilder) error {
 
 	// Generate generate-migration.ts
 	createScriptsPath := filepath.Join(scriptPath, "generate-migration.ts")
-	if err := utils.WriteFile(createScriptsPath, files.GetHelperORMScriptTemplate(string(cfg.Architecture))); err != nil {
+	if err := utils.WriteFile(createScriptsPath, files.GetTypeORMHelperScriptTemplate(string(cfg.Architecture))); err != nil {
 		return fmt.Errorf("error creating generate-migration.ts: %w", err)
 	}
 

@@ -54,35 +54,19 @@ func PromptArchitecture() (string, error) {
 	return result, nil
 }
 
-// PromptExpress asks if the user wants to use ExpressJS library
-func PromptExpress() (bool, error) {
-	prompt := promptui.Select{
-		Label: "Do you want to use ExpressJS library?",
-		Items: []string{
-			"No, I don't need Express",
-			"Yes, install Express",
-		},
-		Templates: &promptui.SelectTemplates{
-			Label:    "{{ . }}:",
-			Active:   color.New(color.FgYellow).Sprint("▸ {{ . | yellow }}"),
-			Inactive: "  {{ . | faint }}",
-			Selected: color.New(color.FgGreen).Sprint("✔ {{ . | green }}"),
-		},
-	}
-
-	_, result, err := prompt.Run()
-	if err != nil {
-		return false, err
-	}
-
-	// Return true if user wants Express, false otherwise
-	return result == "Yes, install Express", nil
-}
-
 // PromptExpressOnly asks if the user wants to use ExpressJS library
-func PromptExpressOnly() (string, error) {
+func PromptLibrary(architecture string) (string, error) {
+
+	// Define library choices
 	libraries := []models.LibraryOption{
 		{Display: "Express.js", ID: "express"},
+	}
+
+	// If not hexagonal architecture then add a choice
+	if architecture != string(models.HexagonalArchitecture) {
+		libraries = append([]models.LibraryOption{
+			{Display: "No library needed", ID: "none"},
+		}, libraries...)
 	}
 
 	// Exctact name
@@ -112,21 +96,26 @@ func PromptExpressOnly() (string, error) {
 }
 
 // PromptORM ask Which ORM to use
-func PromptOrm(architecture string) (string, error) {
-	var orms = []models.ORMOption{}
-	fmt.Println("architecture choisit : ", architecture)
-	if architecture != string(models.HexagonalArchitecture) {
-		orms = []models.ORMOption{
-			{Display: "I don't want to use any ORM", ID: "none"},
-			{Display: "TypeORM", ID: "typeorm"},
-		}
-	} else {
-		orms = []models.ORMOption{
-			{Display: "TypeORM", ID: "typeorm"},
-		}
+func PromptOrm(architecture string, library string) (string, error) {
+
+	// If no library was chosen then return back
+	if library == "none" || library == "" {
+		return "none", nil
 	}
 
-	// Extraire les noms d'affichage
+	// define library choice
+	orms := []models.ORMOption{
+		{Display: "TypeORM", ID: "typeorm"},
+	}
+
+	// If not hexagonal architecture then add a choice
+	if architecture != string(models.HexagonalArchitecture) {
+		orms = append([]models.ORMOption{
+			{Display: "I don't need ORM", ID: "none"},
+		}, orms...)
+	}
+
+	// Exctract display name
 	displayItems := make([]string, len(orms))
 	for i, orm := range orms {
 		displayItems[i] = orm.Display
@@ -148,7 +137,7 @@ func PromptOrm(architecture string) (string, error) {
 		return "", err
 	}
 
-	// Retourner l'ID basé sur l'index sélectionné
+	// return ID based on the selected index
 	return orms[index].ID, nil
 }
 

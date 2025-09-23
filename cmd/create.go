@@ -20,12 +20,15 @@ import (
 // Always ask for the choice of a library or not : If there is no library, then it will impact the following prompt choice
 // ORM choice only if a library has been previously choosen
 func runCreate(cmd *cobra.Command, args []string) error {
+
 	// Display a beautifull Banner
 	utils.DisplayBanner()
 	color.New(color.FgCyan, color.Bold).Println("🚀 ArchiTS CLI - Project Scaffolding")
 	fmt.Println()
 
+	//////////////////////////////////////////////////////
 	// Step 1: Start collecting the result of each prompts
+	//////////////////////////////////////////////////////
 
 	// Prompt 1 - Project name
 	projectName, err := prompts.PromptProjectName()
@@ -39,42 +42,32 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error when choosing an architecture: %w", err)
 	}
 
-	// Prompt 2 - Express Library?
+	// Prompt 3 - Libraries choice
+	library, err := prompts.PromptLibrary(architecture)
+	if err != nil {
+		return fmt.Errorf("error when choosing a library: %w", err)
+	}
+
 	var express bool
-	var library string
-	if architecture != string(models.HexagonalArchitecture) {
-		express, err = prompts.PromptExpress()
-		if err != nil {
-			return fmt.Errorf("error when choosing express library: %w", err)
-		}
-	} else {
-		// Prompt 2alt - Which Library?
-		library, err = prompts.PromptExpressOnly()
-		if library == "express" {
-			express = true
-		}
-
-		if err != nil {
-			return fmt.Errorf("error when choosing express library: %w", err)
-		}
+	if library == "express" {
+		express = true
 	}
 
-	// Prompt 3 - ORM Type (only if a library was chosen)
-	var orm string
-	if express || library != "" {
-		orm, err = prompts.PromptOrm(architecture)
-		if err != nil {
-			return fmt.Errorf("error when choosing an ORM: %w", err)
-		}
+	// Prompt 4 - ORM Type (only if a library was chosen)
+	orm, err := prompts.PromptOrm(architecture, library)
+	if err != nil {
+		return fmt.Errorf("error when choosing an ORM: %w", err)
 	}
 
-	// Prompt 4 - Port listen
+	// Prompt 5 - Port listen
 	port, err := prompts.PromptPort()
 	if err != nil {
 		return fmt.Errorf("error when entering listen port: %w", err)
 	}
 
+	//////////////////////////////////////////
 	// Step 2: Create the project architecture
+	//////////////////////////////////////////
 
 	// Create the project directory
 	projectPath := filepath.Join(".", projectName)
@@ -101,7 +94,9 @@ func runCreate(cmd *cobra.Command, args []string) error {
 	color.New(color.FgHiMagenta).Printf("Library Name: %s\n", library)
 	fmt.Println()
 
+	///////////////////////////////////////////////////
 	// Step 3: Generation and dependencies installation
+	///////////////////////////////////////////////////
 
 	//Store the configuration in a struct and generate the project
 	config := models.ProjectConfigBuilder{
@@ -128,7 +123,10 @@ func runCreate(cmd *cobra.Command, args []string) error {
 		color.New(color.FgRed).Printf("⚠️  Error during pnpm installation: %v\n", err)
 	}
 
+	///////////////////////////
 	// Step 4: Success messages
+	///////////////////////////
+
 	fmt.Println()
 	color.New(color.FgGreen, color.Bold).Println("✅ Project structure created successfully!")
 	fmt.Println()
