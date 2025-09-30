@@ -1,19 +1,24 @@
-# archits-cli
+# ArchiTS-CLI
 
-> A powerful CLI tool for TypeScript/JavaScript project architecture management
+> A powerful CLI tool for TypeScript project architecture management
+> 🌐 [Visit www.archits.dev](https://www.archits.dev)
 
-[![npm version](https://badge.fury.io/js/archits-cli.svg)](https://badge.fury.io/js/archits-cli)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://badge.fury.io/js/archits-cli.svg)](https://badge.fury.io/js/archits-cli) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![npm downloads](https://img.shields.io/npm/dm/archits-cli.svg)](https://www.npmjs.com/package/archits-cli) [![GitHub stars](https://img.shields.io/github/stars/thomas-bressel/archi-ts-cli.svg)](https://github.com/thomas-bressel/archi-ts-cli/stargazers)
 
-Archi-TS-CLI is a Go-based command-line tool designed to simplify project architecture management for TypeScript projects. It provides features to generate, organize, and analyze project structures with clean architecture patterns.
+---
 
 ## 🚀 Quick Start
 
+### Global Installation
 
-### Global Installation (Recommended)
 ```bash
+### Global Installation (Recommended)
+
 # Install globally
 npm install -g archits-cli
+
+# Check your Node.js version (must be >= 14)
+node -v
 
 # Create a symlink for easier access (if using nvm)
 ln -sf /home/[your-username]/.nvm/versions/node/v[your-node-version]/lib/node_modules/archits-cli/bin/archits /home/[your-username]/.nvm/versions/node/v[your-node-version]/bin/archi
@@ -21,62 +26,82 @@ ln -sf /home/[your-username]/.nvm/versions/node/v[your-node-version]/lib/node_mo
 # Verify installation
 archi version
 
-# Use anywhere
-archi create
-archi generate entity User
-archi --help
 ```
+
+---
 
 ## 📋 Features
 
-- **Automatic project structure generation** - Create clean architecture projects instantly
-- **Entity generation** - Generate controller, service, repository, entity, and route files
-- **TypeScript & JavaScript support** - Choose your preferred language
-- **Multiple architecture patterns** - Support for different project architectures
-- **Express.js integration** - Optional Express setup
-- **Jest configuration** - Pre-configured testing setup
-- **Clean code templates** - Following best practices
+* Automatic TypeScript project structure
+* Entity generation (controller, service, repository, entity, route)
+* Multiple architecture patterns
+* Optional Express.js setup
+* Pre-configured Jest testing
+* Clean code templates with best practices
+
+---
 
 ## 🛠️ Usage
 
 ### Create New Project
+
 ```bash
 archi create
 ```
 
-This will prompt you to choose:
-- Project name
-- Language (TypeScript/JavaScript)  
-- Architecture type
-- Express.js integration
-- And more...
+Prompts:
+
+* Project name
+* Architecture type
+* Express.js integration
+* And more...
 
 ### Generate Entity Files
+
 ```bash
 archi generate entity Product
 ```
 
 Generates:
-- `Product.controller.ts`
-- `Product.service.ts` 
-- `Product.repository.ts`
-- `Product.entity.ts`
-- `Product.route.ts`
-- Unit tests for each layer
+
+* `Product.controller.ts`
+* `Product.service.ts`
+* `Product.repository.ts`
+* `Product.entity.ts`
+* `Product.route.ts`
+* Unit tests for each layer
 
 ### Other Commands
-```bash
-# Show version
-archi version
 
-# Show help
+```bash
+archi version
 archi --help
 ```
 
+---
+
+## ⚡ Quick Commands
+
+| Command                        | Description                     |
+| ------------------------------ | ------------------------------- |
+| `archi create`                 | Create a new TypeScript project |
+| `archi generate entity <Name>` | Generate entity files           |
+| `archi version`                | Show version                    |
+| `archi --help`                 | Show help                       |
+
+---
+
+## 🤔 Why ArchiTS?
+
+* Save hours setting up TypeScript project architecture
+* Keep code organized and scalable
+* Integrated TypeScript best practices
+* Perfect for Express.js + TypeScript
+* Pre-configured Jest testing
+
+---
 
 ## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -84,27 +109,25 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+---
+
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/thomas-bressel/archi-ts-cli/blob/main/LICENSE) file for details.
+MIT License - see [LICENSE](https://github.com/thomas-bressel/archi-ts-cli/blob/main/LICENSE)
+
+---
 
 ## 👨‍💻 Author
 
 **Thomas Bressel**
-- GitHub: [@thomas-bressel](https://github.com/thomas-bressel)
 
-## 💖 Support
-
-If you find this project helpful, please consider:
-
-[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=UMJGHGGV4YUHE)
-
-## 🔗 Links
-
-- [Source Code](https://github.com/thomas-bressel/archi-ts-cli)
-- [Issues](https://github.com/thomas-bressel/archi-ts-cli/issues)
-- [Discussions](https://github.com/thomas-bressel/archi-ts-cli/discussions)
+* GitHub: [@thomas-bressel](https://github.com/thomas-bressel)
 
 ---
 
+## 💖 Support
+
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge\&logo=paypal\&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=UMJGHGGV4YUHE)
+
 Made with ❤️ by Thomas Bressel
+🌐 [www.archits.dev](https://www.archits.dev)
